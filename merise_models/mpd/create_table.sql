@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS"account"(
     birthdate date CHECK((date_part('year', CURRENT_DATE) - date_part('year', birthdate)) >= 21),
     loan_authorization boolean default false,
     monthly_pay double precision, 
-    account_ref double precision
+    account_ref varchar (100)
 );
 
 CREATE TABLE IF NOT EXISTS "balance"(

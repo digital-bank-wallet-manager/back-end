@@ -18,7 +18,8 @@ public class FindAll <T>{
 
     public List<T> findAll(Class<T> clazz) throws SQLException {
         List<T> entities = new ArrayList<>();
-        String sql = "select * from "+clazz.getSimpleName().toLowerCase();
+        String tableName = CamelCaseToSnakeCase.convertToSnakeCase(clazz.getSimpleName().toLowerCase());
+        String sql = "select * from "+tableName;
 
         try(PreparedStatement statement = connection.prepareStatement(sql)){
             ResultSet resultSet = statement.executeQuery();
@@ -49,15 +50,17 @@ public class FindAll <T>{
             for (Field field : fields) {
                 field.setAccessible(true);
 
-                Object value = resultSet.getObject(field.getName());
+                Object value = resultSet.getObject(CamelCaseToSnakeCase.convertToSnakeCase(field.getName()));
                 field.set(entity, value);
             }
 
         }catch (SQLException | IllegalAccessException e){
-            throw new SQLException("conversion failed");
+            throw new SQLException(e);
         }
         return entity;
     }
+
+
 
 
 }

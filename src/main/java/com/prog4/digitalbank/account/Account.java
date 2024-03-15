@@ -9,12 +9,13 @@ import java.sql.Date;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class AccountModel {
+public class Account {
     private String id;
     private String firstName;
     private String lastName;
     private Date birthdate;
-    private float monthlyPay;
-    private String AccountRef;
+    private Boolean loanAuthorization ;
+    private Double monthlyPay;
+    private String accountRef;
 
 }
