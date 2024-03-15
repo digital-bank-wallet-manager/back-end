@@ -31,8 +31,6 @@ public class FindAll <T>{
         }catch (SQLException | NoSuchMethodException | InvocationTargetException | InstantiationException |
                 IllegalAccessException e){
             throw new RuntimeException(e) ;
-        }finally {
-            connection.close();
         }
 
         return entities;
