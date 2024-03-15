@@ -32,15 +32,15 @@ paths:
           $ref: "#/components/responses/404"
         500: 
           $ref: "#/components/responses/500"
-  /account/{accountRef}: 
+  /account/{id}: 
     get: 
       tags:
         - account 
-      summary: get account by account reference 
-      operationId: getAccountByRef
+      summary: get account by its id 
+      operationId: getAccountById
       parameters: 
         - in: path 
-          name: accountRef 
+          name: id 
           schema: 
             type: string 
           required: true    
