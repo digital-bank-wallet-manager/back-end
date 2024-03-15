@@ -6,8 +6,12 @@ info:
 tags:
   - name: account
     description: Everything about account
-  - name: tranfer
+  - name: transfer
     description: all about transfer
+  - name: loan
+    description: about loans
+  - name: transaction
+    description: about account transactions
 paths:
   /accounts:
     get:
@@ -32,18 +36,14 @@ paths:
           $ref: "#/components/responses/404"
         500: 
           $ref: "#/components/responses/500"
-  /account/{accountRef}: 
+  /account/{accountId}: 
     get: 
       tags:
         - account 
-      summary: get account by account reference 
-      operationId: getAccountByRef
+      summary: get account by its id 
+      operationId: getAccountById
       parameters: 
-        - in: path 
-          name: accountRef 
-          schema: 
-            type: string 
-          required: true    
+        - $ref: "#/components/parameters/PathAccountId"    
       responses:
         200: 
           $ref: "#/components/responses/200"
@@ -62,6 +62,8 @@ paths:
       tags:
         - account
       summary: Create or update an account 
+      parameters:
+        - $ref: "#/components/parameters/PathAccountId"
       requestBody: 
         required: true 
         content:
@@ -82,14 +84,102 @@ paths:
           $ref: "#/components/responses/404"
         500: 
           $ref: "#/components/responses/500"
+  /balance/account/{accountId}: 
+    get: 
+      tags:
+        - balance
+      summary: Get the last Balance of the account
+      parameters:
+        - $ref: "#/components/parameters/PathAccountId"
+      responses:
+        200: 
+          $ref: "#/components/responses/200"
+          description: return an array of accounts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Balance"
+        400: 
+          $ref: "#/components/responses/400"
+        404: 
+          $ref: "#/components/responses/404"
+        500: 
+          $ref: "#/components/responses/500"
+  /balance/loan/{accountId}:
+    get: 
+      tags:
+        - loan 
+      summary: List of the account, the loan amount,the loan interest and the loan evolution filtered by the first 7 days' interest and from the 8th day's interest
+      parameters:
+        - $ref: "#/components/parameters/PathAccountId"
+      responses:
+        200: 
+          $ref: "#/components/responses/200"
+          description: return an array of accounts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BankLoan"
+        400: 
+          $ref: "#/components/responses/400"
+        404: 
+          $ref: "#/components/responses/404"
+        500: 
+          $ref: "#/components/responses/500"
+  /transaction/account/{accountId}:
+    get: 
+      tags:
+        - transaction
+      summary: List of all the transactions permformed by the account from the recent one to the older one
+      parameters:
+        - $ref: "#/components/parameters/PathAccountId"
+      responses:
+        200: 
+          $ref: "#/components/responses/200"
+          description: return an array of accounts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Transactions"
+        400: 
+          $ref: "#/components/responses/400"
+        404: 
+          $ref: "#/components/responses/404"
+        500: 
+          $ref: "#/components/responses/500"
+  /transfer/account/{accountId}:
+    get: 
+      tags:
+        - transfer 
+      summary: List of all the transfers of an account
+      description: List of the sender account's transfers
+      parameters:
+        - $ref: "#/components/parameters/PathAccountId"
+      responses:
+        200: 
+          $ref: "#/components/responses/200"
+          description: return an array of accounts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Transfer"
+        400: 
+          $ref: "#/components/responses/400"
+        404: 
+          $ref: "#/components/responses/404"
+        500: 
+          $ref: "#/components/responses/500"
 components:
   schemas:
     CrupdateAccount: 
       type: object
       properties:
-        id:
-          description: auto-generated
-          type: string
         firstName:
           description: the account's owner first_name
           type: string
@@ -103,12 +193,16 @@ components:
         monthlyPay:
           type: number
           format: float
-        accountRef:
-          description: the account's number is unique
-          type: string
     Account:
       allOf:
         - $ref: "#/components/schemas/CrupdateAccount" 
+      properties:
+        id:
+          description: auto-generated
+          type: string
+        accountRef:
+          description: the account's number is unique
+          type: string
     CrupdateBalance: 
       type: object
       properties:
@@ -220,6 +314,14 @@ components:
               type: string
         body:
           type: object
+  parameters:
+    PathAccountId: 
+      in: path
+      name: accountId
+      description: id in path 
+      required: true
+      schema: 
+        type: string 
   responses:
     "200":
       description: HTTP 200 (ok)
