@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS"account"(
     first_name varchar(100),
     last_name varchar(100) NOT NULL,
     birthdate date CHECK((date_part('year', CURRENT_DATE) - date_part('year', birthdate)) >= 21),
+    loan_authorization boolean default false,
     monthly_pay double precision, 
     account_ref double precision
 );
