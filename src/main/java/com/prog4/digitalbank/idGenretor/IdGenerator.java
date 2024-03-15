@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
 
 public class IdGenerator {
     private static final String string= "abcdefghijklmnopqrstuvwxyz";
@@ -60,6 +63,10 @@ public class IdGenerator {
         String id= generalLoop(6);
         return ref+id;
     }
+
+
+
+
 }
 
 

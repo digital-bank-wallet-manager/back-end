@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS"account"(
     loan_authorization boolean default false,
     monthly_pay double precision, 
     account_ref varchar(50)
+
 );
 
 CREATE TABLE IF NOT EXISTS "balance"(
