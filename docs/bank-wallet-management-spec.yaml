@@ -1,0 +1,263 @@
+openapi: 3.0.0
+info:
+  title: digital bank wallet management API
+  description: This is an api about a digital bank management.
+  version: 1.1.0
+tags:
+  - name: account
+    description: Everything about account
+  - name: tranfer
+    description: all about transfer
+paths:
+  /accounts:
+    get:
+      tags:
+        - account
+      summary: get all accounts
+      description: The returned accounts are ordered by creation date
+      operationId: getAccounts
+      responses:
+        200: 
+          $ref: "#/components/responses/200"
+          description: return an array of accounts
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: "#/components/schemas/Account"
+        400: 
+          $ref: "#/components/responses/400"
+        404: 
+          $ref: "#/components/responses/404"
+        500: 
+          $ref: "#/components/responses/500"
+  /account/{accountRef}: 
+    get: 
+      tags:
+        - account 
+      summary: get account by account reference 
+      operationId: getAccountByRef
+      parameters: 
+        - in: path 
+          name: accountRef 
+          schema: 
+            type: string 
+          required: true    
+      responses:
+        200: 
+          $ref: "#/components/responses/200"
+          description: return an array of accounts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+        400: 
+          $ref: "#/components/responses/400"
+        404: 
+          $ref: "#/components/responses/404"
+        500: 
+          $ref: "#/components/responses/500"
+    put: 
+      tags:
+        - account
+      summary: Create or update an account 
+      requestBody: 
+        required: true 
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/CrupdateAccount"
+      responses:
+        200: 
+          $ref: "#/components/responses/200"
+          description: return an array of accounts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+        400: 
+          $ref: "#/components/responses/400"
+        404: 
+          $ref: "#/components/responses/404"
+        500: 
+          $ref: "#/components/responses/500"
+components:
+  schemas:
+    CrupdateAccount: 
+      type: object
+      properties:
+        id:
+          description: auto-generated
+          type: string
+        firstName:
+          description: the account's owner first_name
+          type: string
+        lastName:
+          description: the account's owner last name
+          type: string
+        birthdate:
+          description: the account owner should have at least 21 years old
+          type: string
+          format: date
+        monthlyPay:
+          type: number
+          format: float
+        accountRef:
+          description: the account's number is unique
+          type: string
+    Account:
+      allOf:
+        - $ref: "#/components/schemas/CrupdateAccount" 
+    CrupdateBalance: 
+      type: object
+      properties:
+        id:
+          type: string
+        amount:
+          type: number
+          format: float
+        dateTime:
+          type: string
+          format: date-time
+    Balance:
+      allOf:
+        - $ref: "#/components/schemas/CrupdateBalance"
+        - type: object
+          properties:
+            account:
+              $ref: "#/components/schemas/Account"
+    Transfer:
+      description: There is no negative balance or bank loan for the transfer
+      type: object
+      properties:
+        id:
+          type: string
+          description: auto-generated
+        amount:
+          type: number
+          format: float
+        reason:
+          description: the reason of the transfer
+          type: string
+        dateTime:
+          type: string
+          format: date-time
+        effectiveDate:
+          type: string
+          format: date-time
+        recordDate:
+          type: string
+          format: date-time
+        transferRef:
+          type: string
+        accountReceiver:
+          description: the destination of the transfer
+          $ref: "#/components/schemas/Account"
+        accountSender:
+          description: the sender's account is different from the receiver's account
+          $ref: "#/components/schemas/Account"
+    LoanEvolution:
+      description: when the account's owner pay the loan
+      type: object
+      properties:
+        id:
+          type: string
+        dateTime:
+          type: string
+          format: date-time
+        totalInterest:
+          type: number
+          format: float
+        rest:
+          type: number
+          format: float
+    BankLoan:
+      description: loan accorded by the bank for each account
+      type: object
+      properties:
+        id:
+          type: string
+        amount:
+          type: number
+          format: float
+        loanDate:
+          type: string
+          format: date
+        interest:
+          description: according each account
+          type: number
+          format: float
+        account:
+          $ref: "#/components/schemas/Account"
+        loanEvolution:
+          $ref: "#/components/schemas/LoanEvolution"
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: string
+        amount:
+          type: number
+          format: float
+        type:
+          description: type of the transaction
+          type: string
+        dateTime:
+          type: string
+          format: date-time
+        account:
+          $ref: "#/components/schemas/Account"
+    defaultResponse:
+      type: object
+      properties:
+        status:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+        body:
+          type: object
+  responses:
+    "200":
+      description: HTTP 200 (ok)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/defaultResponse"
+          example:
+            status:
+              code: 200
+              message: OK
+    "400":
+      description: HTTP 400 (Bad request)
+      content:
+        application/json:
+          schema: 
+            $ref: "#/components/schemas/defaultResponse"
+          example:
+            status:
+              code: 400
+              message: Bad request 
+    "404":
+      description: HTTP 404 (not found)
+      content:
+        application/json:
+          schema: 
+            $ref: "#/components/schemas/defaultResponse"
+          example:
+            status:
+              code: 404
+              message: Not found
+    "500":
+      description: HTTP 500 (internal server error)
+      content:
+        application/json:
+          schema: 
+            $ref: "#/components/schemas/defaultResponse"
+          example:
+            status:
+              code: 500
+              message: Internal server error  
