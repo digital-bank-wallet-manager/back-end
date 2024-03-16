@@ -13,6 +13,5 @@ public class CamelCaseToSnakeCase {
         }
         return snakeCase.toString();
     }
-
 }
 

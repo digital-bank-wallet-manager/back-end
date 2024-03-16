@@ -57,8 +57,4 @@ public class FindAll <T>{
         }
         return entity;
     }
-
-
-
-
 }
