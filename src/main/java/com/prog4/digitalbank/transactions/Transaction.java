@@ -15,5 +15,10 @@ public class Transaction {
     private Timestamp dateTime ;
     private String accountId;
 
-
+    public Transaction(double amount, String type, Timestamp dateTime, String accountId) {
+        this.amount = amount;
+        this.type = type;
+        this.dateTime = dateTime;
+        this.accountId = accountId;
+    }
 }

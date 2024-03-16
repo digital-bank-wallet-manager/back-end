@@ -45,6 +45,7 @@ public class ProvisingServices {
 
         Provisioning insert = provisingSave.insert(provisioningToInsert);
         insertServices.insertBalance(accountId , amount , effective);
+        insertServices.insertTransaction(accountId , amount , effective , "credit");
         return insert;
     }
 }

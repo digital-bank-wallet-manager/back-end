@@ -18,7 +18,7 @@ public class TransactionServices {
         String id = IdGenerator.generateTransactionRef();
         Double amount = transaction.getAmount();
         String type = transaction.getType();
-        Timestamp dateTime = Timestamp.valueOf(LocalDateTime.now());
+        Timestamp dateTime = transaction.getDateTime();
         String accountId = transaction.getAccountId();
 
         Transaction toInsert = new Transaction(
