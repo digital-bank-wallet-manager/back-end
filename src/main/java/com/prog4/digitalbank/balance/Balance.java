@@ -14,4 +14,10 @@ public class Balance {
     private double amount;
     private Timestamp dateTime;
     private String accountId;
+
+    public Balance(Double amount , String accountId) {
+        this.accountId = accountId;
+        this.amount = amount;
+    }
+
 }
