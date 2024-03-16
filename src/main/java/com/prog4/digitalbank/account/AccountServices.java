@@ -16,6 +16,7 @@ public class AccountServices {
     private FindAll<Account> findAll;
     private Save<Account> save;
     private FindById<Account> findById;
+    private AccountRepository accountRepository;
     public List<Account> findAll (Class<Account> accountModelClass) throws SQLException {
         return findAll.findAll(accountModelClass);
     }
@@ -46,6 +47,22 @@ public class AccountServices {
 
     public Account findById (Class<Account> accountClass , String id){
         return findById.findById(accountClass , id);
+    }
+
+    public String giveAuthorization (String id ){
+        return accountRepository.updateAuthorization(
+                "account" ,
+                id ,
+                "loan_authorization",
+                true);
+    }
+
+    public String updateSalary (String id , Double salary){
+        return accountRepository.updateMonthlyPay(
+                "account",
+                id,
+                "monthly_pay",
+                salary);
     }
 
 }

@@ -26,4 +26,15 @@ public class AccountController {
     public Account findById (@PathVariable String id ){
         return accountServices.findById(Account.class , id);
     }
+
+    @PutMapping("/account/loan/{id}")
+    public String giveLoanAuthorization(@PathVariable String id){
+        return accountServices.giveAuthorization(id);
+    }
+
+    @PutMapping("/account/salary/{id}/{salary}")
+    public String updateSalary(@PathVariable String id , @PathVariable Double salary){
+        return accountServices.updateSalary(id , salary);
+    }
+
 }
