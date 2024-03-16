@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: digital bank wallet management API
   description: This is an api about a digital bank management.
-  version: 1.1.0
+  version: 1.2.0
 tags:
   - name: account
     description: Everything about account
@@ -47,7 +47,7 @@ paths:
       responses:
         200: 
           $ref: "#/components/responses/200"
-          description: return an array of accounts
+          description: return an account
           content:
             application/json:
               schema:
@@ -61,7 +61,8 @@ paths:
     put: 
       tags:
         - account
-      summary: Create or update an account 
+      summary: Create or update an account
+      operationdId: crupdateAccountById
       parameters:
         - $ref: "#/components/parameters/PathAccountId"
       requestBody: 
@@ -73,7 +74,7 @@ paths:
       responses:
         200: 
           $ref: "#/components/responses/200"
-          description: return an array of accounts
+          description: return the created or the updated account
           content:
             application/json:
               schema:
@@ -89,12 +90,13 @@ paths:
       tags:
         - balance
       summary: Get the last Balance of the account
+      operationId: getBalanceByAccountId
       parameters:
         - $ref: "#/components/parameters/PathAccountId"
       responses:
         200: 
           $ref: "#/components/responses/200"
-          description: return an array of accounts
+          description: return the last balance of the account
           content:
             application/json:
               schema:
@@ -105,17 +107,45 @@ paths:
           $ref: "#/components/responses/404"
         500: 
           $ref: "#/components/responses/500"
+    put:
+      tags:
+        - balance
+      summary: Update or create the balance of an account
+      operationId: crupdateBalanceByAccountId
+      parameters:
+        - $ref: "#/components/parameters/PathAccountId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CrupdateBalance"
+      responses:
+        200:
+          $ref: "#/components/responses/200"
+          description: return the created or updated balance with the account
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Balance"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
   /balance/loan/{accountId}:
     get: 
       tags:
         - loan 
       summary: List of the account, the loan amount,the loan interest and the loan evolution filtered by the first 7 days' interest and from the 8th day's interest
+      operationId: getLoanByAccountId
       parameters:
         - $ref: "#/components/parameters/PathAccountId"
       responses:
         200: 
           $ref: "#/components/responses/200"
-          description: return an array of accounts
+          description: return an array of loans with the linked account
           content:
             application/json:
               schema:
@@ -132,13 +162,14 @@ paths:
     get: 
       tags:
         - transaction
+      operationId: getTransactionByAccountId
       summary: List of all the transactions permformed by the account from the recent one to the older one
       parameters:
         - $ref: "#/components/parameters/PathAccountId"
       responses:
         200: 
           $ref: "#/components/responses/200"
-          description: return an array of accounts
+          description: return the list of the account's transactions
           content:
             application/json:
               schema:
@@ -156,13 +187,14 @@ paths:
       tags:
         - transfer 
       summary: List of all the transfers of an account
+      operationId: getTransaferByAccountId
       description: List of the sender account's transfers
       parameters:
         - $ref: "#/components/parameters/PathAccountId"
       responses:
         200: 
           $ref: "#/components/responses/200"
-          description: return an array of accounts
+          description: return a list of the sender's account's transfers
           content:
             application/json:
               schema:
@@ -206,8 +238,6 @@ components:
     CrupdateBalance: 
       type: object
       properties:
-        id:
-          type: string
         amount:
           type: number
           format: float
@@ -219,6 +249,8 @@ components:
         - $ref: "#/components/schemas/CrupdateBalance"
         - type: object
           properties:
+            id:
+              type: string
             account:
               $ref: "#/components/schemas/Account"
     Transfer:
