@@ -10,14 +10,13 @@ import java.sql.SQLException;
 @Configuration
 public class DBconfig {
     private String username;
-
     private String password;
     @Bean
     public Connection getConnection() throws SQLException {
         return DriverManager.getConnection(
                 "jdbc:postgresql://localhost:5432/bank_wallet",
-                username = "postgres",
-                password = "Sqlohyvqdiko"
+                username = System.getenv("DBuser"),
+                password = System.getenv("DBpassword")
         );
     }
 }

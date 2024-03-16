@@ -36,7 +36,7 @@ public class FindAll <T>{
         return entities;
     }
 
-    private T convertToList (ResultSet resultSet, Class<T> clazz ) throws NoSuchMethodException,
+    public T convertToList (ResultSet resultSet, Class<T> clazz ) throws NoSuchMethodException,
                                                                                     SQLException,
                                                                                     InvocationTargetException,
                                                                                     InstantiationException,
@@ -57,8 +57,4 @@ public class FindAll <T>{
         }
         return entity;
     }
-
-
-
-
 }
