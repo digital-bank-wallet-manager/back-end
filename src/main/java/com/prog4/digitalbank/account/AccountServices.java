@@ -46,7 +46,7 @@ public class AccountServices {
 
             Balance firstBalance = new Balance(0.0 ,id);
             Account saved =  save.insert(insert);
-            balanceServices.save(firstBalance);
+            balanceServices.saveBalance(firstBalance);
             return saved;
         }
 

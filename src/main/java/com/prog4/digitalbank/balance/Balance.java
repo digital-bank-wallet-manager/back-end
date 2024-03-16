@@ -19,4 +19,5 @@ public class Balance {
         this.accountId = accountId;
         this.amount = amount;
     }
+
 }
