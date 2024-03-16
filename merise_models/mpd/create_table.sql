@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS "balance"(
 CREATE TABLE IF NOT EXISTS "transaction"(
     id varchar(50) primary key, 
     amount double precision,
-    type varchar(50),
+    type varchar(50) CHECK (type ilike 'debit' OR type ilike 'credit'),
     date_time timestamp,
     account_id varchar(50) references "account"(id)
 );

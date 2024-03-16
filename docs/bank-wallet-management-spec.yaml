@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: digital bank wallet management API
   description: This is an api about a digital bank management.
-  version: 1.2.0
+  version: 1.2.2
 tags:
   - name: account
     description: Everything about account
@@ -12,6 +12,8 @@ tags:
     description: about loans
   - name: transaction
     description: about account transactions
+  - name: provisioning
+    description: account's provisioning
 paths:
   /accounts:
     get:
@@ -205,7 +207,31 @@ paths:
           $ref: "#/components/responses/400"
         404: 
           $ref: "#/components/responses/404"
-        500: 
+        500:
+          $ref: "#/components/responses/500"
+  /provisioning/account/{accountId}:
+    get:
+      tags:
+        - provisoning
+      summary: List of all the provisionings of the account
+      operationId: getProvisioningByAccountId
+      parameters:
+        - $ref: "#/components/parameters/PathAccountId"
+      responses:
+        200:
+          $ref: "#/components/responses/200"
+          description: return a list of all the account's provisionings filtered from the recent one to the older one
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Provisioning"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
           $ref: "#/components/responses/500"
 components:
   schemas:
@@ -327,13 +353,36 @@ components:
           type: number
           format: float
         type:
-          description: type of the transaction
+          description: type of the transaction (debit or credit)
           type: string
+          enum:
+            - debit
+            - credit
         dateTime:
           type: string
           format: date-time
         account:
           $ref: "#/components/schemas/Account"
+    Provisioning:
+      type: object
+      properties:
+        id:
+          type: string
+        amount:
+          type: number
+          format: float
+        reason:
+          type: string
+        effectiveDate:
+          type: string
+          format: date
+        recordDate:
+          type: string
+          format: date
+        account:
+          type: object
+          properties:
+            $ref: "#/components/schemas/Account"
     defaultResponse:
       type: object
       properties:
