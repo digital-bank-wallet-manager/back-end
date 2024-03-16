@@ -16,11 +16,11 @@ public class BalanceServices {
 
     public Balance save (Balance balance) throws SQLException {
         String id = IdGenerator.generateId(10);
-        Double amount = 0.0;
+        Double amount = balance.getAmount();
         Timestamp dateTime = Timestamp.valueOf(LocalDateTime.now());
         String accountId = balance.getAccountId();
 
-        Balance toSave = new Balance(id , amount , dateTime,accountId);
+        Balance toSave = new Balance(id ,amount ,dateTime,accountId);
         return save.insert(toSave);
     }
 }

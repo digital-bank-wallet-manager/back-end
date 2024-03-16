@@ -3,6 +3,8 @@ package com.prog4.digitalbank.account;
 import com.prog4.digitalbank.CrudOperations.FindAll;
 import com.prog4.digitalbank.CrudOperations.FindById;
 import com.prog4.digitalbank.CrudOperations.Save;
+import com.prog4.digitalbank.balance.Balance;
+import com.prog4.digitalbank.balance.BalanceServices;
 import com.prog4.digitalbank.idGenretor.IdGenerator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ public class AccountServices {
     private Save<Account> save;
     private FindById<Account> findById;
     private AccountRepository accountRepository;
+    private BalanceServices balanceServices;
     public List<Account> findAll (Class<Account> accountModelClass) throws SQLException {
         return findAll.findAll(accountModelClass);
     }
@@ -40,7 +43,11 @@ public class AccountServices {
                     authorization,
                     salary,
                     accountRef);
-            return save.insert(insert);
+
+            Balance firstBalance = new Balance(0.0 ,id);
+            Account saved =  save.insert(insert);
+            balanceServices.save(firstBalance);
+            return saved;
         }
 
     }
