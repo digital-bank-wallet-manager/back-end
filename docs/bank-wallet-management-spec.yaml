@@ -212,7 +212,7 @@ paths:
   /provisioning/account/{accountId}:
     get:
       tags:
-        - provisoning
+        - provisioning
       summary: List of all the provisionings of the account
       operationId: getProvisioningByAccountId
       parameters:
