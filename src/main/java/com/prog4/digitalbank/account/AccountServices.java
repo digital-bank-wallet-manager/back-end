@@ -1,6 +1,7 @@
 package com.prog4.digitalbank.account;
 
 import com.prog4.digitalbank.CrudOperations.FindAll;
+import com.prog4.digitalbank.CrudOperations.FindById;
 import com.prog4.digitalbank.CrudOperations.Save;
 import com.prog4.digitalbank.idGenretor.IdGenerator;
 import lombok.AllArgsConstructor;
@@ -14,6 +15,7 @@ import java.util.List;
 public class AccountServices {
     private FindAll<Account> findAll;
     private Save<Account> save;
+    private FindById<Account> findById;
     public List<Account> findAll (Class<Account> accountModelClass) throws SQLException {
         return findAll.findAll(accountModelClass);
     }
@@ -40,6 +42,10 @@ public class AccountServices {
             return save.insert(insert);
         }
 
+    }
+
+    public Account findById (Class<Account> accountClass , String id){
+        return findById.findById(accountClass , id);
     }
 
 }

@@ -21,4 +21,9 @@ public class AccountController {
         return accountServices.insert(account);
 
     }
+
+    @GetMapping ("/account/{id}")
+    public Account findById (@PathVariable String id ){
+        return accountServices.findById(Account.class , id);
+    }
 }
