@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: digital bank wallet management API
   description: This is an api about a digital bank management.
-  version: 1.2.0
+  version: 1.2.2
 tags:
   - name: account
     description: Everything about account
@@ -353,8 +353,11 @@ components:
           type: number
           format: float
         type:
-          description: type of the transaction
+          description: type of the transaction (debit or credit)
           type: string
+          enum:
+            - debit
+            - credit
         dateTime:
           type: string
           format: date-time
