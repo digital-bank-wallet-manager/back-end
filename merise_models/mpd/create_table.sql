@@ -55,3 +55,12 @@ CREATE TABLE IF NOT EXISTS "bank_loan"(
     account_id varchar(50) references "account"(id),
     loan_evolution_id varchar(50) references "loan_evolution"(id)
 );
+
+CREATE TABLE IF NOT EXISTS "provisioning"(
+    id varchar(50) primary key,
+    amount double precision,
+    reason text,
+    effective_date date,
+    record_date date,
+    account_id varchar(50) references "account"(id)
+);
