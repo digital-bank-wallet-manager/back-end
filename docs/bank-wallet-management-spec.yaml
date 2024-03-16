@@ -334,6 +334,26 @@ components:
           format: date-time
         account:
           $ref: "#/components/schemas/Account"
+    Provisioning:
+      type: object
+      properties:
+        id:
+          type: string
+        amount:
+          type: number
+          format: float
+        reason:
+          type: string
+        effectiveDate:
+          type: string
+          format: date
+        recordDate:
+          type: string
+          format: date
+        account:
+          type: object
+          properties:
+            $ref: "#/components/schemas/Account"
     defaultResponse:
       type: object
       properties:
