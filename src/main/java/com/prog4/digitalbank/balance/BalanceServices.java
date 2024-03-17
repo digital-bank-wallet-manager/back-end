@@ -29,6 +29,16 @@ public class BalanceServices {
         return save.insert(toSave);
     }
 
+    public Balance saveBalanceForSpecificTime (Balance balance) throws SQLException {
+        String id = IdGenerator.generateId(10);
+        Double amount = balance.getAmount();
+        Timestamp dateTime = balance.getDateTime();
+        String accountId = balance.getAccountId();
+
+        Balance toSave = new Balance(id ,amount ,dateTime,accountId);
+        return save.insert(toSave);
+    }
+
 
 
     public List<Balance> getLastBalanceById (String accountId){

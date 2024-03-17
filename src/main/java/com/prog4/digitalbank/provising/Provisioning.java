@@ -2,7 +2,9 @@ package com.prog4.digitalbank.provising;
 
 import lombok.*;
 
-import java.util.Date;
+import java.sql.Date;
+import java.sql.Timestamp;
+
 @AllArgsConstructor
 @Getter
 @Setter
