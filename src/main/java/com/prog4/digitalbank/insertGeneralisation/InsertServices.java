@@ -22,14 +22,27 @@ public class InsertServices {
     private BalanceServices balanceServices;
     private TransactionServices transactionServices;
     public void insertBalance (String accountId , Double amount , Date effective) throws SQLException {
-        List<Balance> lastBalance = balanceServices.getLastBalanceById(accountId);
+
+        Timestamp timestamp = DateToTimestamp(effective);
+        List<Balance> lastBalance = balanceServices.getLastBalanceById(accountId ,timestamp);
         Double amountOfBalance = lastBalance.get(0).getAmount();
         Double newBalanceAmount = amount + amountOfBalance;
-        Timestamp timestamp = DateToTimestamp(effective);
         Balance balanceToInsert = new Balance(newBalanceAmount ,timestamp , accountId);
         balanceServices.saveBalanceForSpecificTime(balanceToInsert);
     }
 
+    public void upDateAndInsertBalances (String accountId , Double amount , Date effective) throws SQLException {
+        Timestamp timestamp = DateToTimestamp(effective);
+        List<Balance> balances = balanceServices.getNotEffectiveBalance(accountId , timestamp);
+
+        if (!balances.isEmpty()){
+            insertBalance(accountId , amount , effective);
+            balanceServices.upDatebalances(accountId , timestamp , amount);
+        }else{
+            insertBalance(accountId , amount , effective);
+        }
+
+    }
     public void insertTransaction (String accountId , Double amount , Date date , String type) throws SQLException {
         Timestamp timestamp = DateToTimestamp(date);
         Transaction transaction = new Transaction(amount ,type , timestamp , accountId);

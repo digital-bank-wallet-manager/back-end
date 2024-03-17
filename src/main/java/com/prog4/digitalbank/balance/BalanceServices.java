@@ -41,8 +41,16 @@ public class BalanceServices {
 
 
 
-    public List<Balance> getLastBalanceById (String accountId){
-        return balanceRepository.getLastBalanceById(accountId);
+    public List<Balance> getLastBalanceById (String accountId , Timestamp referenceDate){
+        return balanceRepository.getLastBalanceById(accountId , referenceDate);
+    }
+
+    public List<Balance> getNotEffectiveBalance (String accountId , Timestamp referenceDate){
+        return balanceRepository.getNotEffectiveBalance(accountId , referenceDate);
+    }
+
+    public String upDatebalances (String accountId , Timestamp referenceDate , Double amount){
+        return balanceRepository.upDateBalances(accountId, referenceDate,amount);
     }
 
 }

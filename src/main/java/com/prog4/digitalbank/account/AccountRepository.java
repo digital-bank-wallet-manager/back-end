@@ -1,6 +1,6 @@
 package com.prog4.digitalbank.account;
 
-import com.prog4.digitalbank.balance.Balance;
+
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
