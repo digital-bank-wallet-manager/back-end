@@ -1,8 +1,8 @@
 package com.prog4.digitalbank.provising;
 
 import com.prog4.digitalbank.CrudOperations.Save;
-import com.prog4.digitalbank.idGenretor.IdGenerator;
 import com.prog4.digitalbank.insertGeneralisation.InsertServices;
+import com.prog4.digitalbank.methods.IdGenerators;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.autoconfigure.quartz.QuartzTransactionManager;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ public class ProvisingServices {
     private InsertServices insertServices;
     @QuartzTransactionManager
     public Provisioning saveProvising (Provisioning provisioning) throws SQLException {
-        String id = IdGenerator.generateId(12);
+        String id = IdGenerators.generateId(12);
         Double amount = provisioning.getAmount();
         String reason = provisioning.getReason();
         Date effective = provisioning.getEffectiveDate();

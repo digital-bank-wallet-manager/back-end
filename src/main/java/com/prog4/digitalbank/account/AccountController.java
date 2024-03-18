@@ -1,6 +1,5 @@
 package com.prog4.digitalbank.account;
 
-import com.prog4.digitalbank.idGenretor.IdGenerator;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

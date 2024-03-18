@@ -1,13 +1,9 @@
 package com.prog4.digitalbank.balance;
 
-import com.prog4.digitalbank.CrudOperations.FindAll;
 import com.prog4.digitalbank.CrudOperations.FindById;
 import com.prog4.digitalbank.CrudOperations.Save;
-import com.prog4.digitalbank.Services.Conversion;
-import com.prog4.digitalbank.account.AccountRepository;
-import com.prog4.digitalbank.idGenretor.IdGenerator;
-import com.prog4.digitalbank.insertGeneralisation.InsertServices;
-import com.prog4.digitalbank.transactions.TransactionServices;
+import com.prog4.digitalbank.methods.Conversion;
+import com.prog4.digitalbank.methods.IdGenerators;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +21,7 @@ public class BalanceServices {
     private FindById<Balance> findById;
 
     public Balance saveBalance (Balance balance) throws SQLException {
-        String id = IdGenerator.generateId(10);
+        String id = IdGenerators.generateId(10);
         Double amount = balance.getAmount();
         Timestamp dateTime = Timestamp.valueOf(LocalDateTime.now());
         String accountId = balance.getAccountId();
@@ -35,7 +31,7 @@ public class BalanceServices {
     }
 
     public Balance saveBalanceForSpecificTime (Balance balance) throws SQLException {
-        String id = IdGenerator.generateId(10);
+        String id = IdGenerators.generateId(10);
         Double amount = balance.getAmount();
         Timestamp dateTime = balance.getDateTime();
         String accountId = balance.getAccountId();

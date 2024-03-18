@@ -1,5 +1,6 @@
 package com.prog4.digitalbank.CrudOperations;
 
+import com.prog4.digitalbank.methods.Conversion;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +15,7 @@ public class Save<T> {
     private Connection connection;
 
     public T insert (T entity)throws SQLException {
-        String tableName = CamelCaseToSnakeCase
+        String tableName = Conversion
                 .convertToSnakeCase(entity.getClass()
                         .getSimpleName()
                         .toLowerCase());
@@ -25,7 +26,7 @@ public class Save<T> {
         Field[] fields = entity.getClass().getDeclaredFields();
         for (Field field : fields){
             field.setAccessible(true);
-            columns.append(CamelCaseToSnakeCase
+            columns.append(Conversion
                     .convertToSnakeCase(field.getName()))
                     .append(", ");
             values.append("?, ");

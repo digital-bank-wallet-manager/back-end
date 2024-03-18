@@ -1,17 +1,8 @@
-package com.prog4.digitalbank.idGenretor;
-
-import lombok.Setter;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
+package com.prog4.digitalbank.methods;
 
 import java.security.SecureRandom;
-import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Date;
 
-public class IdGenerator {
+public class IdGenerators {
     private static final String string= "abcdefghijklmnopqrstuvwxyz";
     private static final String number = "0123456789";
 
@@ -19,7 +10,7 @@ public class IdGenerator {
     private  static final String combine = string  + number;
     private static SecureRandom secureRandom = new SecureRandom();
 
-    public IdGenerator(SecureRandom secureRandom) {
+    public IdGenerators(SecureRandom secureRandom) {
         this.secureRandom = secureRandom;
     }
 
@@ -63,11 +54,4 @@ public class IdGenerator {
         String id= generalLoop(6);
         return ref+id;
     }
-
-
-
-
 }
-
-
-

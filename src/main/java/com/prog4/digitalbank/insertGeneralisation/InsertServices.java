@@ -1,7 +1,6 @@
 package com.prog4.digitalbank.insertGeneralisation;
 
-import com.prog4.digitalbank.CrudOperations.Save;
-import com.prog4.digitalbank.Services.Conversion;
+import com.prog4.digitalbank.methods.Conversion;
 import com.prog4.digitalbank.balance.Balance;
 import com.prog4.digitalbank.balance.BalanceServices;
 import com.prog4.digitalbank.transactions.Transaction;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Calendar;
 import java.util.List;
 
 @Service
