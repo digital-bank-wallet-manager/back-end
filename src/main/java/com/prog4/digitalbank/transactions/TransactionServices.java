@@ -48,6 +48,8 @@ public class TransactionServices {
                      bankLoanId,
                     null
             );
+            transactionSave.insert(toInsert);
+        }
         if (Objects.equals(action, "transfert")) {
             String transferId = transaction.getTransferId();
             toInsert = new Transaction(
@@ -60,7 +62,6 @@ public class TransactionServices {
                      null,
                      transferId);
             transactionSave.insert(toInsert);
-        }
         }
 
         return toInsert;

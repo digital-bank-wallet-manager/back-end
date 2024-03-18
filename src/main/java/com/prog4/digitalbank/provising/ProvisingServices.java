@@ -36,7 +36,7 @@ public class ProvisingServices {
 
         Provisioning insert = provisingSave.insert(provisioningToInsert);
         insertServices.upDateAndInsertBalances(accountId , amount , effective);
-        insertServices.insertTransaction(accountId , amount , effective , "credit" , id , "transfert");
+        insertServices.insertTransaction(accountId , amount , effective , "credit" , id , "loan");
         return insert;
     }
 }
