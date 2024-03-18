@@ -58,12 +58,13 @@ public class BalanceRepository {
         }
     }
 
-    public String upDateBalances (String accountId , Timestamp referenceDate , Double amount){
-        String sql = "update balance set amount = amount + ? where account_id = ? and date_time > ? ";
+    public String upDateBalances (String accountId , Timestamp referenceDate , Double amount , String transactionId){
+        String sql = "update balance set amount = amount + ? where account_id = ? and transaction_id != ? and date_time >= ? ";
         try(PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setDouble(1, amount);
             statement.setString(2, accountId);
-            statement.setTimestamp(3,referenceDate);
+            statement.setString(3,transactionId);
+            statement.setTimestamp(4,referenceDate);
             statement.executeUpdate();
             return "updated successfully";
         } catch (SQLException e) {
