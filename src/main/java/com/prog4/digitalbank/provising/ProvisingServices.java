@@ -4,6 +4,7 @@ import com.prog4.digitalbank.CrudOperations.Save;
 import com.prog4.digitalbank.idGenretor.IdGenerator;
 import com.prog4.digitalbank.insertGeneralisation.InsertServices;
 import lombok.AllArgsConstructor;
+import org.springframework.boot.autoconfigure.quartz.QuartzTransactionManager;
 import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -15,7 +16,7 @@ import java.time.LocalDate;
 public class ProvisingServices {
     private Save<Provisioning> provisingSave ;
     private InsertServices insertServices;
-
+    @QuartzTransactionManager
     public Provisioning saveProvising (Provisioning provisioning) throws SQLException {
         String id = IdGenerator.generateId(12);
         Double amount = provisioning.getAmount();
@@ -35,7 +36,7 @@ public class ProvisingServices {
 
         Provisioning insert = provisingSave.insert(provisioningToInsert);
         insertServices.upDateAndInsertBalances(accountId , amount , effective);
-        insertServices.insertTransaction(accountId , amount , effective , "credit");
+        insertServices.insertTransaction(accountId , amount , effective , "credit" , id , "transfert");
         return insert;
     }
 }
