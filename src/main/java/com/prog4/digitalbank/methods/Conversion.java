@@ -1,4 +1,4 @@
-package com.prog4.digitalbank.Services;
+package com.prog4.digitalbank.methods;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -14,5 +14,18 @@ public class Conversion {
         calendar.set(Calendar.MILLISECOND, 0);
         Timestamp timestamp = new Timestamp(calendar.getTimeInMillis());
         return timestamp;
+    }
+
+    public static String convertToSnakeCase(String string){
+        StringBuilder snakeCase = new StringBuilder();
+        for (int i = 0; i < string.length(); i++) {
+            char c = string.charAt(i);
+            if (Character.isUpperCase(c)) {
+                snakeCase.append('_').append(Character.toLowerCase(c));
+            } else {
+                snakeCase.append(c);
+            }
+        }
+        return snakeCase.toString();
     }
 }

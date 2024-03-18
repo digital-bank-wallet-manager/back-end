@@ -5,7 +5,8 @@ import com.prog4.digitalbank.CrudOperations.FindById;
 import com.prog4.digitalbank.CrudOperations.Save;
 import com.prog4.digitalbank.balance.Balance;
 import com.prog4.digitalbank.balance.BalanceServices;
-import com.prog4.digitalbank.idGenretor.IdGenerator;
+import com.prog4.digitalbank.methods.CheckAge;
+import com.prog4.digitalbank.methods.IdGenerators;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,13 +25,13 @@ public class AccountServices {
         return findAll.findAll(accountModelClass);
     }
     public Account insert (Account account) throws SQLException {
-        String id = IdGenerator.generateId(10);
+        String id = IdGenerators.generateId(10);
         String firstName = account.getFirstName();
         String lastName = account.getLastName();
         Date birthdate = account.getBirthdate();
         Boolean authorization = false ;
         Double salary = account.getMonthlyPay();
-        String accountRef = IdGenerator.generateAccountNumber();
+        String accountRef = IdGenerators.generateAccountNumber();
         if (CheckAge.calculateAge(birthdate) < 21){
             Account error = new Account("error: you must be up than 21 years old ");
             return error;

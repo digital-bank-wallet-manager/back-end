@@ -1,6 +1,6 @@
 package com.prog4.digitalbank.CrudOperations;
 
-import com.prog4.digitalbank.balance.Balance;
+import com.prog4.digitalbank.methods.Conversion;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -20,7 +20,7 @@ public class FindById<T> {
 
     public T findByIdOrderd(Class<T> clazz, String id , String order) {
         T entity = null;
-        String tableName = CamelCaseToSnakeCase
+        String tableName = Conversion
                 .convertToSnakeCase(clazz.getSimpleName().toLowerCase());
         String sql = "select * from " + tableName + " where id = ? "+order;
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -46,7 +46,7 @@ public class FindById<T> {
 
     public List<T> findByAccountId(Class<T> clazz, String id , String order) {
         List<T> entity = new ArrayList<>();
-        String tableName = CamelCaseToSnakeCase
+        String tableName = Conversion
                 .convertToSnakeCase(clazz.getSimpleName().toLowerCase());
         String sql = "select * from " + tableName + " where account_id = ? and date_time <= current_timestamp "+order;
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {

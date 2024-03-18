@@ -1,7 +1,7 @@
 package com.prog4.digitalbank.transactions;
 
 import com.prog4.digitalbank.CrudOperations.Save;
-import com.prog4.digitalbank.idGenretor.IdGenerator;
+import com.prog4.digitalbank.methods.IdGenerators;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ public class TransactionServices {
     private Save<Transaction> transactionSave;
     public String insertTransaction (Transaction transaction  , String action) throws SQLException {
 
-        String id = IdGenerator.generateTransactionRef();
+        String id = IdGenerators.generateTransactionRef();
         Double amount = transaction.getAmount();
         String type = transaction.getType();
         Timestamp dateTime = transaction.getDateTime();
