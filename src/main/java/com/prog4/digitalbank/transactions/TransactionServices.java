@@ -14,8 +14,8 @@ import java.util.Objects;
 @AllArgsConstructor
 public class TransactionServices {
     private Save<Transaction> transactionSave;
+    public String insertTransaction (Transaction transaction  , String action) throws SQLException {
 
-    public String insertTransaction (Transaction transaction  ,  String action) throws SQLException {
         String id = IdGenerator.generateTransactionRef();
         Double amount = transaction.getAmount();
         String type = transaction.getType();
@@ -23,30 +23,31 @@ public class TransactionServices {
         String accountId = transaction.getAccountId();
         Transaction toInsert = null;
 
-        if (Objects.equals(action, "provisioning")){
+        if (Objects.equals(action, "provisioning")) {
             String provisioningId = transaction.getProvisioningId();
-             toInsert = new Transaction(
-                     id,
-                     amount,
+            toInsert = new Transaction(
+                    id,
+                    amount,
                     type,
-                     dateTime,
-                     accountId,
-                     provisioningId,
-                     null,
-                     null);
+                    dateTime,
+                    accountId,
+                    provisioningId,
+                    null,
+                    null);
+
 
             transactionSave.insert(toInsert);
         }
         if (Objects.equals(action, "loan")) {
             String bankLoanId = transaction.getBankLoanId();
             toInsert = new Transaction(
-                     id,
-                     amount,
-                     type,
-                     dateTime,
-                     accountId,
+                    id,
+                    amount,
+                    type,
+                    dateTime,
+                    accountId,
                     null,
-                     bankLoanId,
+                    bankLoanId,
                     null
             );
             transactionSave.insert(toInsert);
@@ -60,8 +61,8 @@ public class TransactionServices {
                     dateTime,
                     accountId,
                     null,
-                     null,
-                     transferId);
+                    null,
+                    transferId);
             transactionSave.insert(toInsert);
         }
 

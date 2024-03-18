@@ -21,7 +21,9 @@ public class InsertServices {
     private BalanceServices balanceServices;
     private TransactionServices transactionServices;
 
-    public void insertBalance (String accountId , Double amount , Date effective , String transactionId) throws SQLException {
+
+    public void insertBalance (String accountId , Double amount , Date effective, String transactionId) throws SQLException {
+
         Timestamp timestamp = DateToTimestamp(effective);
         List<Balance> lastBalance = balanceServices.getLastBalanceById(accountId ,timestamp);
         Double amountOfBalance = lastBalance.get(0).getAmount();
@@ -42,20 +44,19 @@ public class InsertServices {
         }
 
     }
+
     public String insertTransaction (String accountId ,
-                                   Double amount ,
+                       Double amount ,
                                    Date date ,
                                    String type ,
                                    String actionId,
-                                   String action) throws SQLException
-    {
+                                   String action) throws SQLException {
 
         Timestamp timestamp = DateToTimestamp(date);
         Transaction transaction = new Transaction(amount ,type , timestamp , accountId , actionId ,actionId, actionId);
-           String id =  transactionServices.insertTransaction(transaction , action);
+        String id =  transactionServices.insertTransaction(transaction , action);
            return id;
     }
-
     private Timestamp DateToTimestamp (Date date){
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
