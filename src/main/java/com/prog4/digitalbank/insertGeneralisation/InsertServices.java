@@ -1,6 +1,7 @@
 package com.prog4.digitalbank.insertGeneralisation;
 
 import com.prog4.digitalbank.CrudOperations.Save;
+import com.prog4.digitalbank.Services.Conversion;
 import com.prog4.digitalbank.balance.Balance;
 import com.prog4.digitalbank.balance.BalanceServices;
 import com.prog4.digitalbank.transactions.Transaction;
@@ -24,7 +25,7 @@ public class InsertServices {
 
     public void insertBalance (String accountId , Double amount , Date effective, String transactionId) throws SQLException {
 
-        Timestamp timestamp = DateToTimestamp(effective);
+        Timestamp timestamp = Conversion.DateToTimestamp(effective);
         List<Balance> lastBalance = balanceServices.getLastBalanceById(accountId ,timestamp);
         Double amountOfBalance = lastBalance.get(0).getAmount();
         Double newBalanceAmount = amount + amountOfBalance;
@@ -33,7 +34,7 @@ public class InsertServices {
     }
 
     public void upDateAndInsertBalances (String accountId , Double amount , Date effective , String transactionId) throws SQLException {
-        Timestamp timestamp = DateToTimestamp(effective);
+        Timestamp timestamp = Conversion.DateToTimestamp(effective);
         List<Balance> balances = balanceServices.getNotEffectiveBalance(accountId , timestamp);
 
         if (!balances.isEmpty()){
@@ -52,19 +53,10 @@ public class InsertServices {
                                    String actionId,
                                    String action) throws SQLException {
 
-        Timestamp timestamp = DateToTimestamp(date);
+        Timestamp timestamp = Conversion.DateToTimestamp(date);
         Transaction transaction = new Transaction(amount ,type , timestamp , accountId , actionId ,actionId, actionId);
         String id =  transactionServices.insertTransaction(transaction , action);
            return id;
     }
-    private Timestamp DateToTimestamp (Date date){
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        Timestamp timestamp = new Timestamp(calendar.getTimeInMillis());
-        return timestamp;
-    }
+
 }
