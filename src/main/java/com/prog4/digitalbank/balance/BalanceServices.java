@@ -34,8 +34,9 @@ public class BalanceServices {
         Double amount = balance.getAmount();
         Timestamp dateTime = balance.getDateTime();
         String accountId = balance.getAccountId();
+        String transactionId = balance.getTransactionId();
 
-        Balance toSave = new Balance(id ,amount ,dateTime,accountId);
+        Balance toSave = new Balance(id ,amount ,dateTime,accountId , transactionId);
         return save.insert(toSave);
     }
 
@@ -49,8 +50,8 @@ public class BalanceServices {
         return balanceRepository.getNotEffectiveBalance(accountId , referenceDate);
     }
 
-    public String upDatebalances (String accountId , Timestamp referenceDate , Double amount){
-        return balanceRepository.upDateBalances(accountId, referenceDate,amount);
+    public String upDatebalances (String accountId , Timestamp referenceDate , Double amount , String transactionId){
+        return balanceRepository.upDateBalances(accountId, referenceDate,amount , transactionId);
     }
 
 }

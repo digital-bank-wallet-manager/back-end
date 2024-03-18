@@ -21,28 +21,28 @@ public class InsertServices {
     private BalanceServices balanceServices;
     private TransactionServices transactionServices;
 
-    public void insertBalance (String accountId , Double amount , Date effective) throws SQLException {
+    public void insertBalance (String accountId , Double amount , Date effective , String transactionId) throws SQLException {
         Timestamp timestamp = DateToTimestamp(effective);
         List<Balance> lastBalance = balanceServices.getLastBalanceById(accountId ,timestamp);
         Double amountOfBalance = lastBalance.get(0).getAmount();
         Double newBalanceAmount = amount + amountOfBalance;
-        Balance balanceToInsert = new Balance(newBalanceAmount ,timestamp , accountId);
+        Balance balanceToInsert = new Balance(newBalanceAmount ,timestamp , accountId , transactionId );
         balanceServices.saveBalanceForSpecificTime(balanceToInsert);
     }
 
-    public void upDateAndInsertBalances (String accountId , Double amount , Date effective) throws SQLException {
+    public void upDateAndInsertBalances (String accountId , Double amount , Date effective , String transactionId) throws SQLException {
         Timestamp timestamp = DateToTimestamp(effective);
         List<Balance> balances = balanceServices.getNotEffectiveBalance(accountId , timestamp);
 
         if (!balances.isEmpty()){
-            insertBalance(accountId , amount , effective);
-            balanceServices.upDatebalances(accountId , timestamp , amount);
+            insertBalance(accountId , amount , effective , transactionId);
+            balanceServices.upDatebalances(accountId , timestamp , amount , transactionId);
         }else{
-            insertBalance(accountId , amount , effective);
+            insertBalance(accountId , amount , effective , transactionId);
         }
 
     }
-    public void insertTransaction (String accountId ,
+    public String insertTransaction (String accountId ,
                                    Double amount ,
                                    Date date ,
                                    String type ,
@@ -52,7 +52,8 @@ public class InsertServices {
 
         Timestamp timestamp = DateToTimestamp(date);
         Transaction transaction = new Transaction(amount ,type , timestamp , accountId , actionId ,actionId, actionId);
-            transactionServices.insertTransaction(transaction , action);
+           String id =  transactionServices.insertTransaction(transaction , action);
+           return id;
     }
 
     private Timestamp DateToTimestamp (Date date){

@@ -15,7 +15,7 @@ import java.util.Objects;
 public class TransactionServices {
     private Save<Transaction> transactionSave;
 
-    public Transaction insertTransaction (Transaction transaction  ,  String action) throws SQLException {
+    public String insertTransaction (Transaction transaction  ,  String action) throws SQLException {
         String id = IdGenerator.generateTransactionRef();
         Double amount = transaction.getAmount();
         String type = transaction.getType();
@@ -34,6 +34,7 @@ public class TransactionServices {
                      provisioningId,
                      null,
                      null);
+
             transactionSave.insert(toInsert);
         }
         if (Objects.equals(action, "loan")) {
@@ -64,7 +65,7 @@ public class TransactionServices {
             transactionSave.insert(toInsert);
         }
 
-        return toInsert;
+        return id;
     }
 
 }
