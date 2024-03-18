@@ -14,6 +14,9 @@ public class Transaction {
     private String type;
     private Timestamp dateTime ;
     private String accountId;
+    private String provisioningId;
+    private String bankLoanId;
+    private String transferId;
 
     public Transaction(double amount, String type, Timestamp dateTime, String accountId) {
         this.amount = amount;
@@ -21,4 +24,27 @@ public class Transaction {
         this.dateTime = dateTime;
         this.accountId = accountId;
     }
+
+    public Transaction(double amount,
+                       String type,
+                       Timestamp dateTime,
+                       String accountId ,
+                       String provisioningId,
+                       String bankLoanId,
+                       String transferId) {
+        this(amount , type , dateTime , accountId);
+        this.provisioningId = provisioningId;
+        this.bankLoanId = bankLoanId;
+        this.transferId = transferId;
+    }
+
+
+
+
+
+
+
+
+
+
 }

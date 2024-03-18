@@ -18,11 +18,10 @@ import java.util.List;
 @AllArgsConstructor
 
 public class InsertServices {
-    private Save<Balance> balanceSave;
     private BalanceServices balanceServices;
     private TransactionServices transactionServices;
-    public void insertBalance (String accountId , Double amount , Date effective) throws SQLException {
 
+    public void insertBalance (String accountId , Double amount , Date effective) throws SQLException {
         Timestamp timestamp = DateToTimestamp(effective);
         List<Balance> lastBalance = balanceServices.getLastBalanceById(accountId ,timestamp);
         Double amountOfBalance = lastBalance.get(0).getAmount();
@@ -43,10 +42,17 @@ public class InsertServices {
         }
 
     }
-    public void insertTransaction (String accountId , Double amount , Date date , String type) throws SQLException {
+    public void insertTransaction (String accountId ,
+                                   Double amount ,
+                                   Date date ,
+                                   String type ,
+                                   String actionId,
+                                   String action) throws SQLException
+    {
+
         Timestamp timestamp = DateToTimestamp(date);
-        Transaction transaction = new Transaction(amount ,type , timestamp , accountId);
-        transactionServices.insertTransaction(transaction);
+        Transaction transaction = new Transaction(amount ,type , timestamp , accountId , actionId ,actionId, actionId);
+            transactionServices.insertTransaction(transaction , action);
     }
 
     private Timestamp DateToTimestamp (Date date){
