@@ -15,10 +15,12 @@ public class Save<T> {
     private Connection connection;
 
     public T insert (T entity)throws SQLException {
+
         String tableName = Conversion
-                .convertToSnakeCase(entity.getClass()
-                        .getSimpleName()
-                        .toLowerCase());
+                .convertToSnakeCase
+                        (Conversion
+                                .firstCharToLowercase(entity.getClass()
+                                .getSimpleName()));
 
         StringBuilder columns = new StringBuilder();
         StringBuilder values = new StringBuilder();
