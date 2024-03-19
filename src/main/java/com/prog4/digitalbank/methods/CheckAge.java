@@ -1,4 +1,4 @@
-package com.prog4.digitalbank.account;
+package com.prog4.digitalbank.methods;
 
 import java.time.LocalDate;
 import java.util.Date;

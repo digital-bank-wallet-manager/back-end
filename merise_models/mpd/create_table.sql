@@ -28,6 +28,8 @@ CREATE TABLE IF NOT EXISTS "transaction"(
     account_id varchar(50) references "account"(id)
 );
 
+
+
 CREATE TABLE IF NOT EXISTS "transfer"(
     id varchar(50) primary key,
     amount double precision,

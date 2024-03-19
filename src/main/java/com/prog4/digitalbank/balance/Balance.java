@@ -16,6 +16,7 @@ public class Balance {
     private double amount;
     private Timestamp dateTime;
     private String accountId;
+    private String transactionId;
 
     public Balance(Double amount , String accountId ) {
         this.accountId = accountId;
@@ -23,9 +24,22 @@ public class Balance {
 
     }
 
-    public Balance(double amount, Timestamp dateTime, String accountId) {
+    public Balance(String id) {
+        this.id = id;
+    }
+
+    public Balance(double amount, Timestamp dateTime, String accountId , String transactionId) {
         this.amount = amount;
         this.dateTime = dateTime;
         this.accountId = accountId;
+        this.transactionId = transactionId;
+    }
+
+    public Balance(String id, Double amount, Timestamp dateTime, String accountId) {
+        this.id = id;
+        this.amount = amount;
+        this.dateTime = dateTime;
+        this.accountId = accountId;
+
     }
 }

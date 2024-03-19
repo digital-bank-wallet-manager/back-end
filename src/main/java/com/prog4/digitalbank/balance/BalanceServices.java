@@ -1,26 +1,31 @@
 package com.prog4.digitalbank.balance;
 
-import com.prog4.digitalbank.CrudOperations.FindAll;
+import com.prog4.digitalbank.CrudOperations.FindById;
 import com.prog4.digitalbank.CrudOperations.Save;
-import com.prog4.digitalbank.account.AccountRepository;
-import com.prog4.digitalbank.idGenretor.IdGenerator;
+import com.prog4.digitalbank.methods.Conversion;
+import com.prog4.digitalbank.methods.IdGenerators;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+
+import static java.sql.Date.valueOf;
 
 @Service
 @AllArgsConstructor
 public class BalanceServices {
     private Save<Balance> save;
     private BalanceRepository balanceRepository;
-
+    private FindById<Balance> findById;
 
     public Balance saveBalance (Balance balance) throws SQLException {
-        String id = IdGenerator.generateId(10);
+        String id = IdGenerators.generateId(10);
         Double amount = balance.getAmount();
         Timestamp dateTime = Timestamp.valueOf(LocalDateTime.now());
         String accountId = balance.getAccountId();
@@ -30,12 +35,13 @@ public class BalanceServices {
     }
 
     public Balance saveBalanceForSpecificTime (Balance balance) throws SQLException {
-        String id = IdGenerator.generateId(10);
+        String id = IdGenerators.generateId(10);
         Double amount = balance.getAmount();
         Timestamp dateTime = balance.getDateTime();
         String accountId = balance.getAccountId();
+        String transactionId = balance.getTransactionId();
 
-        Balance toSave = new Balance(id ,amount ,dateTime,accountId);
+        Balance toSave = new Balance(id ,amount ,dateTime,accountId , transactionId);
         return save.insert(toSave);
     }
 
@@ -49,8 +55,30 @@ public class BalanceServices {
         return balanceRepository.getNotEffectiveBalance(accountId , referenceDate);
     }
 
-    public String upDatebalances (String accountId , Timestamp referenceDate , Double amount){
-        return balanceRepository.upDateBalances(accountId, referenceDate,amount);
+    public String upDatebalances (String accountId , Timestamp referenceDate , Double amount , String transactionId){
+        return balanceRepository.upDateBalances(accountId, referenceDate,amount , transactionId);
     }
+
+    public List<Balance> findByAccountIdAndPeriod (String accountId , Date dateStart , Date dateEnd){
+        List<Balance> error = new ArrayList<>();
+        if (dateStart.after(dateEnd)){
+            Balance balanceError = new Balance("invalid date");
+            error.add(balanceError);
+            return error;
+        }
+        if (dateEnd.after(valueOf(LocalDate.now()))){
+            error.add(new Balance("invalid date"));
+            return error;
+        }
+        Timestamp date1 = Conversion.DateToTimestamp(dateStart);
+        Timestamp date2 =Conversion.DateToTimestamp(dateEnd);
+        return balanceRepository.findBalancesByAccountIdAndPeriod(accountId , date1 , date2);
+    }
+
+    public List<Balance> findByAccountIdOrdered (Class<Balance> balanceClass ,String id ){
+        String order = "order by date_time asc";
+        return findById.findByAccountId(balanceClass ,id , order);
+    }
+
 
 }

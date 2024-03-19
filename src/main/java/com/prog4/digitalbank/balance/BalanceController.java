@@ -3,7 +3,9 @@ package com.prog4.digitalbank.balance;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.module.ModuleDescriptor;
 import java.security.PrivateKey;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -11,9 +13,16 @@ import java.util.List;
 @AllArgsConstructor
 public class BalanceController {
     private BalanceServices balanceServices;
-    @PostMapping("/balance/save")
-    public Balance save (@RequestBody Balance balance) throws SQLException {
-        return balanceServices.saveBalance(balance);
+    @GetMapping("/account/balance/{accountId}/{start}/{end}")
+    public List<Balance> save (@PathVariable(required = true) String accountId ,
+                         @PathVariable(required = true) Date start,
+                         @PathVariable(required = true) Date end) throws SQLException {
+        return balanceServices.findByAccountIdAndPeriod(accountId , start ,end);
+    }
+
+    @GetMapping("/account/balance/{accountId}")
+    public List<Balance> findByAccount(@PathVariable String accountId ){
+        return balanceServices.findByAccountIdOrdered(Balance.class , accountId);
     }
 
 }
