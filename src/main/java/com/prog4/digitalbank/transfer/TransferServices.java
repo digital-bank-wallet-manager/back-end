@@ -36,7 +36,7 @@ public class TransferServices {
         }
 
         public boolean checkConditions(String id , Double amount , Date effectiveDate ){
-            boolean check = false;
+            boolean check = true;
             double lastBalance =getBalance(  id );
             if (lastBalance >= amount){
                 if (effectiveDate != null){
@@ -89,8 +89,8 @@ public class TransferServices {
                 insertServices.upDateAndInsertBalances(senderId , -amountTransfer , effective , idTransaction);
                 return transfer;
             }else {
-                Transfer error = new Transfer("amount or date invalid " +
-                        "(please check your balance / the effective date must be at list 2 days after today");
+                Transfer error = new Transfer("amount or invalid date " +
+                        "(please check your balance , the effective date must be at list 2 days after today)");
                 return error;
             }
 
