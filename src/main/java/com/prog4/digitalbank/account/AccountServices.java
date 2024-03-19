@@ -73,4 +73,8 @@ public class AccountServices {
                 salary);
     }
 
+    public Account findByAccountRef (String accountRef , String firstName , String lastName){
+        return accountRepository.findByAccountRef(accountRef , firstName , lastName);
+    }
+
 }
