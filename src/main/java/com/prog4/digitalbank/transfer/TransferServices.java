@@ -11,15 +11,12 @@ import com.prog4.digitalbank.methods.CheckDateValidy;
 import com.prog4.digitalbank.methods.IdGenerators;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.PrimitiveIterator;
-
 import static java.sql.Date.valueOf;
 
 @Service
@@ -27,6 +24,7 @@ import static java.sql.Date.valueOf;
 public class TransferServices {
         private BalanceServices balanceServices;
         private AccountServices accountServices;
+
         private InsertServices insertServices;
         private Save<ForeignTransfer> foreignTransferSave;
         private Save<Transfer> transferSave;
@@ -50,6 +48,7 @@ public class TransferServices {
             return check;
         }
 
+
         public boolean conditionInside(String id , Double amount){
 
             boolean check = false;
@@ -61,6 +60,7 @@ public class TransferServices {
             }
             return check;
         }
+
 
         public Transfer transferOperationForeign(String senderId,
                                                  Double amount ,
@@ -109,7 +109,6 @@ public class TransferServices {
             }
 
         }
-
         public String getReceiverId (String accountRef , String firstName , String lastName){
             Account receiver = accountServices.findByAccountRef(accountRef ,firstName , lastName);
             return receiver.getId();
@@ -187,4 +186,5 @@ public class TransferServices {
                 return error;
             }
         }
+
 }

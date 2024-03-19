@@ -4,4 +4,8 @@ ALTER TABLE IF EXISTS "transaction"
     ADD COLUMN bank_loan_id varchar(50)
     REFERENCES "bank_loan"(id),
     ADD COLUMN transfer_id varchar(50)
-    REFERENCES "transfer"(id)
+    REFERENCES "transfer"(id);
+
+ALTER TABLE IF EXISTS "transaction"
+    ADD COLUMN expense_id varchar(50)
+    REFERENCES "expense"(id);
