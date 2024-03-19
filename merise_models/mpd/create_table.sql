@@ -66,3 +66,11 @@ CREATE TABLE IF NOT EXISTS "provisioning"(
     record_date date,
     account_id varchar(50) references "account"(id)
 );
+
+CREATE TYPE categories AS ENUM('food', 'housing', 'transportation', 'health', 'education', 'financial fees', 'saving', 'investment', 'other');
+
+CREATE TABLE IF NOT EXISTS "expense"(
+    id varchar(50) primary key,
+    category categories NOT NULL,
+    description text
+);
