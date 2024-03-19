@@ -10,8 +10,12 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+
+import static java.sql.Date.valueOf;
 
 @Service
 @AllArgsConstructor
@@ -56,6 +60,16 @@ public class BalanceServices {
     }
 
     public List<Balance> findByAccountIdAndPeriod (String accountId , Date dateStart , Date dateEnd){
+        List<Balance> error = new ArrayList<>();
+        if (dateStart.after(dateEnd)){
+            Balance balanceError = new Balance("invalid date");
+            error.add(balanceError);
+            return error;
+        }
+        if (dateEnd.after(valueOf(LocalDate.now()))){
+            error.add(new Balance("invalid date"));
+            return error;
+        }
         Timestamp date1 = Conversion.DateToTimestamp(dateStart);
         Timestamp date2 =Conversion.DateToTimestamp(dateEnd);
         return balanceRepository.findBalancesByAccountIdAndPeriod(accountId , date1 , date2);

@@ -15,7 +15,6 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-
 public class InsertServices {
     private BalanceServices balanceServices;
     private TransactionServices transactionServices;
