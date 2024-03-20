@@ -76,7 +76,7 @@ public class BalanceServices {
     }
 
     public List<Balance> findByAccountIdOrdered (Class<Balance> balanceClass ,String id ){
-        String order = "order by date_time asc";
+        String order = "order by date_time desc";
         return findById.findByAccountId(balanceClass ,id , order);
     }
 
