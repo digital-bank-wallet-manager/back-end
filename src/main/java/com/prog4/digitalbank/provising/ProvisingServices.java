@@ -16,7 +16,7 @@ import java.time.LocalDate;
 public class ProvisingServices {
     private Save<Provisioning> provisingSave ;
     private InsertServices insertServices;
-    @QuartzTransactionManager
+
     public Provisioning saveProvising (Provisioning provisioning) throws SQLException {
         String id = IdGenerators.generateId(12);
         Double amount = provisioning.getAmount();
@@ -37,7 +37,6 @@ public class ProvisingServices {
         Provisioning insert = provisingSave.insert(provisioningToInsert);
         String getTransactionId = insertServices.insertTransaction(accountId , amount , effective , "credit" , id , "provisioning");
         insertServices.upDateAndInsertBalances(accountId , amount , effective , getTransactionId);
-        insertServices.insertTransaction(accountId , amount , effective , "credit" , id , "provisioning");
         return insert;
     }
 }
