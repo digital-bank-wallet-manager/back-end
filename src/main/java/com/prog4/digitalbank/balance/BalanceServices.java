@@ -47,7 +47,7 @@ public class BalanceServices {
 
 
 
-    public List<Balance> getLastBalanceById (String accountId , Timestamp referenceDate){
+    public Balance getLastBalanceById (String accountId , Timestamp referenceDate){
         return balanceRepository.getLastBalanceById(accountId , referenceDate);
     }
 

@@ -8,12 +8,14 @@ public class Conversion {
     public static Timestamp DateToTimestamp (Date date){
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        Timestamp timestamp = new Timestamp(calendar.getTimeInMillis());
-        return timestamp;
+        int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        int currentMinute = Calendar.getInstance().get(Calendar.MINUTE);
+        int currentSecond = Calendar.getInstance().get(Calendar.SECOND);
+
+        calendar.set(Calendar.HOUR_OF_DAY , currentHour);
+        calendar.set(Calendar.MINUTE , currentMinute);
+        calendar.set(Calendar.SECOND , currentSecond);
+        return new Timestamp(calendar.getTimeInMillis());
     }
 
     public static String convertToSnakeCase(String string){

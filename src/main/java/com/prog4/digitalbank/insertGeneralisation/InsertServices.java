@@ -23,8 +23,8 @@ public class InsertServices {
     public void insertBalance (String accountId , Double amount , Date effective, String transactionId) throws SQLException {
 
         Timestamp timestamp = Conversion.DateToTimestamp(effective);
-        List<Balance> lastBalance = balanceServices.getLastBalanceById(accountId ,timestamp);
-        Double amountOfBalance = lastBalance.get(0).getAmount();
+        Balance balance = balanceServices.getLastBalanceById(accountId ,timestamp);
+        Double amountOfBalance = balance.getAmount();
         Double newBalanceAmount = amount + amountOfBalance;
         Balance balanceToInsert = new Balance(newBalanceAmount ,timestamp , accountId , transactionId );
         balanceServices.saveBalanceForSpecificTime(balanceToInsert);
@@ -44,7 +44,7 @@ public class InsertServices {
     }
 
     public String insertTransaction (String accountId ,
-                       Double amount ,
+                                   Double amount ,
                                    Date date ,
                                    String type ,
                                    String actionId,
