@@ -14,9 +14,9 @@ import java.util.List;
 public class BalanceRepository {
     private Connection connection;
 
-    public List<Balance> getLastBalanceById(String accountId , Timestamp referenceDate){
-        List<Balance> balances = new ArrayList<>();
-        String sql = "select * from balance where account_id = ? and date_time < ? order by date_time desc limit 1";
+    public Balance getLastBalanceById(String accountId , Timestamp referenceDate){
+        Balance balances = new Balance();
+        String sql = "select * from balance where account_id = ? and date_time <= ? order by date_time desc limit 1";
         try(PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1 , accountId);
             statement.setTimestamp(2,referenceDate);
@@ -27,7 +27,7 @@ public class BalanceRepository {
                 Double amount = resultSet.getDouble("amount");
                 Timestamp dateTime = resultSet.getTimestamp("date_time");
                 String accountId1 = resultSet.getString("account_id");
-                balances.add(new Balance(id , amount , dateTime , accountId1));
+                balances = new Balance(id , amount , dateTime , accountId1);
             }
 
             return balances;
@@ -39,7 +39,7 @@ public class BalanceRepository {
 
     public List<Balance> getNotEffectiveBalance(String accountId , Timestamp referenceDate){
         List<Balance> balances = new ArrayList<>();
-        String sql = "select * from balance where account_id = ? and date_time > ? ";
+        String sql = "select * from balance where account_id = ? and date_time >= ? ";
         try(PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1 , accountId);
             statement.setTimestamp(2,referenceDate);

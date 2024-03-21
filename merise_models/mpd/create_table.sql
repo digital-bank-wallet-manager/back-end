@@ -84,6 +84,7 @@ CREATE TABLE IF NOT EXISTS "expense"(
     id varchar(50) primary key,
     amount double precision,
     date_time timestamp,
+    pattern varchar(100),
     food_and_drinks food_and_drinks_cat,
     purchases_and_online_shops purchases_and_online_shops_cat,
     housing housing_cat,
