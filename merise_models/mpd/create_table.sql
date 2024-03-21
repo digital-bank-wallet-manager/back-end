@@ -67,10 +67,16 @@ CREATE TABLE IF NOT EXISTS "provisioning"(
     account_id varchar(50) references "account"(id)
 );
 
-CREATE TYPE categories AS ENUM('food', 'housing', 'transportation', 'health', 'education', 'financial fees', 'saving', 'investment', 'other');
+create table if not exists "expense_category"(
+        id serial primary key,
+        name varchar (50),
+        description text
+ );
 
-CREATE TABLE IF NOT EXISTS "expense"(
-    id varchar(50) primary key,
-    category categories NOT NULL,
-    description text
-);
+ CREATE TABLE IF NOT EXISTS "expense"(
+     id varchar(50) primary key,
+     expense_category_id int references "expense_category"(id),
+     amount double precision,
+     date_time timestamp,
+     pattern varchar (100)
+ );
