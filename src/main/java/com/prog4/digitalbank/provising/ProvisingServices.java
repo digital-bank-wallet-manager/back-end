@@ -4,8 +4,9 @@ import com.prog4.digitalbank.CrudOperations.Save;
 import com.prog4.digitalbank.insertGeneralisation.InsertServices;
 import com.prog4.digitalbank.methods.IdGenerators;
 import lombok.AllArgsConstructor;
-import org.springframework.boot.autoconfigure.quartz.QuartzTransactionManager;
 import org.springframework.stereotype.Service;
+
+
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
