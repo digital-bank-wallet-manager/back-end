@@ -35,9 +35,14 @@ public class ProvisingServices {
                 accountId
         );
 
-        Provisioning insert = provisingSave.insert(provisioningToInsert);
-        String getTransactionId = insertServices.insertTransaction(accountId , amount , effective , "credit" , id , "provisioning");
-        insertServices.upDateAndInsertBalances(accountId , amount , effective , getTransactionId);
-        return insert;
+        if(effective.before(Date.valueOf(LocalDate.now()))){
+             Provisioning error = new Provisioning("the effective date must be after today");
+             return error;
+        }else {
+            Provisioning insert = provisingSave.insert(provisioningToInsert);
+            String getTransactionId = insertServices.insertTransaction(accountId, amount, effective, "credit", id, "provisioning");
+            insertServices.upDateAndInsertBalances(accountId, amount, effective, getTransactionId);
+            return insert;
+        }
     }
 }
