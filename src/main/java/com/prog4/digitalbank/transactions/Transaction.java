@@ -33,19 +33,14 @@ public class Transaction {
                        String accountId ,
                        String provisioningId,
                        String bankLoanId,
-                       String transferId) {
+                       String transferId,
+                       String expenseId) {
         this(amount , type , dateTime , accountId);
         this.provisioningId = provisioningId;
         this.bankLoanId = bankLoanId;
         this.transferId = transferId;
+        this.expenseId = expenseId;
     }
-
-
-
-
-
-
-
 
 
 
