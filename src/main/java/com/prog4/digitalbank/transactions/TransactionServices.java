@@ -14,7 +14,7 @@ import java.util.Objects;
 @AllArgsConstructor
 public class TransactionServices {
     private Save<Transaction> transactionSave;
-    public String insertTransaction (Transaction transaction  , String action) throws SQLException {
+    public String insertTransaction (Transaction transaction  , String action , int subCategoryId) throws SQLException {
 
         String id = IdGenerators.generateTransactionRef();
         Double amount = transaction.getAmount();
@@ -22,6 +22,7 @@ public class TransactionServices {
         Timestamp dateTime = transaction.getDateTime();
         String accountId = transaction.getAccountId();
         Transaction toInsert = null;
+        int subCat = subCategoryId;
 
         if (Objects.equals(action, "provisioning")) {
             String provisioningId = transaction.getProvisioningId();
@@ -33,7 +34,10 @@ public class TransactionServices {
                     accountId,
                     provisioningId,
                     null,
-                    null);
+                    null,
+                    null,
+                    subCat
+                    );
 
 
             transactionSave.insert(toInsert);
@@ -48,7 +52,9 @@ public class TransactionServices {
                     accountId,
                     null,
                     bankLoanId,
-                    null
+                    null,
+                    null,
+                    subCat
             );
             transactionSave.insert(toInsert);
         }
@@ -62,7 +68,24 @@ public class TransactionServices {
                     accountId,
                     null,
                     null,
-                    transferId);
+                    transferId,
+                    null,
+                    subCat);
+            transactionSave.insert(toInsert);
+        }
+        if (Objects.equals(action, "expense")) {
+            String expenseId = transaction.getExpenseId();
+            toInsert = new Transaction(
+                    id,
+                    amount,
+                    type,
+                    dateTime,
+                    accountId,
+                    null,
+                    null,
+                    null,
+                    expenseId,
+                    subCat);
             transactionSave.insert(toInsert);
         }
 
