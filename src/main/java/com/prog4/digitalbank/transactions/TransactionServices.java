@@ -22,7 +22,6 @@ public class TransactionServices {
         Timestamp dateTime = transaction.getDateTime();
         String accountId = transaction.getAccountId();
         Transaction toInsert = null;
-        int subCat = subCategoryId;
 
         if (Objects.equals(action, "provisioning")) {
             String provisioningId = transaction.getProvisioningId();
@@ -36,7 +35,7 @@ public class TransactionServices {
                     null,
                     null,
                     null,
-                    subCat
+                    subCategoryId
                     );
 
 
@@ -54,7 +53,7 @@ public class TransactionServices {
                     bankLoanId,
                     null,
                     null,
-                    subCat
+                    subCategoryId
             );
             transactionSave.insert(toInsert);
         }
@@ -70,7 +69,7 @@ public class TransactionServices {
                     null,
                     transferId,
                     null,
-                    subCat);
+                    subCategoryId);
             transactionSave.insert(toInsert);
         }
         if (Objects.equals(action, "expense")) {
@@ -85,7 +84,7 @@ public class TransactionServices {
                     null,
                     null,
                     expenseId,
-                    subCat);
+                    subCategoryId);
             transactionSave.insert(toInsert);
         }
 
