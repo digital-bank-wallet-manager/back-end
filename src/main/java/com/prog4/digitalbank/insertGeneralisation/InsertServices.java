@@ -52,7 +52,7 @@ public class InsertServices {
                                      int subCategoryId) throws SQLException {
 
         Timestamp timestamp = Conversion.DateToTimestamp(date);
-        Transaction transaction = new Transaction(amount ,type , timestamp , accountId , actionId ,actionId, actionId);
+        Transaction transaction = new Transaction(amount ,type , timestamp , accountId , actionId ,actionId, actionId ,actionId);
         String id =  transactionServices.insertTransaction(transaction , action , subCategoryId);
            return id;
     }

@@ -82,6 +82,7 @@ CREATE TABLE IF NOT EXISTS "category"(
 CREATE TABLE IF NOT EXISTS "expense"(
     id varchar(50) primary key,
     amount double precision,
-    date_time timestamp
+    date_time timestamp,
+    account_id varchar (100) references "account"(id)
 
 );
