@@ -9,3 +9,4 @@ ALTER TABLE IF EXISTS "transaction"
 ALTER TABLE IF EXISTS "transaction"
     ADD COLUMN expense_id varchar(50)
     REFERENCES "expense"(id);
+

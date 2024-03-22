@@ -17,6 +17,8 @@ public class Transaction {
     private String provisioningId;
     private String bankLoanId;
     private String transferId;
+    private String expenseId;
+    private int subCategoryId;
 
     public Transaction(double amount, String type, Timestamp dateTime, String accountId) {
         this.amount = amount;

@@ -14,23 +14,27 @@ import java.sql.SQLException;
 public class TransferController {
     private TransferServices transferServices;
 
-    @PostMapping("/transfer/foreing/{accountRef}")
-    public Transfer foreignTransfer (@RequestBody Transfer transfer , @PathVariable String accountRef) throws SQLException {
+    @PostMapping("/transfer/foreing/{accountRef}/{subCategoryId}")
+    public Transfer foreignTransfer (@RequestBody Transfer transfer,
+                                     @PathVariable String accountRef ,
+                                     @PathVariable int subCategoryId) throws SQLException {
 
 
         return transferServices.transferOperationForeign(transfer.getSenderAccountId(),
                 transfer.getAmount(),
                 transfer.getEffectiveDate(),
                 transfer.getReason(),
-                accountRef);
+                accountRef,
+                subCategoryId);
     }
 
 
-    @PostMapping("/transfer/inside/{accountRef}/{firstName}/{lastName}")
+    @PostMapping("/transfer/inside/{accountRef}/{firstName}/{lastName}/{subCategoryId}")
     public Transfer insideTransfer (@RequestBody Transfer transfer,
                                     @PathVariable String accountRef,
                                     @PathVariable String firstName,
-                                    @PathVariable String lastName) throws SQLException {
-        return transferServices.transferInsideOperation(transfer ,accountRef , firstName , lastName);
+                                    @PathVariable String lastName,
+                                    @PathVariable int subCategoryId) throws SQLException {
+        return transferServices.transferInsideOperation(transfer ,accountRef , firstName , lastName , subCategoryId);
     }
 }
