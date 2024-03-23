@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS "loan_evolution"(
     id varchar(50) primary key,
     date_time timestamp,
     total_interest double precision,
-    rest double precision
+    rest double precision,
     id_loan varchar (50) references "bank_loan"(id)
 );
 
@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS "bank_loan"(
     amount double precision,
     loan_date date,
     interest double precision,
-    account_id varchar(50) references "account"(id),
+    account_id varchar(50) references "account"(id)
 );
 
 CREATE TABLE IF NOT EXISTS "provisioning"(
@@ -65,7 +65,6 @@ CREATE TABLE IF NOT EXISTS "provisioning"(
     reason text,
     effective_date date,
     record_date date,
-<<<<<<< HEAD
     account_id varchar(50) references "account"(id),
 );
 
@@ -78,7 +77,6 @@ CREATE TABLE IF NOT EXISTS "sub_category"(
 CREATE TABLE IF NOT EXISTS "category"(
     id serial primary key,
     name varchar(100),
-
     type varchar (50) check (type = 'credit' or type = 'debit')
 );
 
@@ -86,10 +84,6 @@ CREATE TABLE IF NOT EXISTS "expense"(
     id varchar(50) primary key,
     amount double precision,
     date_time timestamp,
-<<<<<<< HEAD
-    pattern varchar(100)
-=======
+    pattern varchar(100),
     account_id varchar (100) references "account"(id)
-
->>>>>>> 2f7e892e821d10e2af4ee567e52d9300db4b1092
 );
