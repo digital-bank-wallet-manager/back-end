@@ -82,7 +82,7 @@ public class LoanServices {
     }
 
     public List<BankLoan> findBankLoanByAccountId(String accountId){
-        return bankLoanFindById.findByAccountId(BankLoan.class,accountId,"order by laon_date desc limit 1");
+        return bankLoanFindById.findByAccountId(BankLoan.class,accountId,"order by loan_date desc limit 1","loan_date <= current_date");
     }
 
 

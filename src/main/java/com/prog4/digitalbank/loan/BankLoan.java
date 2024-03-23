@@ -8,6 +8,7 @@ import java.sql.Date;
 @Setter
 @ToString
 @EqualsAndHashCode
+@NoArgsConstructor
 public class BankLoan {
     private String id;
     private Double amount;

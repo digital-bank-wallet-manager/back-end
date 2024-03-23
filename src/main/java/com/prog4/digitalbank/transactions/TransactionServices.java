@@ -3,6 +3,7 @@ package com.prog4.digitalbank.transactions;
 import com.prog4.digitalbank.CrudOperations.Save;
 import com.prog4.digitalbank.methods.IdGenerators;
 import lombok.AllArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -14,6 +15,7 @@ import java.util.Objects;
 @AllArgsConstructor
 public class TransactionServices {
     private Save<Transaction> transactionSave;
+    private TransactionRepository transactionRepository;
     public String insertTransaction (Transaction transaction  , String action , int subCategoryId) throws SQLException {
 
         String id = IdGenerators.generateTransactionRef();
@@ -22,6 +24,12 @@ public class TransactionServices {
         Timestamp dateTime = transaction.getDateTime();
         String accountId = transaction.getAccountId();
         Transaction toInsert = null;
+        String status = null;
+        if (dateTime.after(Timestamp.valueOf(LocalDateTime.now()))){
+            status = "apending";
+        }else {
+            status = "done";
+        }
 
         if (Objects.equals(action, "provisioning")) {
             String provisioningId = transaction.getProvisioningId();
@@ -35,7 +43,8 @@ public class TransactionServices {
                     null,
                     null,
                     null,
-                    subCategoryId
+                    subCategoryId,
+                    status
                     );
 
 
@@ -53,7 +62,8 @@ public class TransactionServices {
                     bankLoanId,
                     null,
                     null,
-                    subCategoryId
+                    subCategoryId,
+                    status
             );
             transactionSave.insert(toInsert);
         }
@@ -69,7 +79,8 @@ public class TransactionServices {
                     null,
                     transferId,
                     null,
-                    subCategoryId);
+                    subCategoryId,
+                    status);
             transactionSave.insert(toInsert);
         }
         if (Objects.equals(action, "expense")) {
@@ -84,11 +95,16 @@ public class TransactionServices {
                     null,
                     null,
                     expenseId,
-                    subCategoryId);
+                    subCategoryId,
+                    status);
             transactionSave.insert(toInsert);
         }
 
         return id;
+    }
+    @Scheduled(fixedRate = 5000)
+    public void updateStatus() throws SQLException {
+        transactionRepository.updateStatus();
     }
 
 }
