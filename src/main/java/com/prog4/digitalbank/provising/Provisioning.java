@@ -17,4 +17,8 @@ public class Provisioning {
     private Date effectiveDate ;
     private Date recordDate ;
     private String accountId;
+
+    public Provisioning(String id) {
+        this.id = id;
+    }
 }
