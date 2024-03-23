@@ -177,7 +177,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Transactions"
+                  $ref: "#/components/schemas/Transaction"
         400: 
           $ref: "#/components/responses/400"
         404: 
@@ -363,6 +363,22 @@ components:
           format: date-time
         account:
           $ref: "#/components/schemas/Account"
+    SubCategory:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    Category:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        subCategory:
+          $ref: "#/components/schemas/SubCategory"
     Provisioning:
       type: object
       properties:
@@ -380,9 +396,9 @@ components:
           type: string
           format: date
         account:
-          type: object
-          properties:
-            $ref: "#/components/schemas/Account"
+          $ref: "#/components/schemas/Account"
+        category:
+          $ref: "#/components/schemas/Category"
     defaultResponse:
       type: object
       properties:
