@@ -25,7 +25,8 @@ CREATE TABLE IF NOT EXISTS "transaction"(
     amount double precision,
     type varchar(50) CHECK (type ilike 'debit' OR type ilike 'credit'),
     date_time timestamp,
-    account_id varchar(50) references "account"(id)
+    account_id varchar(50) references "account"(id),
+    sub_category_id varchar(50) references "sub_category"(idw)
 );
 
 
@@ -65,24 +66,22 @@ CREATE TABLE IF NOT EXISTS "provisioning"(
     effective_date date,
     record_date date,
     account_id varchar(50) references "account"(id),
-    category_id varchar(50) references "category"(id)
-);
-
-CREATE TABLE IF NOT EXISTS "sub_category"(
-    id varchar(50),
-    name varchar(100)
 );
 
 CREATE TABLE IF NOT EXISTS "category"(
     id varchar(50) primary key,
+    name varchar(100)
+);
+
+CREATE TABLE IF NOT EXISTS "sub_category"(
+    id varchar(50) primary key,
     name varchar(100),
-    sub_category_id varchar(100) REFERENCES "category"(id)
+    category_id varchar(100) REFERENCES "category"(id)
 );
 
 CREATE TABLE IF NOT EXISTS "expense"(
     id varchar(50) primary key,
     amount double precision,
     date_time timestamp,
-    pattern varchar(100),
-    category_id varchar(100)
+    pattern varchar(100)
 );
