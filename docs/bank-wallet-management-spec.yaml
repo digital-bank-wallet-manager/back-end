@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: digital bank wallet management API
   description: This is an api about a digital bank management.
-  version: 1.2.2
+  version: 2.0.0
 tags:
   - name: account
     description: Everything about account
@@ -261,7 +261,7 @@ components:
         accountRef:
           description: the account's number is unique
           type: string
-    CrupdateBalance: 
+    CrupdateBalance:
       type: object
       properties:
         amount:
@@ -298,9 +298,6 @@ components:
         effectiveDate:
           type: string
           format: date-time
-        recordDate:
-          type: string
-          format: date-time
         transferRef:
           type: string
         accountReceiver:
@@ -324,6 +321,8 @@ components:
         rest:
           type: number
           format: float
+        loanEvolution:
+          $ref: "#/components/schemas/BankLoan"
     BankLoan:
       description: loan accorded by the bank for each account
       type: object
@@ -342,8 +341,21 @@ components:
           format: float
         account:
           $ref: "#/components/schemas/Account"
-        loanEvolution:
-          $ref: "#/components/schemas/LoanEvolution"
+    Expense:
+      type: object
+      properties:
+        id:
+          type: string
+        amount:
+          type: number
+          format: float
+        dateTime:
+          type: string
+          format: datetime
+        pattern:
+          type: string
+        account:
+          $ref: "#/components/schemas/Account"
     Transaction:
       type: object
       properties:
@@ -363,22 +375,40 @@ components:
           format: date-time
         account:
           $ref: "#/components/schemas/Account"
+        provisioning:
+          $ref: "#/components/schemas/Provisioning"
+        bankLoan:
+          $ref: "#/components/schemas/BankLoan"
+        transfer:
+          $ref: "#/components/schemas/Transfer"
+        expense:
+          $ref: "#/components/schemas/Expense"
+        category:
+          $ref: "#/components/schemas/SubCategory"
     SubCategory:
       type: object
       properties:
         id:
-          type: string
+          type: integer
         name:
           type: string
+        category:
+          $ref: "#/components/schemas/Category"
     Category:
       type: object
       properties:
         id:
-          type: string
+          type: integer
         name:
           type: string
-        subCategory:
-          $ref: "#/components/schemas/SubCategory"
+    ForeignTransfer:
+      type: object
+      properties:
+        id:
+          type: string
+        accountRefForeign:
+          type: string
+          description: unique value
     Provisioning:
       type: object
       properties:
