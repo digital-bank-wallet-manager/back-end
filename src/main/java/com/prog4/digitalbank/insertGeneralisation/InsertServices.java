@@ -48,11 +48,12 @@ public class InsertServices {
                                    Date date ,
                                    String type ,
                                    String actionId,
-                                   String action) throws SQLException {
+                                   String action,
+                                     int subCategoryId) throws SQLException {
 
         Timestamp timestamp = Conversion.DateToTimestamp(date);
-        Transaction transaction = new Transaction(amount ,type , timestamp , accountId , actionId ,actionId, actionId);
-        String id =  transactionServices.insertTransaction(transaction , action);
+        Transaction transaction = new Transaction(amount ,type , timestamp , accountId , actionId ,actionId, actionId ,actionId);
+        String id =  transactionServices.insertTransaction(transaction , action , subCategoryId);
            return id;
     }
 

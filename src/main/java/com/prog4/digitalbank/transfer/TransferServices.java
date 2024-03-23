@@ -66,7 +66,8 @@ public class TransferServices {
                                                  Double amount ,
                                                  Date effectiveDate ,
                                                  String reason,
-                                                 String accountRef) throws SQLException {
+                                                 String accountRef,
+                                                 int subCategoryId) throws SQLException {
             if (checkConditions(senderId , amount , effectiveDate )){
                 String idForeign = IdGenerators.generateId(6);
                 String idTransfer = IdGenerators.generateId(10);
@@ -99,7 +100,9 @@ public class TransferServices {
                         effective ,
                         "debit",
                         idTransfer ,
-                        "transfert");
+                        "transfert",
+                        subCategoryId
+                        );
                 insertServices.upDateAndInsertBalances(senderId , -amountTransfer , effective , idTransaction);
                 return transfer;
             }else {
@@ -148,7 +151,11 @@ public class TransferServices {
             return transfer1;
         }
 
-        public Transfer transferInsideOperation (Transfer transfer , String accountRef , String firstName , String lastName) throws SQLException {
+        public Transfer transferInsideOperation (Transfer transfer,
+                                                 String accountRef ,
+                                                 String firstName ,
+                                                 String lastName,
+                                                 int subCategoryId) throws SQLException {
 
             if (checkExistance(accountRef , firstName , lastName)){
                 String receiverId = getReceiverId(accountRef , firstName , lastName);
@@ -160,7 +167,8 @@ public class TransferServices {
                            transferExecuted.getEffectiveDate(),
                            "debit",
                            transferExecuted.getId(),
-                           "transfert");
+                           "transfert",
+                           subCategoryId);
                    insertServices.upDateAndInsertBalances(transferExecuted.getSenderAccountId(),
                            -transferExecuted.getAmount(),
                            transferExecuted.getEffectiveDate(),
@@ -170,7 +178,8 @@ public class TransferServices {
                             transferExecuted.getEffectiveDate(),
                             "credit",
                             transferExecuted.getId(),
-                            "transfert");
+                            "transfert",
+                           subCategoryId);
                    insertServices.upDateAndInsertBalances(transferExecuted.getReceiverAccountId(),
                             transferExecuted.getAmount(),
                             transferExecuted.getEffectiveDate(),
