@@ -1,19 +1,17 @@
 package com.prog4.digitalbank.loan;
-
 import com.prog4.digitalbank.CrudOperations.FindById;
 import com.prog4.digitalbank.CrudOperations.Save;
 import com.prog4.digitalbank.account.Account;
 import com.prog4.digitalbank.account.AccountServices;
-import com.prog4.digitalbank.balance.BalanceServices;
 import com.prog4.digitalbank.insertGeneralisation.InsertServices;
 import com.prog4.digitalbank.methods.Conversion;
 import com.prog4.digitalbank.methods.IdGenerators;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -22,7 +20,8 @@ public class LoanServices {
     private Save<BankLoan> bankLoanSave;
     private AccountServices accountServices;
     private InsertServices insertServices;
-
+    private  LoanRepository loanRepository;
+    private FindById<BankLoan> bankLoanFindById;
     private BankLoan bankLoanSave (BankLoan bankLoan) throws SQLException {
         return bankLoanSave.insert(bankLoan);
     }
@@ -39,8 +38,16 @@ public class LoanServices {
         if (!auth){
             return false;
         }
-        return !(salary / 3 < amount);
+        if(salary < amount / 3){
+            return false;
+
+        }
+        if (findByAccountId(bankLoan.getAccountId()) != null){
+            return false;
+        }
+        return true;
     }
+
 
     public BankLoan loanOperation(BankLoan bankLoan) throws SQLException {
         if (checkEligility(bankLoan,Account.class)){
@@ -69,6 +76,15 @@ public class LoanServices {
         BankLoan error = new BankLoan("your are not allowed for this operation (check your loan authorization or your monthly pay is not enough)");
         return error;
     }
+
+    public LoanEvolution findByAccountId(String accountId){
+        return loanRepository.findByAccountId(accountId);
+    }
+
+    public List<BankLoan> findBankLoanByAccountId(String accountId){
+        return bankLoanFindById.findByAccountId(BankLoan.class,accountId,"order by laon_date desc limit 1");
+    }
+
 
 
 }

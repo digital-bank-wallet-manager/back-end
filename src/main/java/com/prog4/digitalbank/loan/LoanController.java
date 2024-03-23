@@ -2,9 +2,7 @@ package com.prog4.digitalbank.loan;
 
 import com.prog4.digitalbank.account.Account;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 
@@ -16,4 +14,5 @@ public class LoanController {
     public BankLoan bankLoan(@RequestBody BankLoan bankLoan) throws SQLException, IllegalAccessException {
         return loanServices.loanOperation(bankLoan);
     }
+
 }
