@@ -24,7 +24,6 @@ import static java.sql.Date.valueOf;
 public class TransferServices {
         private BalanceServices balanceServices;
         private AccountServices accountServices;
-
         private InsertServices insertServices;
         private Save<ForeignTransfer> foreignTransferSave;
         private Save<Transfer> transferSave;
@@ -95,7 +94,7 @@ public class TransferServices {
                         sender,
                         idForeign);
                 transferSave.insert(transfer);
-                String idTransaction = insertServices.insertTransaction(sender,
+                insertServices.insertTransaction(sender,
                         amountTransfer,
                         effective ,
                         "debit",
@@ -103,7 +102,6 @@ public class TransferServices {
                         "transfert",
                         subCategoryId
                         );
-                insertServices.upDateAndInsertBalances(senderId , -amountTransfer , effective , idTransaction);
                 return transfer;
             }else {
                 Transfer error = new Transfer("amount or invalid date " +
@@ -162,28 +160,21 @@ public class TransferServices {
                 if (conditionInside(transfer.getSenderAccountId() , transfer.getAmount())){
                    Transfer transferExecuted = composititon(transfer , receiverId );
                    transferSave.insert(transferExecuted);
-                   String senderTransactionId = insertServices.insertTransaction(transferExecuted.getSenderAccountId(),
+                   insertServices.insertTransaction(transferExecuted.getSenderAccountId(),
                            transferExecuted.getAmount(),
                            transferExecuted.getEffectiveDate(),
                            "debit",
                            transferExecuted.getId(),
                            "transfert",
                            subCategoryId);
-                   insertServices.upDateAndInsertBalances(transferExecuted.getSenderAccountId(),
-                           -transferExecuted.getAmount(),
-                           transferExecuted.getEffectiveDate(),
-                           senderTransactionId);
-                   String receiverTransactionId = insertServices.insertTransaction(transferExecuted.getReceiverAccountId(),
+
+                   insertServices.insertTransaction(transferExecuted.getReceiverAccountId(),
                             transferExecuted.getAmount(),
                             transferExecuted.getEffectiveDate(),
                             "credit",
                             transferExecuted.getId(),
                             "transfert",
                            subCategoryId);
-                   insertServices.upDateAndInsertBalances(transferExecuted.getReceiverAccountId(),
-                            transferExecuted.getAmount(),
-                            transferExecuted.getEffectiveDate(),
-                            receiverTransactionId);
                    return transferExecuted;
 
                 }else{

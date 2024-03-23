@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 @Setter
 @ToString
 @EqualsAndHashCode
+@NoArgsConstructor
 public class Transaction {
     private String id ;
     private double amount ;

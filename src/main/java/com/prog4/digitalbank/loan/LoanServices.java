@@ -63,14 +63,13 @@ public class LoanServices {
             String idEvolution = IdGenerators.generateId(12);
             LoanEvolution loanEvolution = new LoanEvolution(idEvolution,timestamp,0.0,amount,id);
             loanEvolutionSave.insert(loanEvolution);
-            String transactionId = insertServices.insertTransaction(accountId,
+            insertServices.insertTransaction(accountId,
                     amount,
                     date,
                     "credit",
                     id,
                     "loan",
                     29);
-            insertServices.upDateAndInsertBalances(accountId , amount,date,transactionId);
             return bankLoan1;
         }
         BankLoan error = new BankLoan("your are not allowed for this operation (check your loan authorization or your monthly pay is not enough)");
@@ -80,11 +79,7 @@ public class LoanServices {
     public LoanEvolution findByAccountId(String accountId){
         return loanRepository.findByAccountId(accountId);
     }
-
     public List<BankLoan> findBankLoanByAccountId(String accountId){
         return bankLoanFindById.findByAccountId(BankLoan.class,accountId,"order by loan_date desc limit 1","loan_date <= current_date");
     }
-
-
-
 }

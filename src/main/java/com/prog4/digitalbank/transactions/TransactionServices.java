@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -16,7 +17,7 @@ import java.util.Objects;
 public class TransactionServices {
     private Save<Transaction> transactionSave;
     private TransactionRepository transactionRepository;
-    public String insertTransaction (Transaction transaction  , String action , int subCategoryId) throws SQLException {
+    public void insertTransaction (Transaction transaction  , String action , int subCategoryId) throws SQLException {
 
         String id = IdGenerators.generateTransactionRef();
         Double amount = transaction.getAmount();
@@ -99,12 +100,14 @@ public class TransactionServices {
                     status);
             transactionSave.insert(toInsert);
         }
-
-        return id;
     }
     @Scheduled(fixedRate = 5000)
     public void updateStatus() throws SQLException {
         transactionRepository.updateStatus();
+    }
+
+    public List<Transaction> notAppliedTransaction(){
+        return transactionRepository.getNotAppliedTransaction();
     }
 
 }
