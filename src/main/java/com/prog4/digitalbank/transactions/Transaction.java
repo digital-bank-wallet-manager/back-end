@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 @Setter
 @ToString
 @EqualsAndHashCode
+@NoArgsConstructor
 public class Transaction {
     private String id ;
     private double amount ;
@@ -19,7 +20,7 @@ public class Transaction {
     private String transferId;
     private String expenseId;
     private int subCategoryId;
-
+    private String status;
     public Transaction(double amount, String type, Timestamp dateTime, String accountId) {
         this.amount = amount;
         this.type = type;

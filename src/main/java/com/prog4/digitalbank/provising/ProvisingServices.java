@@ -40,8 +40,8 @@ public class ProvisingServices {
              return error;
         }else {
             Provisioning insert = provisingSave.insert(provisioningToInsert);
-            String getTransactionId = insertServices.insertTransaction(accountId, amount, effective, "credit", id, "provisioning", subCategoryId);
-            insertServices.upDateAndInsertBalances(accountId, amount, effective, getTransactionId);
+             insertServices.insertTransaction(accountId, amount, effective, "credit", id, "provisioning", subCategoryId);
+            //insertServices.upDateAndInsertBalances(accountId, amount, effective, getTransactionId);
             return insert;
         }
     }
