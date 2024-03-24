@@ -7,6 +7,7 @@ import com.prog4.digitalbank.account.AccountServices;
 import com.prog4.digitalbank.balance.Balance;
 import com.prog4.digitalbank.balance.BalanceServices;
 import com.prog4.digitalbank.insertGeneralisation.InsertServices;
+import com.prog4.digitalbank.loan.LoanRepository;
 import com.prog4.digitalbank.methods.CheckDateValidy;
 import com.prog4.digitalbank.methods.IdGenerators;
 import lombok.AllArgsConstructor;
@@ -27,6 +28,7 @@ public class TransferServices {
         private InsertServices insertServices;
         private Save<ForeignTransfer> foreignTransferSave;
         private Save<Transfer> transferSave;
+        private LoanRepository loanRepository;
 
         public Double getBalance ( String id ){
             List<Balance> balances = balanceServices.findByAccountIdOrdered(Balance.class , id);
@@ -50,14 +52,14 @@ public class TransferServices {
 
         public boolean conditionInside(String id , Double amount){
 
-            boolean check = false;
             double lastBalance = getBalance(id);
-            if (lastBalance >= amount){
-                check = true;
-                }else {
-                check = false;
+            if (loanRepository.findByAccountId(id).size()>0){
+                return false;
             }
-            return check;
+            if (lastBalance < amount) {
+                return false;
+            }
+                return true;
         }
 
 
@@ -178,7 +180,7 @@ public class TransferServices {
                    return transferExecuted;
 
                 }else{
-                    Transfer error = new Transfer("you do not have the amount of "+transfer.getAmount()+" in your account please check your balance");
+                    Transfer error = new Transfer("operation denied / reason : unpaid laon or lack of balance");
                     return error;
                 }
             }else {

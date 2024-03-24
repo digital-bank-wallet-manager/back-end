@@ -1,58 +1,47 @@
 package com.prog4.digitalbank.loan;
-
-<<<<<<< HEAD
 import com.prog4.digitalbank.CrudOperations.FindAll;
-=======
->>>>>>> Prod
 import lombok.AllArgsConstructor;
-import org.postgresql.shaded.com.ongres.scram.common.ScramStringFormatting;
 import org.springframework.stereotype.Repository;
 
-<<<<<<< HEAD
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-=======
-import java.sql.*;
->>>>>>> Prod
+
 
 @AllArgsConstructor
 @Repository
 public class LoanRepository {
     private Connection connection;
-<<<<<<< HEAD
-    private FindAll<LoanEvolution> useConvertList;
-=======
->>>>>>> Prod
+    private FindAll<BankLoan> useConvertList;
 
-    public LoanEvolution findByAccountId (String accountId){
-        String sql = "select loan_evolution.id , loan_evolution.date_time ,\n" +
-                "loan_evolution.total_interest , loan_evolution.rest , loan_evolution.bank_loan_id \n" +
-                " from loan_evolution inner join bank_loan \n"+
-                "on loan_evolution.bank_loan_id = bank_loan.id \n" +
-                "where bank_loan.account_id = ? order by loan_evolution.date_time desc limit 1";
-        LoanEvolution loanEvolution = null;
+
+    public List<BankLoan> findByAccountId (String accountId){
+        String sql = "select * from bank_loan where account_id = ? and status = ?";
+        List<BankLoan> bankLoans = new ArrayList<>();
 
         try(PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1,accountId);
+            statement.setString(2,"unpaid");
             ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()){
-                String id = resultSet.getString("id");
-                Timestamp dateTime = resultSet.getTimestamp("date_time");
-                Double totalInterest = resultSet.getDouble("total_interest");
-                Double rest = resultSet.getDouble("rest");
-                String bankLoanId = resultSet.getString("bank_loan_id");
-                 loanEvolution = new LoanEvolution(id,dateTime,totalInterest,rest,bankLoanId);
-
+            while (resultSet.next()){
+                bankLoans.add(useConvertList.convertToList(resultSet , BankLoan.class));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
         }
-        return loanEvolution;
+        return bankLoans;
     }
 
-<<<<<<< HEAD
+
     public LoanEvolution getLastState(String bankLoanId){
         LoanEvolution loanEvolutions = null;
         String sql = "select * from loan_evolution where bank_loan_id = ? and date_time <= current_timestamp order by date_time desc limit 1";
@@ -83,21 +72,5 @@ public class LoanRepository {
         }
     }
 
-   /* public LoanEvolution getActualLoan (String accountId){
-        String sql = "SELECT COALESCE(CAST(rest AS DOUBLE PRECISION), 0) as tota ,\n " +
-                "" +
-                "FROM loan_evolution \n" +
-                "INNER JOIN bank_loan ON loan_evolution.bank_loan_id = bank_loan.id \n" +
-                "WHERE DATE_TRUNC('day', loan_evolution.date_time) <= CURRENT_DATE \n" +
-                "AND account_id =?;\n order by ";
-        try (PreparedStatement statement = connection.prepareStatement(sql)){
-            statement.setString(1,accountId);
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }*/
-=======
->>>>>>> Prod
 
 }

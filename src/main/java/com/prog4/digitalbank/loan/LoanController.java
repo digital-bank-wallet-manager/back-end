@@ -1,6 +1,6 @@
 package com.prog4.digitalbank.loan;
 
-import com.prog4.digitalbank.account.Account;
+
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,9 +19,4 @@ public class LoanController {
     public List<BankLoan> find (@PathVariable String accountId){
         return loanServices.findBankLoanByAccountId(accountId);
     }
-<<<<<<< HEAD
-
-
-=======
->>>>>>> Prod
 }

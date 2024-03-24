@@ -16,11 +16,8 @@ public class BankLoan {
     private Double interestAboveSevenDay;
     private String accountId;
     private Double interestSevenDay;
-<<<<<<< HEAD
     private String status;
-=======
 
->>>>>>> Prod
     public BankLoan(String id) {
         this.id = id;
     }
