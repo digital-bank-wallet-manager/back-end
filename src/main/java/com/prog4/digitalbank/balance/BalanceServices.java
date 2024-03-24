@@ -74,7 +74,7 @@ public class BalanceServices {
 
     public List<Balance> findByAccountIdOrdered (Class<Balance> balanceClass ,String id ){
         String order = "order by date_time desc";
-        String column = "date_time <= current_timestamp";
+        String column = "and date_time <= current_timestamp";
         return findById.findByAccountId(balanceClass ,id , order,column);
     }
 
@@ -101,8 +101,12 @@ public class BalanceServices {
     }
 
     public Balance actualBalance(String accountId){
-        return balanceRepository.findActualBalance(accountId).get(0);
+        return balanceRepository.findBalanceByDate(accountId , Date.valueOf(LocalDate.now())).get(0);
 
+    }
+
+    public Balance balanceForSpecificTime (String accountId , Date date){
+        return balanceRepository.findBalanceByDate(accountId , date).get(0);
     }
 
 
