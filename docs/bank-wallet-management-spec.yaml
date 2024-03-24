@@ -306,6 +306,33 @@ paths:
           $ref: "#/components/responses/404"
         500:
           $ref: "#/components/responses/500"
+  /provising/save/{subCategoryId}:
+    post:
+      tags:
+        - provisioning
+      summary: add a new provisioning
+      operationId: addProvisioning
+      parameters:
+        - $ref: "#/components/parameters/PathSubCategoryId"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Provisioning"
+      responses:
+        200:
+          $ref: "#/components/responses/200"
+          description: return the new provisioning
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Provisioning"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
   /category/{type}:
     get:
       tags:
@@ -655,6 +682,13 @@ components:
       required: true
       schema: 
         type: string
+    PathSubCategoryId:
+      in: path
+      name: subCategoryId
+      description: subcategory id in path
+      required: true
+      schema:
+        type: integer
   responses:
     "200":
       description: HTTP 200 (ok)
