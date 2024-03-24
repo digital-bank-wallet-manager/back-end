@@ -127,4 +127,16 @@ public class LoanServices {
         loanRepository.updateBankLoanStatus();
     }
 
+    public LoanEvolution actualLoan(String accountId){
+        LoanEvolution loanEvolution = null;
+        if (findByAccountId(accountId).size()>0){
+            String bankLoanId = findByAccountId(accountId).get(0).getId();
+            LoanEvolution loanEvolution1 = loanRepository.getLastState(bankLoanId);
+            loanEvolution = new LoanEvolution(loanEvolution1.getTotalInterest(),loanEvolution1.getRest());
+        }else {
+            loanEvolution = new LoanEvolution(0.0,0.0);
+        }
+        return loanEvolution;
+    }
+
 }

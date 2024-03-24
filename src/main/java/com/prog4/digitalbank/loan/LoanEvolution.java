@@ -16,4 +16,9 @@ public class LoanEvolution {
     private Double totalInterest;
     private Double rest;
     private String bankLoanId;
+
+    public LoanEvolution(double totalInterest, double rest) {
+        this.totalInterest = totalInterest;
+        this.rest = rest;
+    }
 }
