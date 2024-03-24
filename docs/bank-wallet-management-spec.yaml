@@ -14,6 +14,8 @@ tags:
     description: about account transactions
   - name: provisioning
     description: account's provisioning
+  - name: category
+    description: transaction's category
 paths:
   /accounts:
     get:
@@ -297,6 +299,35 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Provisioning"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+  /category/{type}:
+    get:
+      tags:
+        - category
+      summary: get category by transaction's type
+      operationId: getCategoryByType
+      parameters:
+        - name: type
+          in: path
+          description: the transation's type
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: "#/components/responses/200"
+          description: return a list of categories by transaction's type
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Category"
         400:
           $ref: "#/components/responses/400"
         404:
