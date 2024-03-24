@@ -38,13 +38,14 @@ public class TransferServices {
 
         public boolean checkConditions(String id , Double amount , Date effectiveDate ){
             boolean check = true;
-            double lastBalance = getBalance(id);
-            if (lastBalance >= amount){
-                if (effectiveDate != null){
-                    check = CheckDateValidy.checkDateValidity(effectiveDate , 2);
-                }
-            }else{
+            if (loanRepository.findByAccountId(id).size()>0){
                 check = false;
+            }
+            double lastBalance = getBalance(id);
+            if (lastBalance >= amount) {
+                if (effectiveDate != null) {
+                    check = CheckDateValidy.checkDateValidity(effectiveDate, 2);
+                }
             }
             return check;
         }
@@ -106,8 +107,7 @@ public class TransferServices {
                         );
                 return transfer;
             }else {
-                Transfer error = new Transfer("amount or invalid date " +
-                        "(please check your balance , the effective date must be at list 2 days after today)");
+                Transfer error = new Transfer("operation denied / reasons : lack of balance , unpaid loan , date unvalid[at least 48h after the sending date]");
                 return error;
             }
 

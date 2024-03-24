@@ -20,9 +20,7 @@ public class BalanceController {
         return balanceServices.findByAccountIdAndPeriod(accountId , start ,end);
     }
 
-    @GetMapping("/account/balance/{accountId}")
-    public Balance findByAccount(@PathVariable String accountId ){
-        return balanceServices.actualBalance(accountId);
-    }
+
+
 
 }
