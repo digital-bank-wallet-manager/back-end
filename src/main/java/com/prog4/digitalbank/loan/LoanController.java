@@ -19,4 +19,6 @@ public class LoanController {
     public List<BankLoan> find (@PathVariable String accountId){
         return loanServices.findBankLoanByAccountId(accountId);
     }
+
+
 }

@@ -22,7 +22,7 @@ public class AccountServices {
     private AccountRepository accountRepository;
     private BalanceServices balanceServices;
     public List<Account> findAll (Class<Account> accountModelClass) throws SQLException {
-        return findAll.findAll(accountModelClass);
+        return findAll.findAll(accountModelClass , "");
     }
     public Account insert (Account account) throws SQLException {
         String id = IdGenerators.generateId(10);
