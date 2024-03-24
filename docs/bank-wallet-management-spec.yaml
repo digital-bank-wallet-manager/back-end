@@ -368,7 +368,77 @@ paths:
           $ref: "#/components/responses/404"
         500:
           $ref: "#/components/responses/500"
-
+  /loan:
+    post:
+      tags:
+        - loan
+      summary: add a bank loan
+      operationId: addBaknLoan
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BankLoan"
+      responses:
+        200:
+          $ref: "#/components/responses/200"
+          description: the updated bank loan
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BankLoan"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+  /loan/{accountId}:
+    get:
+      tags:
+        - loan
+      summary: get a loan by the accountId
+      operationId: getLoanByAccountId
+      parameters:
+        - $ref: "#/components/parameters/PathAccountId"
+      responses:
+        200:
+          $ref: "#/components/responses/200"
+          description: the loan with the account
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BankLoan"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+  /loanHistory/{accountId}:
+    get:
+      tags:
+        - loan
+      summary: get list of loans of an account
+      operationId: getLoanHistory
+      parameters:
+        - $ref: "#/components/parameters/PathAccountId"
+      responses:
+        200:
+          $ref: "#/components/responses/200"
+          description: list of all loans of an account
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BankLoan"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
 components:
   schemas:
     CrupdateAccount:
