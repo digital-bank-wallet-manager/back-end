@@ -282,6 +282,73 @@ paths:
           $ref: "#/components/responses/404"
         500:
           $ref: "#/components/responses/500"
+  /transfer/foreign/{accoutRef}/{subCategoryId}:
+    post:
+      tags:
+        - transfer
+      summary: create a transfer to another bank
+      operationId: addForeignTransfer
+      parameters:
+        - $ref: "#/components/parameters/PathAccountRef"
+        - $ref: "#/components/parameters/PathSubCategoryId"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Transfer"
+        required: true
+      responses:
+        200:
+          $ref: "#/components/responses/200"
+          description: return a the new foreign transfer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transfer"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+  /transfer/inside/{accountRef}/{firstName}/{lastName}/{subCategory}:
+    post:
+      tags:
+        - transfer
+      summary: transfer inside the bank
+      operationId: addInsideTransfer
+      parameters:
+        - $ref: "#/components/parameters/PathAccountRef"
+        - name: firstName
+          in: path
+          description: first name of the destination account's owner
+          required: true
+          type: string
+        - name: lastName
+          in: path
+          description: last name of the destination accounr's owner
+          required: true
+          type: string
+        - $ref: "#/components/parameters/PathSubCategoryId"
+      requestBody:
+        content:
+          application.json:
+            schema:
+              $ref: "#/components/schemas/Transfer"
+      responses:
+        200:
+          $ref: "#/components/responses/200"
+          description: return a the new inside transfer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transfer"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
   /provisioning/account/{accountId}:
     get:
       tags:
@@ -689,6 +756,13 @@ components:
       required: true
       schema:
         type: integer
+    PathAccountRef:
+      in: path
+      name: accountRef
+      description: the account reference
+      required: true
+      schema:
+        type: string
   responses:
     "200":
       description: HTTP 200 (ok)
