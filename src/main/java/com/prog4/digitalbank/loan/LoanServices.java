@@ -114,10 +114,14 @@ public class LoanServices {
                loanEvolutionSave(save);
            }
        }
+
+
     }
 
-
-
+    @Scheduled(fixedRate = 5000)
+    public void updateStatusBankLoan(){
+        loanRepository.updateBankLoanStatus();
+    }
 
 
 }

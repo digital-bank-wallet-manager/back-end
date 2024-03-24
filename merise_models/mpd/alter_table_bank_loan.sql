@@ -1,0 +1,1 @@
+alter table bank_loan add column status varchar (10);

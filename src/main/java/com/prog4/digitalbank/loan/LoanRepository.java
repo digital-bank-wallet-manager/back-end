@@ -62,5 +62,29 @@ public class LoanRepository {
         return loanEvolutions;
     }
 
+    public void updateBankLoanStatus(){
+        String sql = "update bank_loan set status = 'paid' from loan_evolution \n" +
+                "where bank_loan.id = loan_evolution.bank_loan_id and loan_evolution.rest = 0";
+        try (PreparedStatement statement = connection.prepareStatement(sql)){
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+   /* public LoanEvolution getActualLoan (String accountId){
+        String sql = "SELECT COALESCE(CAST(rest AS DOUBLE PRECISION), 0) as tota ,\n " +
+                "" +
+                "FROM loan_evolution \n" +
+                "INNER JOIN bank_loan ON loan_evolution.bank_loan_id = bank_loan.id \n" +
+                "WHERE DATE_TRUNC('day', loan_evolution.date_time) <= CURRENT_DATE \n" +
+                "AND account_id =?;\n order by ";
+        try (PreparedStatement statement = connection.prepareStatement(sql)){
+            statement.setString(1,accountId);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }*/
 
 }
