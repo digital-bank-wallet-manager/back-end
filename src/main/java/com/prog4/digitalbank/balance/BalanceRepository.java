@@ -36,6 +36,8 @@ public class BalanceRepository {
             throw new RuntimeException(e);
         }
     }
+
+
     public List<Balance> findBalancesByAccountIdAndPeriod(String accountId , Timestamp timeStart , Timestamp timeEnd){
         String sql = "select * FROM balance where account_id = ? AND (date_time >= ? and date_time <= ?) order by date_time asc";
         List<Balance> balances = new ArrayList<>();
@@ -60,11 +62,12 @@ public class BalanceRepository {
         return balances;
     }
 
-    public List<Balance> findActualBalance(String accountId){
+    public List<Balance> findBalanceByDate(String accountId, Date date){
         List<Balance> balances = new ArrayList<>();
-        String Sql = "SELECT * FROM balance WHERE DATE_TRUNC('day',date_time) <= CURRENT_DATE and account_id = ? order by date_time desc limit 1";
+        String Sql = "SELECT * FROM balance WHERE DATE_TRUNC('day',date_time) <= ? and account_id = ? order by date_time desc limit 1";
         try(PreparedStatement statement = connection.prepareStatement(Sql)) {
-            statement.setString(1,accountId);
+            statement.setDate(1,date);
+            statement.setString(2,accountId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()){
                 balances.add(balanceFindAll.convertToList(resultSet , Balance.class));

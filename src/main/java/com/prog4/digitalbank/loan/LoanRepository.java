@@ -14,6 +14,7 @@ import java.util.List;
 public class LoanRepository {
     private Connection connection;
     private FindAll<BankLoan> useConvertList;
+    private FindAll<LoanEvolution> useToConvertList;
 
 
     public List<BankLoan> findByAccountId (String accountId){
@@ -72,6 +73,36 @@ public class LoanRepository {
         }
     }
 
+    public List<LoanEvolution> loanEvolutionsAtDate(String accountId , Date date){
+        List<LoanEvolution> loanEvolutions = new ArrayList<>();
+        String sql = "select loan_evolution.* from loan_evolution \n" +
+                "inner join bank_loan \n" +
+                "on loan_evolution.bank_loan_id = bank_loan.id \n" +
+                "where bank_loan.account_id = ? \n" +
+                "and DATE_TRUNC('day',loan_evolution.date_time) <= ? \n" +
+                "order by loan_evolution.date_time desc limit 1";
+
+        try(PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, accountId);
+            statement.setDate(2,date);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()){
+                loanEvolutions.add(useToConvertList.convertToList(resultSet , LoanEvolution.class));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+
+        return loanEvolutions;
+    }
 
 
 }

@@ -139,4 +139,41 @@ public class LoanServices {
         return loanEvolution;
     }
 
+    public LoanEvolution loanEvolutionByDate(String accountId , Date date) throws SQLException {
+        List<LoanEvolution> loanEvolutions =  loanRepository.loanEvolutionsAtDate(accountId , date);
+        LoanEvolution loanEvolution = null;
+        if (loanEvolutions.size()>0){
+            LoanEvolution loanEvolution1 = loanEvolutions.get(0);
+            Date date1 = new Date(loanEvolution1.getDateTime().getTime());
+            if (date1.before(date)){
+                Double rest = loanEvolution1.getRest();
+                if (rest == 0){
+                    loanEvolution = new LoanEvolution(0.0,0.0);
+                }
+                BankLoan bankLoan = bankLoanFindAll.findAll(BankLoan.class , "where account_id ="+accountId+" and status = 'unpaid").get(0);
+                Double initialAmount = bankLoan.getAmount();
+                Double interest1 = bankLoan.getInterestSevenDay();
+                Double interest2 = bankLoan.getInterestAboveSevenDay();
+
+                Double totalInterest = InterestCalcul.interest(
+                        loanEvolution1.getDateTime(),
+                        Conversion.DateToTimestamp(date),
+                        interest1,
+                        interest2,
+                        initialAmount
+                );
+
+                double rest1 = initialAmount + totalInterest;
+                loanEvolution = new LoanEvolution(totalInterest , rest1);
+            }
+            else {
+                loanEvolution = new LoanEvolution(loanEvolution1.getTotalInterest() , loanEvolution1.getRest());
+            }
+        }else {
+            loanEvolution = new LoanEvolution(0.0,0.0);
+        }
+
+        return loanEvolution;
+    }
+
 }

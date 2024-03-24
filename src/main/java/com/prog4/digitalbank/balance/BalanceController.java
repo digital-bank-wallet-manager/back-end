@@ -13,14 +13,4 @@ import java.util.List;
 @AllArgsConstructor
 public class BalanceController {
     private BalanceServices balanceServices;
-    @GetMapping("/account/balance/{accountId}/{start}/{end}")
-    public List<Balance> save (@PathVariable(required = true) String accountId ,
-                         @PathVariable(required = true) Date start,
-                         @PathVariable(required = true) Date end) throws SQLException {
-        return balanceServices.findByAccountIdAndPeriod(accountId , start ,end);
-    }
-
-
-
-
 }

@@ -101,8 +101,12 @@ public class BalanceServices {
     }
 
     public Balance actualBalance(String accountId){
-        return balanceRepository.findActualBalance(accountId).get(0);
+        return balanceRepository.findBalanceByDate(accountId , Date.valueOf(LocalDate.now())).get(0);
 
+    }
+
+    public Balance balanceForSpecificTime (String accountId , Date date){
+        return balanceRepository.findBalanceByDate(accountId , date).get(0);
     }
 
 
