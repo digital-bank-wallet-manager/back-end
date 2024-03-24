@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS "bank_loan"(
     amount double precision,
     loan_date date,
     interest double precision,
+    status varchar(10),
     account_id varchar(50) references "account"(id)
     );
 
