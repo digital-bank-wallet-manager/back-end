@@ -21,8 +21,8 @@ public class BalanceController {
     }
 
     @GetMapping("/account/balance/{accountId}")
-    public List<Balance> findByAccount(@PathVariable String accountId ){
-        return balanceServices.findByAccountIdOrdered(Balance.class , accountId);
+    public Balance findByAccount(@PathVariable String accountId ){
+        return balanceServices.actualBalance(accountId);
     }
 
 }

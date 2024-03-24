@@ -29,15 +29,8 @@ public class FindById<T> {
             if (resultSet.next()) {
                 entity = findAll.convertToList(resultSet, clazz);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
+        } catch (SQLException | InvocationTargetException | NoSuchMethodException | InstantiationException |
+                 IllegalAccessException e) {
             throw new RuntimeException(e);
         }
 

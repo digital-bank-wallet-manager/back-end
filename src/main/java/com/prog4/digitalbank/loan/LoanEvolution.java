@@ -8,6 +8,8 @@ import java.sql.Timestamp;
 @Setter
 @ToString
 @EqualsAndHashCode
+@NoArgsConstructor
+
 public class LoanEvolution {
     private String id ;
     private Timestamp dateTime;

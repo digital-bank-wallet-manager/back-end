@@ -1,4 +1,6 @@
 package com.prog4.digitalbank.loan;
+
+import com.prog4.digitalbank.CrudOperations.FindAll;
 import com.prog4.digitalbank.CrudOperations.FindById;
 import com.prog4.digitalbank.CrudOperations.Save;
 import com.prog4.digitalbank.account.Account;
@@ -6,11 +8,15 @@ import com.prog4.digitalbank.account.AccountServices;
 import com.prog4.digitalbank.insertGeneralisation.InsertServices;
 import com.prog4.digitalbank.methods.Conversion;
 import com.prog4.digitalbank.methods.IdGenerators;
+import com.prog4.digitalbank.methods.InterestCalcul;
 import lombok.AllArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -22,11 +28,15 @@ public class LoanServices {
     private InsertServices insertServices;
     private  LoanRepository loanRepository;
     private FindById<BankLoan> bankLoanFindById;
+    private FindAll<BankLoan> bankLoanFindAll;
     private BankLoan bankLoanSave (BankLoan bankLoan) throws SQLException {
         return bankLoanSave.insert(bankLoan);
     }
 
-    private LoanEvolution loanEvolution (LoanEvolution loanEvolution ) throws SQLException {
+
+
+    private LoanEvolution loanEvolutionSave (LoanEvolution loanEvolution ) throws SQLException {
+
         return loanEvolutionSave.insert(loanEvolution);
     }
 
@@ -42,7 +52,7 @@ public class LoanServices {
             return false;
 
         }
-        if (findByAccountId(bankLoan.getAccountId()) != null){
+        if (findByAccountId(bankLoan.getAccountId()).size() > 0){
             return false;
         }
         return true;
@@ -58,7 +68,7 @@ public class LoanServices {
             Double interest2 = bankLoan.getInterestAboveSevenDay();
             Date date = bankLoan.getLoanDate();
             Timestamp timestamp = Conversion.DateToTimestamp(date);
-            BankLoan bankLoan1 = new BankLoan(id,amount,date,interest1,accountId,interest2);
+            BankLoan bankLoan1 = new BankLoan(id,amount,date,interest1,accountId,interest2,"unpaid");
             bankLoanSave.insert(bankLoan1);
             String idEvolution = IdGenerators.generateId(12);
             LoanEvolution loanEvolution = new LoanEvolution(idEvolution,timestamp,0.0,amount,id);
@@ -76,10 +86,45 @@ public class LoanServices {
         return error;
     }
 
-    public LoanEvolution findByAccountId(String accountId){
+    public List<BankLoan> findByAccountId(String accountId){
         return loanRepository.findByAccountId(accountId);
     }
     public List<BankLoan> findBankLoanByAccountId(String accountId){
         return bankLoanFindById.findByAccountId(BankLoan.class,accountId,"order by loan_date desc limit 1","loan_date <= current_date");
     }
+
+    public List<BankLoan> findAll() throws SQLException {
+        return bankLoanFindAll.findAll(BankLoan.class , "where status = 'unpaid' ");
+
+    }
+    @Scheduled(fixedDelay = Long.MAX_VALUE)
+    public void addInterest() throws SQLException {
+       List<BankLoan> bankLoans = findAll();
+       for (BankLoan bankLoan : bankLoans){
+           LoanEvolution loanEvolution = loanRepository.getLastState(bankLoan.getId());
+           Double rest = loanEvolution.getRest();
+           Date date = new Date(loanEvolution.getDateTime().getTime());
+           if (rest != 0 && date.before(Date.valueOf(LocalDate.now()))){
+               String id = IdGenerators.generateId(12);
+               Timestamp dateTime = Timestamp.valueOf(LocalDateTime.now());
+               Timestamp startDate = Conversion.DateToTimestamp(bankLoan.getLoanDate());
+               Double totalInterest = InterestCalcul.interest(startDate,
+                       dateTime,bankLoan.getInterestSevenDay(),
+                       bankLoan.getInterestAboveSevenDay(),
+                       bankLoan.getAmount());
+               Double actualInterest = totalInterest - loanEvolution.getTotalInterest();
+               Double newRest = rest + actualInterest;
+               LoanEvolution save = new LoanEvolution(id , dateTime , totalInterest , newRest , bankLoan.getId());
+               loanEvolutionSave(save);
+           }
+       }
+
+
+    }
+
+    @Scheduled(fixedRate = 5000)
+    public void updateStatusBankLoan(){
+        loanRepository.updateBankLoanStatus();
+    }
+
 }

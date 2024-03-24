@@ -55,13 +55,6 @@ public class BalanceServices {
         return balanceRepository.getLastBalanceById(accountId , referenceDate);
     }
 
-    public List<Balance> getNotEffectiveBalance (String accountId , Timestamp referenceDate){
-        return balanceRepository.getNotEffectiveBalance(accountId , referenceDate);
-    }
-
-    public String upDatebalances (String accountId , Timestamp referenceDate , Double amount , String transactionId){
-        return balanceRepository.upDateBalances(accountId, referenceDate,amount , transactionId);
-    }
 
     public List<Balance> findByAccountIdAndPeriod (String accountId , Date dateStart , Date dateEnd){
         List<Balance> error = new ArrayList<>();
@@ -104,6 +97,12 @@ public class BalanceServices {
             saveBalanceForSpecificTime(toInsert);
         }
         return "inserted";
+
+    }
+
+    public Balance actualBalance(String accountId){
+        return balanceRepository.findActualBalance(accountId).get(0);
+
     }
 
 

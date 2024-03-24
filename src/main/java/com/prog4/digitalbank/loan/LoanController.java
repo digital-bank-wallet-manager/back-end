@@ -1,6 +1,6 @@
 package com.prog4.digitalbank.loan;
 
-import com.prog4.digitalbank.account.Account;
+
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
