@@ -90,7 +90,7 @@ public class LoanServices {
         return loanRepository.findByAccountId(accountId);
     }
     public List<BankLoan> findBankLoanByAccountId(String accountId){
-        return bankLoanFindById.findByAccountId(BankLoan.class,accountId,"order by loan_date desc limit 1","loan_date <= current_date");
+        return bankLoanFindById.findByAccountId(BankLoan.class,accountId,"order by loan_date desc limit 1","and loan_date <= current_date");
     }
 
     public List<BankLoan> findAll() throws SQLException {
@@ -163,7 +163,7 @@ public class LoanServices {
                         initialAmount
                 );
 
-                double rest1 = initialAmount + totalInterest;
+                double rest1 = totalInterest - loanEvolution1.getTotalInterest() + loanEvolution1.getRest();
                 loanEvolution = new LoanEvolution(totalInterest , rest1);
             }
             else {
@@ -174,6 +174,10 @@ public class LoanServices {
         }
 
         return loanEvolution;
+    }
+
+    public List<BankLoan> laonHistory (String accountId){
+        return bankLoanFindById.findByAccountId(BankLoan.class ,accountId ,"","");
     }
 
 }

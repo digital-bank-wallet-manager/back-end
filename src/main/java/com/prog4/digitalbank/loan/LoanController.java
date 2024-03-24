@@ -19,4 +19,10 @@ public class LoanController {
     public List<BankLoan> find (@PathVariable String accountId){
         return loanServices.findBankLoanByAccountId(accountId);
     }
+
+    @GetMapping("/loanHistory/{accountId}")
+    public List<BankLoan> loanHistory (@PathVariable String accountId){
+        return loanServices.laonHistory(accountId);
+
+    }
 }

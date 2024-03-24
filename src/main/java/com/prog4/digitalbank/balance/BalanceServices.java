@@ -74,7 +74,7 @@ public class BalanceServices {
 
     public List<Balance> findByAccountIdOrdered (Class<Balance> balanceClass ,String id ){
         String order = "order by date_time desc";
-        String column = "date_time <= current_timestamp";
+        String column = "and date_time <= current_timestamp";
         return findById.findByAccountId(balanceClass ,id , order,column);
     }
 

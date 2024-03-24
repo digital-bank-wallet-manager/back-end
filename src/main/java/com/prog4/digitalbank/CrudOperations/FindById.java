@@ -41,7 +41,7 @@ public class FindById<T> {
         List<T> entity = new ArrayList<>();
         String tableName = Conversion
                 .convertToSnakeCase(Conversion.firstCharToLowercase(clazz.getSimpleName()));
-        String sql = "select * from " + tableName + " where account_id = ? and "+columnDate+" "+order;
+        String sql = "select * from " + tableName + " where account_id = ? "+columnDate+" "+order;
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
