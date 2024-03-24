@@ -1,5 +1,6 @@
 package com.prog4.digitalbank.models;
 
+<<<<<<< HEAD
 import com.prog4.digitalbank.balance.Balance;
 import com.prog4.digitalbank.loan.LoanEvolution;
 import lombok.*;
@@ -14,4 +15,7 @@ public class BalanceModel {
     private Balance balance;
     private LoanEvolution loanEvolution;
 
+=======
+public class BalanceModel {
+>>>>>>> Prod
 }

@@ -1,20 +1,30 @@
 package com.prog4.digitalbank.loan;
 
+<<<<<<< HEAD
 import com.prog4.digitalbank.CrudOperations.FindAll;
+=======
+>>>>>>> Prod
 import lombok.AllArgsConstructor;
 import org.postgresql.shaded.com.ongres.scram.common.ScramStringFormatting;
 import org.springframework.stereotype.Repository;
 
+<<<<<<< HEAD
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+=======
+import java.sql.*;
+>>>>>>> Prod
 
 @AllArgsConstructor
 @Repository
 public class LoanRepository {
     private Connection connection;
+<<<<<<< HEAD
     private FindAll<LoanEvolution> useConvertList;
+=======
+>>>>>>> Prod
 
     public LoanEvolution findByAccountId (String accountId){
         String sql = "select loan_evolution.id , loan_evolution.date_time ,\n" +
@@ -42,6 +52,7 @@ public class LoanRepository {
         return loanEvolution;
     }
 
+<<<<<<< HEAD
     public LoanEvolution getLastState(String bankLoanId){
         LoanEvolution loanEvolutions = null;
         String sql = "select * from loan_evolution where bank_loan_id = ? and date_time <= current_timestamp order by date_time desc limit 1";
@@ -86,5 +97,7 @@ public class LoanRepository {
             throw new RuntimeException(e);
         }
     }*/
+=======
+>>>>>>> Prod
 
 }

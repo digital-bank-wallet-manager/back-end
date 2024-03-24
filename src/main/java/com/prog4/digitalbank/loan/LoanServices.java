@@ -1,5 +1,8 @@
 package com.prog4.digitalbank.loan;
+<<<<<<< HEAD
 import com.prog4.digitalbank.CrudOperations.FindAll;
+=======
+>>>>>>> Prod
 import com.prog4.digitalbank.CrudOperations.FindById;
 import com.prog4.digitalbank.CrudOperations.Save;
 import com.prog4.digitalbank.account.Account;
@@ -7,15 +10,22 @@ import com.prog4.digitalbank.account.AccountServices;
 import com.prog4.digitalbank.insertGeneralisation.InsertServices;
 import com.prog4.digitalbank.methods.Conversion;
 import com.prog4.digitalbank.methods.IdGenerators;
+<<<<<<< HEAD
 import com.prog4.digitalbank.methods.InterestCalcul;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
+=======
+import lombok.AllArgsConstructor;
+>>>>>>> Prod
 import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+<<<<<<< HEAD
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+=======
+>>>>>>> Prod
 import java.util.List;
 
 @Service
@@ -27,12 +37,19 @@ public class LoanServices {
     private InsertServices insertServices;
     private  LoanRepository loanRepository;
     private FindById<BankLoan> bankLoanFindById;
+<<<<<<< HEAD
     private FindAll<BankLoan> bankLoanFindAll;
+=======
+>>>>>>> Prod
     private BankLoan bankLoanSave (BankLoan bankLoan) throws SQLException {
         return bankLoanSave.insert(bankLoan);
     }
 
+<<<<<<< HEAD
     private LoanEvolution loanEvolutionSave (LoanEvolution loanEvolution ) throws SQLException {
+=======
+    private LoanEvolution loanEvolution (LoanEvolution loanEvolution ) throws SQLException {
+>>>>>>> Prod
         return loanEvolutionSave.insert(loanEvolution);
     }
 
@@ -64,7 +81,11 @@ public class LoanServices {
             Double interest2 = bankLoan.getInterestAboveSevenDay();
             Date date = bankLoan.getLoanDate();
             Timestamp timestamp = Conversion.DateToTimestamp(date);
+<<<<<<< HEAD
             BankLoan bankLoan1 = new BankLoan(id,amount,date,interest1,accountId,interest2,"unpaid");
+=======
+            BankLoan bankLoan1 = new BankLoan(id,amount,date,interest1,accountId,interest2);
+>>>>>>> Prod
             bankLoanSave.insert(bankLoan1);
             String idEvolution = IdGenerators.generateId(12);
             LoanEvolution loanEvolution = new LoanEvolution(idEvolution,timestamp,0.0,amount,id);
@@ -88,6 +109,7 @@ public class LoanServices {
     public List<BankLoan> findBankLoanByAccountId(String accountId){
         return bankLoanFindById.findByAccountId(BankLoan.class,accountId,"order by loan_date desc limit 1","loan_date <= current_date");
     }
+<<<<<<< HEAD
 
     public List<BankLoan> findAll() throws SQLException {
         return bankLoanFindAll.findAll(BankLoan.class , "where status = 'unpaid' ");
@@ -124,4 +146,6 @@ public class LoanServices {
     }
 
 
+=======
+>>>>>>> Prod
 }

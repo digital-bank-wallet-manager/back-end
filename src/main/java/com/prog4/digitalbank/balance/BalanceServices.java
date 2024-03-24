@@ -97,10 +97,12 @@ public class BalanceServices {
             saveBalanceForSpecificTime(toInsert);
         }
         return "inserted";
+
     }
 
     public Balance actualBalance(String accountId){
         return balanceRepository.findActualBalance(accountId).get(0);
+
     }
 
 
