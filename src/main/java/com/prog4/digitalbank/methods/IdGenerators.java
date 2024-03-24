@@ -1,5 +1,7 @@
 package com.prog4.digitalbank.methods;
 
+import org.springframework.scheduling.annotation.Scheduled;
+
 import java.security.SecureRandom;
 
 public class IdGenerators {
@@ -54,4 +56,5 @@ public class IdGenerators {
         String id= generalLoop(6);
         return ref+id;
     }
+
 }

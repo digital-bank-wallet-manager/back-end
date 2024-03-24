@@ -44,17 +44,13 @@ public class ExpenseServices {
             String accountId = expense.getAccountId();
             Expense expense1 = new Expense(id , amount , dateTime , accountId);
             saveExpense(expense1);
-            String transactionId = insertServices.insertTransaction(accountId,
+            insertServices.insertTransaction(accountId,
                     amount,
                     Date.valueOf(LocalDate.now()),
                     "debit",
                     id,
                     "expense",
                     subCategoryId);
-            insertServices.upDateAndInsertBalances(accountId,
-                    - amount ,
-                    Date.valueOf(LocalDate.now()),
-                    transactionId );
             return expense1;
         }else {
             Expense error = new Expense("you actual balance is not enough for this operation");

@@ -3,18 +3,21 @@ package com.prog4.digitalbank.transactions;
 import com.prog4.digitalbank.CrudOperations.Save;
 import com.prog4.digitalbank.methods.IdGenerators;
 import lombok.AllArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Service
 @AllArgsConstructor
 public class TransactionServices {
     private Save<Transaction> transactionSave;
-    public String insertTransaction (Transaction transaction  , String action , int subCategoryId) throws SQLException {
+    private TransactionRepository transactionRepository;
+    public void insertTransaction (Transaction transaction  , String action , int subCategoryId) throws SQLException {
 
         String id = IdGenerators.generateTransactionRef();
         Double amount = transaction.getAmount();
@@ -22,7 +25,12 @@ public class TransactionServices {
         Timestamp dateTime = transaction.getDateTime();
         String accountId = transaction.getAccountId();
         Transaction toInsert = null;
-        int subCat = subCategoryId;
+        String status = null;
+        if (dateTime.after(Timestamp.valueOf(LocalDateTime.now()))){
+            status = "apending";
+        }else {
+            status = "done";
+        }
 
         if (Objects.equals(action, "provisioning")) {
             String provisioningId = transaction.getProvisioningId();
@@ -36,7 +44,8 @@ public class TransactionServices {
                     null,
                     null,
                     null,
-                    subCat
+                    subCategoryId,
+                    status
                     );
 
 
@@ -54,7 +63,8 @@ public class TransactionServices {
                     bankLoanId,
                     null,
                     null,
-                    subCat
+                    subCategoryId,
+                    status
             );
             transactionSave.insert(toInsert);
         }
@@ -70,7 +80,8 @@ public class TransactionServices {
                     null,
                     transferId,
                     null,
-                    subCat);
+                    subCategoryId,
+                    status);
             transactionSave.insert(toInsert);
         }
         if (Objects.equals(action, "expense")) {
@@ -85,11 +96,18 @@ public class TransactionServices {
                     null,
                     null,
                     expenseId,
-                    subCat);
+                    subCategoryId,
+                    status);
             transactionSave.insert(toInsert);
         }
+    }
+    @Scheduled(fixedRate = 5000)
+    public void updateStatus() throws SQLException {
+        transactionRepository.updateStatus();
+    }
 
-        return id;
+    public List<Transaction> notAppliedTransaction(){
+        return transactionRepository.getNotAppliedTransaction();
     }
 
 }

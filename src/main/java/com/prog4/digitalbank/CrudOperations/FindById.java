@@ -29,41 +29,27 @@ public class FindById<T> {
             if (resultSet.next()) {
                 entity = findAll.convertToList(resultSet, clazz);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
+        } catch (SQLException | InvocationTargetException | NoSuchMethodException | InstantiationException |
+                 IllegalAccessException e) {
             throw new RuntimeException(e);
         }
 
         return entity;
     }
 
-    public List<T> findByAccountId(Class<T> clazz, String id , String order) {
+    public List<T> findByAccountId(Class<T> clazz, String id , String order , String columnDate) {
         List<T> entity = new ArrayList<>();
         String tableName = Conversion
-                .convertToSnakeCase(clazz.getSimpleName().toLowerCase());
-        String sql = "select * from " + tableName + " where account_id = ? and date_time <= current_timestamp "+order;
+                .convertToSnakeCase(Conversion.firstCharToLowercase(clazz.getSimpleName()));
+        String sql = "select * from " + tableName + " where account_id = ? "+columnDate+" "+order;
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 entity.add(findAll.convertToList(resultSet , clazz));
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
+        } catch (SQLException | InvocationTargetException | NoSuchMethodException | InstantiationException |
+                 IllegalAccessException e) {
             throw new RuntimeException(e);
         }
 

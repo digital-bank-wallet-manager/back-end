@@ -17,10 +17,10 @@ import java.util.List;
 public class FindAll <T>{
     private Connection connection;
 
-    public List<T> findAll(Class<T> clazz) throws SQLException {
+    public List<T> findAll(Class<T> clazz,String where) throws SQLException {
         List<T> entities = new ArrayList<>();
-        String tableName = Conversion.convertToSnakeCase(clazz.getSimpleName().toLowerCase());
-        String sql = "select * from "+tableName;
+        String tableName = Conversion.convertToSnakeCase(Conversion.firstCharToLowercase(clazz.getSimpleName()));
+        String sql = "select * from "+tableName+" "+where;
 
         try(PreparedStatement statement = connection.prepareStatement(sql)){
             ResultSet resultSet = statement.executeQuery();

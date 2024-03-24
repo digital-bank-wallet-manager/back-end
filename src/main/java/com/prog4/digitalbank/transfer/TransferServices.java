@@ -7,6 +7,7 @@ import com.prog4.digitalbank.account.AccountServices;
 import com.prog4.digitalbank.balance.Balance;
 import com.prog4.digitalbank.balance.BalanceServices;
 import com.prog4.digitalbank.insertGeneralisation.InsertServices;
+import com.prog4.digitalbank.loan.LoanRepository;
 import com.prog4.digitalbank.methods.CheckDateValidy;
 import com.prog4.digitalbank.methods.IdGenerators;
 import lombok.AllArgsConstructor;
@@ -24,10 +25,10 @@ import static java.sql.Date.valueOf;
 public class TransferServices {
         private BalanceServices balanceServices;
         private AccountServices accountServices;
-
         private InsertServices insertServices;
         private Save<ForeignTransfer> foreignTransferSave;
         private Save<Transfer> transferSave;
+        private LoanRepository loanRepository;
 
         public Double getBalance ( String id ){
             List<Balance> balances = balanceServices.findByAccountIdOrdered(Balance.class , id);
@@ -37,13 +38,14 @@ public class TransferServices {
 
         public boolean checkConditions(String id , Double amount , Date effectiveDate ){
             boolean check = true;
-            double lastBalance = getBalance(id);
-            if (lastBalance >= amount){
-                if (effectiveDate != null){
-                    check = CheckDateValidy.checkDateValidity(effectiveDate , 2);
-                }
-            }else{
+            if (loanRepository.findByAccountId(id).size()>0){
                 check = false;
+            }
+            double lastBalance = getBalance(id);
+            if (lastBalance >= amount) {
+                if (effectiveDate != null) {
+                    check = CheckDateValidy.checkDateValidity(effectiveDate, 2);
+                }
             }
             return check;
         }
@@ -51,14 +53,14 @@ public class TransferServices {
 
         public boolean conditionInside(String id , Double amount){
 
-            boolean check = false;
             double lastBalance = getBalance(id);
-            if (lastBalance >= amount){
-                check = true;
-                }else {
-                check = false;
+            if (loanRepository.findByAccountId(id).size()>0){
+                return false;
             }
-            return check;
+            if (lastBalance < amount) {
+                return false;
+            }
+                return true;
         }
 
 
@@ -95,7 +97,7 @@ public class TransferServices {
                         sender,
                         idForeign);
                 transferSave.insert(transfer);
-                String idTransaction = insertServices.insertTransaction(sender,
+                insertServices.insertTransaction(sender,
                         amountTransfer,
                         effective ,
                         "debit",
@@ -103,11 +105,9 @@ public class TransferServices {
                         "transfert",
                         subCategoryId
                         );
-                insertServices.upDateAndInsertBalances(senderId , -amountTransfer , effective , idTransaction);
                 return transfer;
             }else {
-                Transfer error = new Transfer("amount or invalid date " +
-                        "(please check your balance , the effective date must be at list 2 days after today)");
+                Transfer error = new Transfer("operation denied / reasons : lack of balance , unpaid loan , date unvalid[at least 48h after the sending date]");
                 return error;
             }
 
@@ -162,32 +162,25 @@ public class TransferServices {
                 if (conditionInside(transfer.getSenderAccountId() , transfer.getAmount())){
                    Transfer transferExecuted = composititon(transfer , receiverId );
                    transferSave.insert(transferExecuted);
-                   String senderTransactionId = insertServices.insertTransaction(transferExecuted.getSenderAccountId(),
+                   insertServices.insertTransaction(transferExecuted.getSenderAccountId(),
                            transferExecuted.getAmount(),
                            transferExecuted.getEffectiveDate(),
                            "debit",
                            transferExecuted.getId(),
                            "transfert",
                            subCategoryId);
-                   insertServices.upDateAndInsertBalances(transferExecuted.getSenderAccountId(),
-                           -transferExecuted.getAmount(),
-                           transferExecuted.getEffectiveDate(),
-                           senderTransactionId);
-                   String receiverTransactionId = insertServices.insertTransaction(transferExecuted.getReceiverAccountId(),
+
+                   insertServices.insertTransaction(transferExecuted.getReceiverAccountId(),
                             transferExecuted.getAmount(),
                             transferExecuted.getEffectiveDate(),
                             "credit",
                             transferExecuted.getId(),
                             "transfert",
                            subCategoryId);
-                   insertServices.upDateAndInsertBalances(transferExecuted.getReceiverAccountId(),
-                            transferExecuted.getAmount(),
-                            transferExecuted.getEffectiveDate(),
-                            receiverTransactionId);
                    return transferExecuted;
 
                 }else{
-                    Transfer error = new Transfer("you do not have the amount of "+transfer.getAmount()+" in your account please check your balance");
+                    Transfer error = new Transfer("operation denied / reason : unpaid laon or lack of balance");
                     return error;
                 }
             }else {
