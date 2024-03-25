@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS "transaction"(
     amount double precision,
     type varchar(50) CHECK (type ilike 'debit' OR type ilike 'credit'),
     date_time timestamp,
-    status varchar(50),
+    status varchar(50) CHECK (status ilike 'pending' OR status ilike 'canceled' OR ilike 'done'),
     account_id varchar(50) references "account"(id),
     provisioning_id varchar(50) references "provisioning"(id),
     bank_loan_id varchar(50) references "bank_loan"(id),
