@@ -282,7 +282,7 @@ paths:
           $ref: "#/components/responses/404"
         500:
           $ref: "#/components/responses/500"
-  /transfer/foreign/{accoutRef}/{subCategoryId}:
+  /transfer/foreing/{accoutRef}/{subCategoryId}:
     post:
       tags:
         - transfer
