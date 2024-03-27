@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: digital bank wallet management API
   description: This is an api about a digital bank management.
-  version: 1.2.2
+  version: 2.0.0
 tags:
   - name: account
     description: Everything about account
@@ -14,6 +14,9 @@ tags:
     description: about account transactions
   - name: provisioning
     description: account's provisioning
+  - name: category
+    description: transaction's category
+  - name: expense
 paths:
   /accounts:
     get:
@@ -38,7 +41,34 @@ paths:
           $ref: "#/components/responses/404"
         500: 
           $ref: "#/components/responses/500"
-  /account/{accountId}: 
+  /accounts/save:
+    post:
+      tags:
+        - account
+      summary: create a new account
+      operationId: addAccount
+      requestBody:
+        description: create a new account in the bank
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CrupdateAccount"
+        required: true
+      responses:
+        200:
+          $ref: "#/components/responses/200"
+          description: return an account
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+  /account/{id}:
     get: 
       tags:
         - account 
@@ -86,6 +116,49 @@ paths:
         404: 
           $ref: "#/components/responses/404"
         500: 
+          $ref: "#/components/responses/500"
+  /account/loan/{id}:
+    put:
+      tags:
+        - account
+      summary: give a loan authorization for the account
+      operationId: updateLoanAuth
+      parameters:
+        - $ref: "#/components/parameters/PathAccountId"
+      responses:
+        200:
+          $ref: "#/components/responses/200"
+          description: Allow a loan for the account
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+  /account/salary/{id}/{salary}:
+    put:
+      tags:
+        - account
+      summary: update salary
+      operationId: updateSalary
+      parameters:
+        - $ref: "#/components/parameters/PathAccountId"
+        - name: salary
+          in: path
+          description: new salary
+          required: true
+          schema:
+            type: number
+            format: float
+      responses:
+        200:
+          $ref: "#/components/responses/200"
+          description: The updated salary for the account
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
           $ref: "#/components/responses/500"
   /balance/account/{accountId}: 
     get: 
@@ -209,6 +282,73 @@ paths:
           $ref: "#/components/responses/404"
         500:
           $ref: "#/components/responses/500"
+  /transfer/foreing/{accoutRef}/{subCategoryId}:
+    post:
+      tags:
+        - transfer
+      summary: create a transfer to another bank
+      operationId: addForeignTransfer
+      parameters:
+        - $ref: "#/components/parameters/PathAccountRef"
+        - $ref: "#/components/parameters/PathSubCategoryId"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Transfer"
+        required: true
+      responses:
+        200:
+          $ref: "#/components/responses/200"
+          description: return a the new foreign transfer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transfer"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+  /transfer/inside/{accountRef}/{firstName}/{lastName}/{subCategory}:
+    post:
+      tags:
+        - transfer
+      summary: transfer inside the bank
+      operationId: addInsideTransfer
+      parameters:
+        - $ref: "#/components/parameters/PathAccountRef"
+        - name: firstName
+          in: path
+          description: first name of the destination account's owner
+          required: true
+          type: string
+        - name: lastName
+          in: path
+          description: last name of the destination accounr's owner
+          required: true
+          type: string
+        - $ref: "#/components/parameters/PathSubCategoryId"
+      requestBody:
+        content:
+          application.json:
+            schema:
+              $ref: "#/components/schemas/Transfer"
+      responses:
+        200:
+          $ref: "#/components/responses/200"
+          description: return a the new inside transfer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transfer"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
   /provisioning/account/{accountId}:
     get:
       tags:
@@ -233,9 +373,169 @@ paths:
           $ref: "#/components/responses/404"
         500:
           $ref: "#/components/responses/500"
+  /provising/save/{subCategoryId}:
+    post:
+      tags:
+        - provisioning
+      summary: add a new provisioning
+      operationId: addProvisioning
+      parameters:
+        - $ref: "#/components/parameters/PathSubCategoryId"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Provisioning"
+      responses:
+        200:
+          $ref: "#/components/responses/200"
+          description: return the new provisioning
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Provisioning"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+  /category/{type}:
+    get:
+      tags:
+        - category
+      summary: get category by transaction's type
+      operationId: getCategoryByType
+      parameters:
+        - name: type
+          in: path
+          description: the transation's type
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: "#/components/responses/200"
+          description: return a list of categories by transaction's type
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Category"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+  /expense/{subCategoryId}:
+    post:
+      tags:
+        - expense
+      summary: add subcategory in the expense
+      operationId: addSubcategoryToExpense
+      parameters:
+        - name: subCategoryId
+          in: path
+          description: the id of the subcategory
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: add a subcategory to an expense
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Expense"
+      responses:
+        200:
+          $ref: "#/components/responses/200"
+          description: subcategory added to the expense
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Expense"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+  /loan:
+    post:
+      tags:
+        - loan
+      summary: add a bank loan
+      operationId: addBaknLoan
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BankLoan"
+      responses:
+        200:
+          $ref: "#/components/responses/200"
+          description: the updated bank loan
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BankLoan"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+  /loan/{accountId}:
+    get:
+      tags:
+        - loan
+      summary: get a loan by the accountId
+      operationId: getLoanByAccountId
+      parameters:
+        - $ref: "#/components/parameters/PathAccountId"
+      responses:
+        200:
+          $ref: "#/components/responses/200"
+          description: the loan with the account
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BankLoan"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+  /loanHistory/{accountId}:
+    get:
+      tags:
+        - loan
+      summary: get list of loans of an account
+      operationId: getLoanHistory
+      parameters:
+        - $ref: "#/components/parameters/PathAccountId"
+      responses:
+        200:
+          $ref: "#/components/responses/200"
+          description: list of all loans of an account
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BankLoan"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
 components:
   schemas:
-    CrupdateAccount: 
+    CrupdateAccount:
       type: object
       properties:
         firstName:
@@ -253,7 +553,7 @@ components:
           format: float
     Account:
       allOf:
-        - $ref: "#/components/schemas/CrupdateAccount" 
+        - $ref: "#/components/schemas/CrupdateAccount"
       properties:
         id:
           description: auto-generated
@@ -261,7 +561,7 @@ components:
         accountRef:
           description: the account's number is unique
           type: string
-    CrupdateBalance: 
+    CrupdateBalance:
       type: object
       properties:
         amount:
@@ -298,9 +598,6 @@ components:
         effectiveDate:
           type: string
           format: date-time
-        recordDate:
-          type: string
-          format: date-time
         transferRef:
           type: string
         accountReceiver:
@@ -324,6 +621,8 @@ components:
         rest:
           type: number
           format: float
+        loanEvolution:
+          $ref: "#/components/schemas/BankLoan"
     BankLoan:
       description: loan accorded by the bank for each account
       type: object
@@ -342,8 +641,21 @@ components:
           format: float
         account:
           $ref: "#/components/schemas/Account"
-        loanEvolution:
-          $ref: "#/components/schemas/LoanEvolution"
+    Expense:
+      type: object
+      properties:
+        id:
+          type: string
+        amount:
+          type: number
+          format: float
+        dateTime:
+          type: string
+          format: datetime
+        pattern:
+          type: string
+        account:
+          $ref: "#/components/schemas/Account"
     Transaction:
       type: object
       properties:
@@ -363,22 +675,40 @@ components:
           format: date-time
         account:
           $ref: "#/components/schemas/Account"
+        provisioning:
+          $ref: "#/components/schemas/Provisioning"
+        bankLoan:
+          $ref: "#/components/schemas/BankLoan"
+        transfer:
+          $ref: "#/components/schemas/Transfer"
+        expense:
+          $ref: "#/components/schemas/Expense"
+        category:
+          $ref: "#/components/schemas/SubCategory"
     SubCategory:
       type: object
       properties:
         id:
-          type: string
+          type: integer
         name:
           type: string
+        category:
+          $ref: "#/components/schemas/Category"
     Category:
       type: object
       properties:
         id:
-          type: string
+          type: integer
         name:
           type: string
-        subCategory:
-          $ref: "#/components/schemas/SubCategory"
+    ForeignTransfer:
+      type: object
+      properties:
+        id:
+          type: string
+        accountRefForeign:
+          type: string
+          description: unique value
     Provisioning:
       type: object
       properties:
@@ -414,11 +744,25 @@ components:
   parameters:
     PathAccountId: 
       in: path
-      name: accountId
+      name: id
       description: id in path 
       required: true
       schema: 
-        type: string 
+        type: string
+    PathSubCategoryId:
+      in: path
+      name: subCategoryId
+      description: subcategory id in path
+      required: true
+      schema:
+        type: integer
+    PathAccountRef:
+      in: path
+      name: accountRef
+      description: the account reference
+      required: true
+      schema:
+        type: string
   responses:
     "200":
       description: HTTP 200 (ok)
