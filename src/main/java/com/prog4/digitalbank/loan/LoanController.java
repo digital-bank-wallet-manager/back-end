@@ -25,4 +25,9 @@ public class LoanController {
         return loanServices.laonHistory(accountId);
 
     }
+
+    @PostMapping("loan/repay")
+    public LoanEvolution repay(@RequestBody BankLoan bankLoan) throws SQLException {
+        return loanServices.repayLoan(bankLoan);
+    }
 }

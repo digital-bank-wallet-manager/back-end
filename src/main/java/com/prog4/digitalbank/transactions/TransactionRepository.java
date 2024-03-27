@@ -19,14 +19,18 @@ public class TransactionRepository {
     private FindAll<Transaction> findAll;
 
     public void updateStatus() throws SQLException {
-        String sql = "update transaction set status = 'done' where (status = 'apending' or status is null) and date_time <= current_timestamp";
+        String sql = "update transaction set status = 'done' where (status = 'apending' ) \n" +
+                "and (date_time <= current_timestamp)\n" +
+                "and (transfer_id is null)";
         try(PreparedStatement statement = connection.prepareStatement(sql)){
             statement.executeUpdate();
         }
     }
 
     public void cancel(String transactionId) throws SQLException {
+
         String sql = "update transaction set status = 'canceled' where (status = 'apending' or status is null) and transaction_id = ?";
+
         try(PreparedStatement statement = connection.prepareStatement(sql)){
             statement.setString(1,transactionId);
             statement.executeUpdate();

@@ -5,6 +5,7 @@ import com.prog4.digitalbank.CrudOperations.FindById;
 import com.prog4.digitalbank.CrudOperations.Save;
 import com.prog4.digitalbank.account.Account;
 import com.prog4.digitalbank.account.AccountServices;
+import com.prog4.digitalbank.balance.BalanceServices;
 import com.prog4.digitalbank.insertGeneralisation.InsertServices;
 import com.prog4.digitalbank.methods.Conversion;
 import com.prog4.digitalbank.methods.IdGenerators;
@@ -29,6 +30,8 @@ public class LoanServices {
     private  LoanRepository loanRepository;
     private FindById<BankLoan> bankLoanFindById;
     private FindAll<BankLoan> bankLoanFindAll;
+    private BalanceServices balanceServices;
+
     private BankLoan bankLoanSave (BankLoan bankLoan) throws SQLException {
         return bankLoanSave.insert(bankLoan);
     }
@@ -178,6 +181,39 @@ public class LoanServices {
 
     public List<BankLoan> laonHistory (String accountId){
         return bankLoanFindById.findByAccountId(BankLoan.class ,accountId ,"","");
+    }
+
+
+
+    public LoanEvolution repayLoan(BankLoan bankLoan) throws SQLException {
+        String accountId= bankLoan.getAccountId();
+        String bankLoanId = bankLoan.getId();
+        double actualBalance = balanceServices.actualBalance(accountId).getAmount();
+        LoanEvolution loanEvolution = loanRepository.getLastState(bankLoanId);
+        Double rest = loanEvolution.getRest();
+        double repayAmount= 0.0;
+        if (rest >= actualBalance) {
+            repayAmount = actualBalance;
+        }
+        if(rest < actualBalance){
+            repayAmount = rest;
+        }
+            Double finalRest = rest - repayAmount;
+            LoanEvolution loanEvolution1 = new LoanEvolution(
+                    IdGenerators.generateId(12),
+                    Timestamp.valueOf(LocalDateTime.now()),
+                    loanEvolution.getTotalInterest(),
+                    finalRest,
+                    bankLoanId);
+            LoanEvolution inserted  = loanEvolutionSave(loanEvolution1);
+            insertServices.insertTransaction(accountId,
+                    repayAmount,
+                    Date.valueOf(LocalDate.now()),
+                    "debit",
+                    bankLoanId,
+                    "loan",
+                    39);
+            return inserted;
     }
 
 }
