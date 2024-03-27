@@ -1,5 +1,7 @@
 package com.prog4.digitalbank.transactions;
 
+import com.prog4.digitalbank.CrudOperations.FindAll;
+import com.prog4.digitalbank.CrudOperations.FindById;
 import com.prog4.digitalbank.CrudOperations.Save;
 import com.prog4.digitalbank.methods.IdGenerators;
 import lombok.AllArgsConstructor;
@@ -16,6 +18,7 @@ import java.util.Objects;
 @AllArgsConstructor
 public class TransactionServices {
     private Save<Transaction> transactionSave;
+    private FindById<Transaction> transactionFindById;
     private TransactionRepository transactionRepository;
     public void insertTransaction (Transaction transaction  , String action , int subCategoryId) throws SQLException {
 
@@ -110,4 +113,13 @@ public class TransactionServices {
         return transactionRepository.getNotAppliedTransaction();
     }
 
+    public String cancelTransaction (String transactionId) throws SQLException {
+
+        String status = transactionFindById.findByIdOrderd(Transaction.class,transactionId,"").getStatus();
+        if (Objects.equals(status,"apending")){
+        transactionRepository.cancel(transactionId);
+        return "transaction "+transactionId+" updated";
+        }
+        return "transaction failed (done transaction can not be canceled";
+    }
 }
