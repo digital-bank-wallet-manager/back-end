@@ -107,6 +107,15 @@ public class BalanceServices {
     }
 
     public Balance balanceForSpecificTime (String accountId , Date date){
+        Timestamp creationDate=findById.findByAccountId(Balance.class ,
+                accountId ,
+                "order by date_time asc",
+                "").get(0).getDateTime();
+        Date createdAt = new Date(creationDate.getTime());
+        if (date.before(createdAt)){
+            Balance error = new Balance("your account was not created yet");
+            return error;
+        }
         return balanceRepository.findBalanceByDate(accountId , date).get(0);
     }
 

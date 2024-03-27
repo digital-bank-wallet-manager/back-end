@@ -21,4 +21,6 @@ public class LoanEvolution {
         this.totalInterest = totalInterest;
         this.rest = rest;
     }
+
+
 }
