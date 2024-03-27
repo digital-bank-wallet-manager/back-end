@@ -9,23 +9,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import java.sql.SQLException;
+import java.util.List;
+
 @AllArgsConstructor
 @RestController
 public class TransferController {
     private TransferServices transferServices;
 
-    @PostMapping("/transfer/foreing/{accountRef}/{subCategoryId}")
-    public Transfer foreignTransfer (@RequestBody Transfer transfer,
-                                     @PathVariable String accountRef ,
-                                     @PathVariable int subCategoryId) throws SQLException {
-
-
-        return transferServices.transferOperationForeign(transfer.getSenderAccountId(),
-                transfer.getAmount(),
-                transfer.getEffectiveDate(),
-                transfer.getReason(),
-                accountRef,
-                subCategoryId);
+    @PostMapping("/transfer/foreign")
+    public String foreignTransfer (@RequestBody ForeingTransferRequest foreingTransferRequest) throws SQLException {
+        return transferServices.foreignTransferOperation(
+                foreingTransferRequest.getTransfer(),
+                foreingTransferRequest.getForeignReceivers());
     }
 
 
@@ -35,6 +30,6 @@ public class TransferController {
                                     @PathVariable String firstName,
                                     @PathVariable String lastName,
                                     @PathVariable int subCategoryId) throws SQLException {
-        return transferServices.transferInsideOperation(transfer ,accountRef , firstName , lastName , subCategoryId);
+        return null;
     }
 }
