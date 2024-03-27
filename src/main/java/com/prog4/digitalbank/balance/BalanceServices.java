@@ -7,6 +7,7 @@ import com.prog4.digitalbank.methods.IdGenerators;
 import com.prog4.digitalbank.transactions.Transaction;
 import com.prog4.digitalbank.transactions.TransactionServices;
 import lombok.AllArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;

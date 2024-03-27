@@ -25,6 +25,14 @@ public class TransactionRepository {
         }
     }
 
+    public void cancel(String transactionId) throws SQLException {
+        String sql = "update transaction set status = 'canceled' where (status = 'apending' or status is null) and transaction_id = ?";
+        try(PreparedStatement statement = connection.prepareStatement(sql)){
+            statement.setString(1,transactionId);
+            statement.executeUpdate();
+        }
+    }
+
     public List<Transaction> getNotAppliedTransaction(){
         String sql = "SELECT transaction.*FROM transaction \n" +
                 "LEFT JOIN balance ON transaction.id = balance.transaction_id \n" +
