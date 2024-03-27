@@ -1,1 +1,1 @@
-alter table bank_loan add column status varchar (10);
+ALTER TABLE bank_loan add column status varchar (10);
