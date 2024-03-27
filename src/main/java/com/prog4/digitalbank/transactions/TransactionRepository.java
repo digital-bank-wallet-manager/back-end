@@ -28,7 +28,9 @@ public class TransactionRepository {
     }
 
     public void cancel(String transactionId) throws SQLException {
-        String sql = "update transaction set status = 'canceled' where (status = 'apending' or status is null) and id = ?";
+
+        String sql = "update transaction set status = 'canceled' where (status = 'apending' or status is null) and transaction_id = ?";
+
         try(PreparedStatement statement = connection.prepareStatement(sql)){
             statement.setString(1,transactionId);
             statement.executeUpdate();
