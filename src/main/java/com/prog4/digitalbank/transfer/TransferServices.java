@@ -1,24 +1,29 @@
 package com.prog4.digitalbank.transfer;
 
 
+import com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeWithZoneIdSerializer;
 import com.prog4.digitalbank.CrudOperations.Save;
 import com.prog4.digitalbank.account.Account;
 import com.prog4.digitalbank.account.AccountServices;
-import com.prog4.digitalbank.balance.Balance;
 import com.prog4.digitalbank.balance.BalanceServices;
 import com.prog4.digitalbank.insertGeneralisation.InsertServices;
+import com.prog4.digitalbank.loan.BankLoan;
 import com.prog4.digitalbank.loan.LoanRepository;
+import com.prog4.digitalbank.loan.LoanServices;
 import com.prog4.digitalbank.methods.CheckDateValidy;
+import com.prog4.digitalbank.methods.Conversion;
 import com.prog4.digitalbank.methods.IdGenerators;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import static java.sql.Date.valueOf;
+
 
 @Service
 @AllArgsConstructor
@@ -28,165 +33,169 @@ public class TransferServices {
         private InsertServices insertServices;
         private Save<ForeignTransfer> foreignTransferSave;
         private Save<Transfer> transferSave;
-        private LoanRepository loanRepository;
-
-        public Double getBalance ( String id ){
-            List<Balance> balances = balanceServices.findByAccountIdOrdered(Balance.class , id);
-            Balance lastBalance = balances.get(0);
-            return lastBalance.getAmount();
-        }
-
-        public boolean checkConditions(String id , Double amount , Date effectiveDate ){
-            boolean check = true;
-            if (loanRepository.findByAccountId(id).size()>0){
-                check = false;
-            }
-            double lastBalance = getBalance(id);
-            if (lastBalance >= amount) {
-                if (effectiveDate != null) {
-                    check = CheckDateValidy.checkDateValidity(effectiveDate, 2);
-                }
-            }
-            return check;
-        }
+        private LoanServices loanServices;
 
 
-        public boolean conditionInside(String id , Double amount){
 
-            double lastBalance = getBalance(id);
-            if (loanRepository.findByAccountId(id).size()>0){
+        private boolean checkUnpaidLoan( Transfer transfer){
+
+            String accountSenderId = transfer.getSenderAccountId();
+            List<BankLoan> unpaidLoan = loanServices.findByAccountId(accountSenderId);
+            if (!unpaidLoan.isEmpty()){
                 return false;
             }
-            if (lastBalance < amount) {
-                return false;
-            }
-                return true;
+            return true;
         }
 
-
-        public Transfer transferOperationForeign(String senderId,
-                                                 Double amount ,
-                                                 Date effectiveDate ,
-                                                 String reason,
-                                                 String accountRef,
-                                                 int subCategoryId) throws SQLException {
-            if (checkConditions(senderId , amount , effectiveDate )){
-                String idForeign = IdGenerators.generateId(6);
-                String idTransfer = IdGenerators.generateId(10);
-                Double amountTransfer = amount;
-                Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
-                Date effective = null;
-                if (effectiveDate == null){
-                    effective = CheckDateValidy.addDayToDate(valueOf(LocalDate.now()), 2);
-                }else {
-                    effective = effectiveDate;
+        private Boolean checkDateValidity(List<ForeignReceiver> foreignReceivers){
+            for (ForeignReceiver foreignReceiver : foreignReceivers){
+                Date date = foreignReceiver.getEffectiveDate();
+                if (date != null){
+                    if (!CheckDateValidy.checkDateValidity(date , 2)){
+                        return false;
+                    }
                 }
+            }
+            return true;
+        }
 
+        public String foreignTransferOperation(Transfer transfer , List<ForeignReceiver>foreignReceivers) throws SQLException {
+           if (checkUnpaidLoan(transfer)){
+               if (checkDateValidity(foreignReceivers)){
                 String transferRef = IdGenerators.generateTransferRef();
-                String receiver = null;
-                String sender = senderId;
-                ForeignTransfer foreignTransfer = new ForeignTransfer(idForeign , accountRef);
-                foreignTransferSave.insert(foreignTransfer);
-                Transfer transfer = new Transfer(idTransfer,
-                        amountTransfer,
-                        reason,
-                        timestamp,
-                        effective,
-                        transferRef,
-                        receiver,
-                        sender,
-                        idForeign);
-                transferSave.insert(transfer);
-                insertServices.insertTransaction(sender,
-                        amountTransfer,
-                        effective ,
-                        "debit",
-                        idTransfer ,
-                        "transfert",
-                        subCategoryId
-                        );
-                return transfer;
-            }else {
-                Transfer error = new Transfer("operation denied / reasons : lack of balance , unpaid loan , date unvalid[at least 48h after the sending date]");
-                return error;
-            }
-
-        }
-        public String getReceiverId (String accountRef , String firstName , String lastName){
-            Account receiver = accountServices.findByAccountRef(accountRef ,firstName , lastName);
-            return receiver.getId();
-        }
-
-        public Boolean checkExistance(String accountRef , String firstName , String lastName){
-            if (accountServices.findByAccountRef(accountRef,firstName,lastName) != null){
-                return true;
-            }else {
-                return false;
-            }
-        }
-
-        private Transfer composititon (Transfer transfer , String receiverId){
-            String id = IdGenerators.generateId(10);
-            Double amount = transfer.getAmount();
-            String reason = transfer.getReason();
-            Timestamp dateTime = Timestamp.valueOf(LocalDateTime.now());
-            Date effectiveDate = null;
-            if (transfer.getEffectiveDate() == null){
-                effectiveDate = Date.valueOf(LocalDate.now());
-            }else {
-                effectiveDate = transfer.getEffectiveDate();
-            }
-            String transferRef = IdGenerators.generateTransferRef();
-            String receiverAccount = receiverId;
-            String senderAccount = transfer.getSenderAccountId();
-            Transfer transfer1 = new Transfer(id,
-                    amount ,
-                    reason ,
-                    dateTime ,
-                    effectiveDate ,
-                    transferRef ,
-                    receiverAccount ,
-                    senderAccount ,
-                    null);
-            return transfer1;
-        }
-
-        public Transfer transferInsideOperation (Transfer transfer,
-                                                 String accountRef ,
-                                                 String firstName ,
-                                                 String lastName,
-                                                 int subCategoryId) throws SQLException {
-
-            if (checkExistance(accountRef , firstName , lastName)){
-                String receiverId = getReceiverId(accountRef , firstName , lastName);
-                if (conditionInside(transfer.getSenderAccountId() , transfer.getAmount())){
-                   Transfer transferExecuted = composititon(transfer , receiverId );
-                   transferSave.insert(transferExecuted);
-                   insertServices.insertTransaction(transferExecuted.getSenderAccountId(),
-                           transferExecuted.getAmount(),
-                           transferExecuted.getEffectiveDate(),
-                           "debit",
-                           transferExecuted.getId(),
-                           "transfert",
-                           subCategoryId);
-
-                   insertServices.insertTransaction(transferExecuted.getReceiverAccountId(),
-                            transferExecuted.getAmount(),
-                            transferExecuted.getEffectiveDate(),
-                            "credit",
-                            transferExecuted.getId(),
+                for (ForeignReceiver foreignReceiver : foreignReceivers){
+                    String foreignTransferId = IdGenerators.generateId(6);
+                    ForeignTransfer foreignTransfer = new ForeignTransfer(foreignTransferId , foreignReceiver.getReceiverAccount());
+                    foreignTransferSave.insert(foreignTransfer);
+                    String transferId = IdGenerators.generateId(12);
+                    Date duration = null;
+                    if (foreignReceiver.getEffectiveDate() == null){
+                         duration = CheckDateValidy.addDayToDate(foreignReceiver.getEffectiveDate(),2);
+                    }
+                    duration = foreignReceiver.getEffectiveDate();
+                    Transfer transfer1 = new Transfer(
+                            transferId,
+                            foreignReceiver.getAmount(),
+                            foreignReceiver.getReason(),
+                            Timestamp.valueOf(LocalDateTime.now()),
+                            duration,
+                            transferRef,
+                            null,
+                            transfer.getSenderAccountId(),
+                            foreignTransferId
+                            );
+                    transferSave.insert(transfer1);
+                    insertServices.insertTransaction(transfer.getSenderAccountId(),
+                            foreignReceiver.getAmount(),
+                            duration,
+                            "debit",
+                            transferId,
                             "transfert",
-                           subCategoryId);
-                   return transferExecuted;
+                            foreignReceiver.getSubCategory());
+                }
+                return "all transfer initiated";
 
-                }else{
-                    Transfer error = new Transfer("operation denied / reason : unpaid laon or lack of balance");
-                    return error;
+               }else {
+                   return "an outside transfer required at least 2 days to validate";
+               }
+           }else {
+               return "you have an unpaid laon";
+           }
+
+        }
+
+
+
+
+
+
+
+        private Boolean checkAvailableBalance(Transfer transfer ,  List<LocalReceiver> localReceivers){
+                List<Double> instantTransfer = new ArrayList<>();
+                for(LocalReceiver localReceiver : localReceivers){
+                    Date effectiveDate = localReceiver.getEffectiveDate();
+                    if (effectiveDate.equals(Date.valueOf(LocalDate.now())) ||
+                    effectiveDate == null ){
+                        instantTransfer.add(localReceiver.getAmount());
+                    }
+                }
+                Double neededBalance = instantTransfer.stream().reduce(0.0,Double::sum);
+                double availableBalance = balanceServices
+                        .actualBalance(transfer
+                                        .getSenderAccountId()).getAmount();
+            return availableBalance >= neededBalance;
+        }
+
+        private boolean checkAccount (List<LocalReceiver> localReceivers){
+            for (LocalReceiver localReceiver : localReceivers){
+                if (accountServices.findByAccountRef(localReceiver.getAccountRef(),localReceiver.getFirstName(),localReceiver.getLastName()) == null){
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public String localTransferOperation(Transfer transfer , List<LocalReceiver> localReceivers) throws SQLException {
+            if (checkUnpaidLoan(transfer)){
+                if (checkAccount(localReceivers)){
+                    if (checkAvailableBalance(transfer , localReceivers)){
+                        String transferRef = IdGenerators.generateTransferRef();
+                        for (LocalReceiver localReceiver : localReceivers){
+                            Date date = null;
+                            if (localReceiver.getEffectiveDate() == null){
+                                date = Date.valueOf(LocalDate.now());
+                            }
+                            date = localReceiver.getEffectiveDate();
+                            String transferId = IdGenerators.generateId(12);
+                            String receiverId = accountServices.findByAccountRef(
+                                    localReceiver.getAccountRef(),
+                                    localReceiver.getFirstName(),
+                                    localReceiver.getLastName()).getId();
+                            Conversion.DateToTimestamp(localReceiver.getEffectiveDate());
+                            Transfer transfer1 = new Transfer(
+                                    transferId,
+                                    localReceiver.getAmount(),
+                                    localReceiver.getReason(),
+                                    Timestamp.valueOf(LocalDateTime.now()),
+                                    date,
+                                    transferRef,
+                                    receiverId,
+                                    transfer.getSenderAccountId(),
+                                    null
+                            );
+                            transferSave.insert(transfer1);
+                            insertServices.insertTransaction(
+                                    transfer.getSenderAccountId(),
+                                    localReceiver.getAmount(),
+                                    date,
+                                    "debit",
+                                    transferId,
+                                    "transfert",
+                                    localReceiver.getSubCategoryId()
+                            );
+                            insertServices.insertTransaction(
+                                    receiverId,
+                                    localReceiver.getAmount(),
+                                    date,
+                                    "credit",
+                                    transferId,
+                                    "transfert",
+                                    localReceiver.getSubCategoryId()
+                            );
+                        }
+                    }else {
+                        return "operation failed : your balance is not enough";
+                    }
+
+                }else {
+                    return "operation failed : invalid account ref / invalid lastname or firstname ";
                 }
             }else {
-                Transfer error = new Transfer(accountRef+" in the name of "+firstName+" "+lastName+" do not exist");
-                return error;
+                return "operation failed : you have an unpaid loan";
             }
+            return "transfer initiated";
+
         }
+
 
 }
