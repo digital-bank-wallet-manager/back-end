@@ -1,12 +1,15 @@
 package com.prog4.digitalbank.transfer;
 
 
+import com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeWithZoneIdSerializer;
 import com.prog4.digitalbank.CrudOperations.Save;
+import com.prog4.digitalbank.account.Account;
 import com.prog4.digitalbank.account.AccountServices;
 import com.prog4.digitalbank.balance.BalanceServices;
 import com.prog4.digitalbank.insertGeneralisation.InsertServices;
 import com.prog4.digitalbank.loan.BankLoan;
 import com.prog4.digitalbank.loan.LoanRepository;
+import com.prog4.digitalbank.loan.LoanServices;
 import com.prog4.digitalbank.methods.CheckDateValidy;
 import com.prog4.digitalbank.methods.Conversion;
 import com.prog4.digitalbank.methods.IdGenerators;
@@ -18,6 +21,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -29,30 +33,35 @@ public class TransferServices {
         private InsertServices insertServices;
         private Save<ForeignTransfer> foreignTransferSave;
         private Save<Transfer> transferSave;
-        private LoanRepository loanRepository;
+        private LoanServices loanServices;
 
 
 
-        public boolean checkConditionsForeign( Transfer transfer , List<ForeignReceiver>foreignReceivers){
+        private boolean checkUnpaidLoan( Transfer transfer){
+
             String accountSenderId = transfer.getSenderAccountId();
-            List<BankLoan> unpaidLoan = loanRepository.findByAccountId(accountSenderId);
-            if (unpaidLoan.isEmpty()){
+            List<BankLoan> unpaidLoan = loanServices.findByAccountId(accountSenderId);
+            if (!unpaidLoan.isEmpty()){
+                return false;
+            }
+            return true;
+        }
+
+        private Boolean checkDateValidity(List<ForeignReceiver> foreignReceivers){
             for (ForeignReceiver foreignReceiver : foreignReceivers){
                 Date date = foreignReceiver.getEffectiveDate();
                 if (date != null){
-                     if (!CheckDateValidy.checkDateValidity(date , 2)){
-                       return false;
-                };
-
+                    if (!CheckDateValidy.checkDateValidity(date , 2)){
+                        return false;
+                    }
                 }
             }
-            }
-
             return true;
         }
 
         public String foreignTransferOperation(Transfer transfer , List<ForeignReceiver>foreignReceivers) throws SQLException {
-            if (checkConditionsForeign(transfer , foreignReceivers)){
+           if (checkUnpaidLoan(transfer)){
+               if (checkDateValidity(foreignReceivers)){
                 String transferRef = IdGenerators.generateTransferRef();
                 for (ForeignReceiver foreignReceiver : foreignReceivers){
                     String foreignTransferId = IdGenerators.generateId(6);
@@ -84,9 +93,15 @@ public class TransferServices {
                             "transfert",
                             foreignReceiver.getSubCategory());
                 }
-                return "all transfer intiated";
-            }
-            return "transfer fail : unpaid loan / invalid Date effect";
+                return "all transfer initiated";
+
+               }else {
+                   return "an outside transfer required at least 2 days to validate";
+               }
+           }else {
+               return "you have an unpaid laon";
+           }
+
         }
 
 
@@ -95,12 +110,91 @@ public class TransferServices {
 
 
 
-        public Boolean checkExistance(String accountRef , String firstName , String lastName){
-            if (accountServices.findByAccountRef(accountRef,firstName,lastName) != null){
-                return true;
-            }else {
-                return false;
+        private Boolean checkAvailableBalance(Transfer transfer ,  List<LocalReceiver> localReceivers){
+                List<Double> instantTransfer = new ArrayList<>();
+                for(LocalReceiver localReceiver : localReceivers){
+                    Date effectiveDate = localReceiver.getEffectiveDate();
+                    if (effectiveDate.equals(Date.valueOf(LocalDate.now())) ||
+                    effectiveDate == null ){
+                        instantTransfer.add(localReceiver.getAmount());
+                    }
+                }
+                Double neededBalance = instantTransfer.stream().reduce(0.0,Double::sum);
+                double availableBalance = balanceServices
+                        .actualBalance(transfer
+                                        .getSenderAccountId()).getAmount();
+            return availableBalance >= neededBalance;
+        }
+
+        private boolean checkAccount (List<LocalReceiver> localReceivers){
+            for (LocalReceiver localReceiver : localReceivers){
+                if (accountServices.findByAccountRef(localReceiver.getAccountRef(),localReceiver.getFirstName(),localReceiver.getLastName()) == null){
+                    return false;
+                }
             }
+            return true;
+        }
+
+        public String localTransferOperation(Transfer transfer , List<LocalReceiver> localReceivers) throws SQLException {
+            if (checkUnpaidLoan(transfer)){
+                if (checkAccount(localReceivers)){
+                    if (checkAvailableBalance(transfer , localReceivers)){
+                        String transferRef = IdGenerators.generateTransferRef();
+                        for (LocalReceiver localReceiver : localReceivers){
+                            Date date = null;
+                            if (localReceiver.getEffectiveDate() == null){
+                                date = Date.valueOf(LocalDate.now());
+                            }
+                            date = localReceiver.getEffectiveDate();
+                            String transferId = IdGenerators.generateId(12);
+                            String receiverId = accountServices.findByAccountRef(
+                                    localReceiver.getAccountRef(),
+                                    localReceiver.getFirstName(),
+                                    localReceiver.getLastName()).getId();
+                            Conversion.DateToTimestamp(localReceiver.getEffectiveDate());
+                            Transfer transfer1 = new Transfer(
+                                    transferId,
+                                    localReceiver.getAmount(),
+                                    localReceiver.getReason(),
+                                    Timestamp.valueOf(LocalDateTime.now()),
+                                    date,
+                                    transferRef,
+                                    receiverId,
+                                    transfer.getSenderAccountId(),
+                                    null
+                            );
+                            transferSave.insert(transfer1);
+                            insertServices.insertTransaction(
+                                    transfer.getSenderAccountId(),
+                                    localReceiver.getAmount(),
+                                    date,
+                                    "debit",
+                                    transferId,
+                                    "transfert",
+                                    localReceiver.getSubCategoryId()
+                            );
+                            insertServices.insertTransaction(
+                                    receiverId,
+                                    localReceiver.getAmount(),
+                                    date,
+                                    "credit",
+                                    transferId,
+                                    "transfert",
+                                    localReceiver.getSubCategoryId()
+                            );
+                        }
+                    }else {
+                        return "operation failed : your balance is not enough";
+                    }
+
+                }else {
+                    return "operation failed : invalid account ref / invalid lastname or firstname ";
+                }
+            }else {
+                return "operation failed : you have an unpaid loan";
+            }
+            return "transfer initiated";
+
         }
 
 

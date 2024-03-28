@@ -24,12 +24,11 @@ public class TransferController {
     }
 
 
-    @PostMapping("/transfer/inside/{accountRef}/{firstName}/{lastName}/{subCategoryId}")
-    public Transfer insideTransfer (@RequestBody Transfer transfer,
-                                    @PathVariable String accountRef,
-                                    @PathVariable String firstName,
-                                    @PathVariable String lastName,
-                                    @PathVariable int subCategoryId) throws SQLException {
-        return null;
+    @PostMapping("/transfer/local")
+    public String insideTransfer (@RequestBody LocalTransferRequest localTransferRequest) throws SQLException {
+        return transferServices.localTransferOperation(
+                localTransferRequest.getTransfer(),
+                localTransferRequest.getLocalReceivers()
+        );
     }
 }
