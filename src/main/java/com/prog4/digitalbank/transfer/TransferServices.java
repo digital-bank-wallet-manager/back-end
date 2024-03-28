@@ -1,13 +1,20 @@
 package com.prog4.digitalbank.transfer;
 
 
+<<<<<<< HEAD
 
+=======
+import com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeWithZoneIdSerializer;
+>>>>>>> Prod
 import com.prog4.digitalbank.CrudOperations.Save;
 import com.prog4.digitalbank.account.AccountServices;
-import com.prog4.digitalbank.balance.Balance;
 import com.prog4.digitalbank.balance.BalanceServices;
 import com.prog4.digitalbank.insertGeneralisation.InsertServices;
 import com.prog4.digitalbank.loan.BankLoan;
+<<<<<<< HEAD
+=======
+import com.prog4.digitalbank.loan.LoanRepository;
+>>>>>>> Prod
 import com.prog4.digitalbank.loan.LoanServices;
 import com.prog4.digitalbank.methods.CheckDateValidy;
 import com.prog4.digitalbank.methods.Conversion;
@@ -34,6 +41,7 @@ public class TransferServices {
         private Save<ForeignTransfer> foreignTransferSave;
         private Save<Transfer> transferSave;
         private LoanServices loanServices;
+<<<<<<< HEAD
         private TransferRepository transferRepository;
 
         private boolean checkUnpaidLoan( Transfer transfer){
@@ -55,6 +63,33 @@ public class TransferServices {
             return true;
         }
 
+=======
+
+
+
+        private boolean checkUnpaidLoan( Transfer transfer){
+
+            String accountSenderId = transfer.getSenderAccountId();
+            List<BankLoan> unpaidLoan = loanServices.findByAccountId(accountSenderId);
+            if (!unpaidLoan.isEmpty()){
+                return false;
+            }
+            return true;
+        }
+
+        private Boolean checkDateValidity(List<ForeignReceiver> foreignReceivers){
+            for (ForeignReceiver foreignReceiver : foreignReceivers){
+                Date date = foreignReceiver.getEffectiveDate();
+                if (date != null){
+                    if (!CheckDateValidy.checkDateValidity(date , 2)){
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+>>>>>>> Prod
         public String foreignTransferOperation(Transfer transfer , List<ForeignReceiver>foreignReceivers) throws SQLException {
            if (checkUnpaidLoan(transfer)){
                if (checkDateValidity(foreignReceivers)){
@@ -66,10 +101,16 @@ public class TransferServices {
                     String transferId = IdGenerators.generateId(12);
                     Date duration = null;
                     if (foreignReceiver.getEffectiveDate() == null){
+<<<<<<< HEAD
                          duration = CheckDateValidy.addDayToDate(Date.valueOf(LocalDate.now()),2);
                     }else {
                     duration = foreignReceiver.getEffectiveDate();
                     }
+=======
+                         duration = CheckDateValidy.addDayToDate(foreignReceiver.getEffectiveDate(),2);
+                    }
+                    duration = foreignReceiver.getEffectiveDate();
+>>>>>>> Prod
                     Transfer transfer1 = new Transfer(
                             transferId,
                             foreignReceiver.getAmount(),
@@ -93,14 +134,30 @@ public class TransferServices {
                 return "all transfer initiated";
 
                }else {
+<<<<<<< HEAD
                    return "an outside transfer required at least 48h to validate";
                }
            }else {
                return "you have an unpaid loan";
+=======
+                   return "an outside transfer required at least 2 days to validate";
+               }
+           }else {
+               return "you have an unpaid laon";
+>>>>>>> Prod
            }
 
         }
 
+<<<<<<< HEAD
+=======
+
+
+
+
+
+
+>>>>>>> Prod
         private Boolean checkAvailableBalance(Transfer transfer ,  List<LocalReceiver> localReceivers){
                 List<Double> instantTransfer = new ArrayList<>();
                 for(LocalReceiver localReceiver : localReceivers){
@@ -114,10 +171,14 @@ public class TransferServices {
                 double availableBalance = balanceServices
                         .actualBalance(transfer
                                         .getSenderAccountId()).getAmount();
+<<<<<<< HEAD
             if (neededBalance > availableBalance){
                 return false;
             }
             return true;
+=======
+            return availableBalance >= neededBalance;
+>>>>>>> Prod
         }
 
         private boolean checkAccount (List<LocalReceiver> localReceivers){
@@ -188,6 +249,7 @@ public class TransferServices {
                 return "operation failed : you have an unpaid loan";
             }
             return "transfer initiated";
+<<<<<<< HEAD
         }
 
         private List<Transfer> appendingTransfer(){
@@ -209,4 +271,10 @@ public class TransferServices {
             List<Transfer> transfers = appendingTransfer();
             updateTransferStatus(transfers);
         }
+=======
+
+        }
+
+
+>>>>>>> Prod
 }
