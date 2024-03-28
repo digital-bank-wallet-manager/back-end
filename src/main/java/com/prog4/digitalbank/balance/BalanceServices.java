@@ -2,23 +2,19 @@ package com.prog4.digitalbank.balance;
 
 import com.prog4.digitalbank.CrudOperations.FindById;
 import com.prog4.digitalbank.CrudOperations.Save;
-import com.prog4.digitalbank.methods.Conversion;
 import com.prog4.digitalbank.methods.IdGenerators;
 import com.prog4.digitalbank.transactions.Transaction;
 import com.prog4.digitalbank.transactions.TransactionServices;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static java.sql.Date.valueOf;
 
 @Service
 @AllArgsConstructor
@@ -55,13 +51,6 @@ public class BalanceServices {
         return balanceRepository.getLastBalanceById(accountId , referenceDate);
     }
 
-
-
-    public List<Balance> findByAccountIdOrdered (Class<Balance> balanceClass ,String id ){
-        String order = "order by date_time desc";
-        String column = "and date_time <= current_timestamp";
-        return findById.findByAccountId(balanceClass ,id , order,column);
-    }
 
     public String applyBalance(List<Transaction> transactions) throws SQLException {
         for (Transaction transaction : transactions){

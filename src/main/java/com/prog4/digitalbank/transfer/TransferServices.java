@@ -1,19 +1,19 @@
 package com.prog4.digitalbank.transfer;
 
 
-import com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeWithZoneIdSerializer;
+
 import com.prog4.digitalbank.CrudOperations.Save;
-import com.prog4.digitalbank.account.Account;
 import com.prog4.digitalbank.account.AccountServices;
+import com.prog4.digitalbank.balance.Balance;
 import com.prog4.digitalbank.balance.BalanceServices;
 import com.prog4.digitalbank.insertGeneralisation.InsertServices;
 import com.prog4.digitalbank.loan.BankLoan;
-import com.prog4.digitalbank.loan.LoanRepository;
 import com.prog4.digitalbank.loan.LoanServices;
 import com.prog4.digitalbank.methods.CheckDateValidy;
 import com.prog4.digitalbank.methods.Conversion;
 import com.prog4.digitalbank.methods.IdGenerators;
 import lombok.AllArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -34,17 +34,13 @@ public class TransferServices {
         private Save<ForeignTransfer> foreignTransferSave;
         private Save<Transfer> transferSave;
         private LoanServices loanServices;
-
-
+        private TransferRepository transferRepository;
 
         private boolean checkUnpaidLoan( Transfer transfer){
 
             String accountSenderId = transfer.getSenderAccountId();
             List<BankLoan> unpaidLoan = loanServices.findByAccountId(accountSenderId);
-            if (!unpaidLoan.isEmpty()){
-                return false;
-            }
-            return true;
+            return unpaidLoan.isEmpty();
         }
 
         private Boolean checkDateValidity(List<ForeignReceiver> foreignReceivers){
@@ -70,9 +66,10 @@ public class TransferServices {
                     String transferId = IdGenerators.generateId(12);
                     Date duration = null;
                     if (foreignReceiver.getEffectiveDate() == null){
-                         duration = CheckDateValidy.addDayToDate(foreignReceiver.getEffectiveDate(),2);
-                    }
+                         duration = CheckDateValidy.addDayToDate(Date.valueOf(LocalDate.now()),2);
+                    }else {
                     duration = foreignReceiver.getEffectiveDate();
+                    }
                     Transfer transfer1 = new Transfer(
                             transferId,
                             foreignReceiver.getAmount(),
@@ -96,19 +93,13 @@ public class TransferServices {
                 return "all transfer initiated";
 
                }else {
-                   return "an outside transfer required at least 2 days to validate";
+                   return "an outside transfer required at least 48h to validate";
                }
            }else {
-               return "you have an unpaid laon";
+               return "you have an unpaid loan";
            }
 
         }
-
-
-
-
-
-
 
         private Boolean checkAvailableBalance(Transfer transfer ,  List<LocalReceiver> localReceivers){
                 List<Double> instantTransfer = new ArrayList<>();
@@ -123,7 +114,10 @@ public class TransferServices {
                 double availableBalance = balanceServices
                         .actualBalance(transfer
                                         .getSenderAccountId()).getAmount();
-            return availableBalance >= neededBalance;
+            if (neededBalance > availableBalance){
+                return false;
+            }
+            return true;
         }
 
         private boolean checkAccount (List<LocalReceiver> localReceivers){
@@ -194,8 +188,25 @@ public class TransferServices {
                 return "operation failed : you have an unpaid loan";
             }
             return "transfer initiated";
-
         }
 
+        private List<Transfer> appendingTransfer(){
+            return transferRepository.appendingTransfer();
+        }
 
+        private void updateTransferStatus(List<Transfer> transfers) throws SQLException {
+            for (Transfer transfer : transfers){
+                Double amount = balanceServices.actualBalance(transfer.getSenderAccountId()).getAmount();
+                if (amount > transfer.getAmount()){
+                    transferRepository.updateTransferStatus(transfer.getId(),"done");
+                }else {
+                    transferRepository.updateTransferStatus(transfer.getId(),"canceled");
+                }
+            }
+        }
+        @Scheduled(fixedRate = 2000)
+        private void transferExecute() throws SQLException {
+            List<Transfer> transfers = appendingTransfer();
+            updateTransferStatus(transfers);
+        }
 }

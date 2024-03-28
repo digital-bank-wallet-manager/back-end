@@ -34,9 +34,9 @@ public class InsertServices {
 
     }
     @Scheduled(fixedRate = 6000)
-    public String applyTransactionOnBalance() throws SQLException {
+    public void applyTransactionOnBalance() throws SQLException {
         List<Transaction> transactions = transactionServices.notAppliedTransaction();
-        return balanceServices.applyBalance(transactions);
+        balanceServices.applyBalance(transactions);
     }
 
 }

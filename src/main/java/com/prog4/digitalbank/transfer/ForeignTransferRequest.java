@@ -8,7 +8,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Getter@Setter
-public class ForeingTransferRequest {
+public class ForeignTransferRequest {
     private Transfer transfer;
     private List<ForeignReceiver> foreignReceivers;
 }

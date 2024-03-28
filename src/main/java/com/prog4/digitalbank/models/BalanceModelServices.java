@@ -18,15 +18,13 @@ public class BalanceModelServices {
 
 
     public BalanceModel actualBalance (String accountId){
-        BalanceModel balanceModel = new BalanceModel(balanceServices.actualBalance(accountId),loanServices.actualLoan(accountId));
-        return balanceModel;
+        return new BalanceModel(balanceServices.actualBalance(accountId),loanServices.actualLoan(accountId));
     }
 
     public BalanceModel balanceAtDate(String accountId , Date date) throws SQLException {
-        BalanceModel balanceModel = new BalanceModel(
+        return new BalanceModel(
                 balanceServices.balanceForSpecificTime(accountId , date),
                 loanServices.loanEvolutionByDate(accountId,date));
-        return balanceModel;
 
     }
 }
