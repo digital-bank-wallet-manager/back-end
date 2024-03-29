@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: digital bank wallet management API
   description: This is an api about a digital bank management.
-  version: 2.0.0
+  version: 3.0.0
 tags:
   - name: account
     description: Everything about account
@@ -282,63 +282,65 @@ paths:
           $ref: "#/components/responses/404"
         500:
           $ref: "#/components/responses/500"
-  /transfer/foreing/{accoutRef}/{subCategoryId}:
-    post:
+  /transaction/cancel/{transactionId}:
+    put:
       tags:
-        - transfer
-      summary: create a transfer to another bank
-      operationId: addForeignTransfer
+        - transaction
+      summary: cancel an ongoing transaction
       parameters:
-        - $ref: "#/components/parameters/PathAccountRef"
-        - $ref: "#/components/parameters/PathSubCategoryId"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Transfer"
-        required: true
+        - name: transactionId
+          in: path
+          description: transaction's id
+          required: true
+          schema:
+            type: string
       responses:
         200:
           $ref: "#/components/responses/200"
-          description: return a the new foreign transfer
+          description: return a message that confirm the cancellation
         400:
           $ref: "#/components/responses/400"
         404:
           $ref: "#/components/responses/404"
         500:
           $ref: "#/components/responses/500"
-  /transfer/inside/{accountRef}/{firstName}/{lastName}/{subCategory}:
+  /transfer/foreign:
+    post:
+      tags:
+        - transfer
+      summary: create a transfer to another bank
+      operationId: addForeignTransfer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ForeignTransferRequest"
+        required: true
+      responses:
+        200:
+          $ref: "#/components/responses/200"
+          description: return a confirmation message
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+  /transfer/local}:
     post:
       tags:
         - transfer
       summary: transfer inside the bank
       operationId: addInsideTransfer
-      parameters:
-        - $ref: "#/components/parameters/PathAccountRef"
-        - name: firstName
-          in: path
-          description: first name of the destination account's owner
-          required: true
-          type: string
-        - name: lastName
-          in: path
-          description: last name of the destination accounr's owner
-          required: true
-          type: string
-        - $ref: "#/components/parameters/PathSubCategoryId"
       requestBody:
         content:
           application.json:
             schema:
-              $ref: "#/components/schemas/Transfer"
+              $ref: "#/components/schemas/LocalTransferRequest"
       responses:
         200:
           $ref: "#/components/responses/200"
-          description: return a the new inside transfer
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Transfer"
+          description: return a confirmation message
         400:
           $ref: "#/components/responses/400"
         404:
@@ -529,6 +531,29 @@ paths:
           $ref: "#/components/responses/404"
         500:
           $ref: "#/components/responses/500"
+  /loan/repay:
+    post:
+      tags:
+        - loan
+      summary: repay loan
+      operationId: loanRepay
+      requestBody:
+        $ref: "#/components/schemas/BankLoan"
+      responses:
+        200:
+          $ref: "#/components/responses/200"
+          description: return the loan's evolution
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoanEvolution"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+
 components:
   schemas:
     CrupdateAccount:
@@ -725,6 +750,46 @@ components:
           $ref: "#/components/schemas/Account"
         category:
           $ref: "#/components/schemas/Category"
+    ForeignReceiver:
+      type: object
+      properties:
+        receiverAccount:
+          type: string
+        amount:
+          type: number
+          format: float
+        reason:
+          type: string
+        effectiveDate:
+          type: string
+          format: date
+        subCategory:
+          type: integer
+    LocalReceiver :
+      allOf:
+        - $ref: "#/components/schemas/ForeignReceiver"
+        - type: object
+          properties:
+            accountRef:
+              type: string
+            firstName:
+              type: string
+            lastName:
+              type: string
+    ForeignTransferRequest:
+      type: object
+      properties:
+        transfer:
+          $ref: "#/components/schemas/Transfer"
+        receivers:
+          $ref: "#/components/schemas/LocalReceiver"
+    LocalTransferRequest:
+      type: object
+      properties:
+        transfer:
+          $ref: "#/components/schemas/Transfer"
+        receivers:
+          $ref: "#/components/schemas/LocalReceiver"
     defaultResponse:
       type: object
       properties:
