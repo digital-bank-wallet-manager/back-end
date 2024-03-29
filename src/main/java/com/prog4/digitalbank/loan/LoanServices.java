@@ -6,6 +6,7 @@ import com.prog4.digitalbank.CrudOperations.Save;
 import com.prog4.digitalbank.account.Account;
 import com.prog4.digitalbank.account.AccountServices;
 import com.prog4.digitalbank.balance.BalanceServices;
+import com.prog4.digitalbank.category.CategoryServices;
 import com.prog4.digitalbank.insertGeneralisation.InsertServices;
 import com.prog4.digitalbank.methods.Conversion;
 import com.prog4.digitalbank.methods.IdGenerators;
@@ -31,11 +32,7 @@ public class LoanServices {
     private FindById<BankLoan> bankLoanFindById;
     private FindAll<BankLoan> bankLoanFindAll;
     private BalanceServices balanceServices;
-
-    private BankLoan bankLoanSave (BankLoan bankLoan) throws SQLException {
-        return bankLoanSave.insert(bankLoan);
-    }
-
+    private CategoryServices categoryServices;
 
 
     private LoanEvolution loanEvolutionSave (LoanEvolution loanEvolution ) throws SQLException {
@@ -82,7 +79,7 @@ public class LoanServices {
                     "credit",
                     id,
                     "loan",
-                    29);
+                    categoryServices.findIdSubCategory("Loan Money"));
             return bankLoan1;
         }
         BankLoan error = new BankLoan("your are not allowed for this operation (check your loan authorization or your monthly pay is not enough)");
@@ -107,7 +104,7 @@ public class LoanServices {
            LoanEvolution loanEvolution = loanRepository.getLastState(bankLoan.getId());
            Double rest = loanEvolution.getRest();
            Date date = new Date(loanEvolution.getDateTime().getTime());
-           if (rest != 0 && date.before(Date.valueOf(LocalDate.now()))){
+           if (rest != 0 && date.toLocalDate().isBefore(LocalDate.now())){
                String id = IdGenerators.generateId(12);
                Timestamp dateTime = Timestamp.valueOf(LocalDateTime.now());
                Timestamp startDate = Conversion.DateToTimestamp(bankLoan.getLoanDate());
@@ -148,7 +145,7 @@ public class LoanServices {
         if (!loanEvolutions.isEmpty()){
             LoanEvolution loanEvolution1 = loanEvolutions.get(0);
             Date date1 = new Date(loanEvolution1.getDateTime().getTime());
-            if (date1.before(date)){
+            if (date1.toLocalDate().isBefore(date.toLocalDate())){
                 Double rest = loanEvolution1.getRest();
                 if (rest == 0){
                     loanEvolution = new LoanEvolution(0.0,0.0);
@@ -212,7 +209,7 @@ public class LoanServices {
                     "debit",
                     bankLoanId,
                     "loan",
-                    39);
+                    categoryServices.findIdSubCategory("Repay"));
             return inserted;
     }
 

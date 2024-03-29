@@ -13,4 +13,8 @@ public class CategoryServices {
     public List<Category> findByType (String type){
        return categoryRepository.findByType(type);
     }
+
+    public int findIdSubCategory(String subCategory){
+        return categoryRepository.findLoanOrRepayId(subCategory);
+    }
 }

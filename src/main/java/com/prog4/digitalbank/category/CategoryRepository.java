@@ -35,6 +35,21 @@ public class CategoryRepository {
         }
     }
 
+    public int findLoanOrRepayId(String type){
+        int id = 0;
+        String sql = "select id from sub_category where name ilike ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)){
+            statement.setString(1,type);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()){
+               id = resultSet.getInt("id");
+            }
+            return id;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 
 }
