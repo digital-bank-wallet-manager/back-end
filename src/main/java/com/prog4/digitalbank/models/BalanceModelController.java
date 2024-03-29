@@ -18,7 +18,7 @@ public class BalanceModelController {
         return balanceModelServices.actualBalance(accountId);
     }
 
-    @GetMapping("/account/balance/{accountId}/{date}")
+   @GetMapping("/account/balance/{accountId}/{date}")
     public BalanceModel balanceModelAtTime(@PathVariable String accountId , @PathVariable Date date) throws SQLException {
         return balanceModelServices.balanceAtDate(accountId , date);
     }
