@@ -2,23 +2,19 @@ package com.prog4.digitalbank.balance;
 
 import com.prog4.digitalbank.CrudOperations.FindById;
 import com.prog4.digitalbank.CrudOperations.Save;
-import com.prog4.digitalbank.methods.Conversion;
 import com.prog4.digitalbank.methods.IdGenerators;
 import com.prog4.digitalbank.transactions.Transaction;
 import com.prog4.digitalbank.transactions.TransactionServices;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static java.sql.Date.valueOf;
 
 @Service
 @AllArgsConstructor
@@ -56,13 +52,6 @@ public class BalanceServices {
     }
 
 
-
-    public List<Balance> findByAccountIdOrdered (Class<Balance> balanceClass ,String id ){
-        String order = "order by date_time desc";
-        String column = "and date_time <= current_timestamp";
-        return findById.findByAccountId(balanceClass ,id , order,column);
-    }
-
     public String applyBalance(List<Transaction> transactions) throws SQLException {
         for (Transaction transaction : transactions){
             String transactionId = transaction.getId();
@@ -87,7 +76,6 @@ public class BalanceServices {
 
     public Balance actualBalance(String accountId){
         return balanceRepository.findBalanceByDate(accountId , Date.valueOf(LocalDate.now())).get(0);
-
     }
 
     public Balance balanceForSpecificTime (String accountId , Date date){
@@ -97,8 +85,10 @@ public class BalanceServices {
                 "").get(0).getDateTime();
         Date createdAt = new Date(creationDate.getTime());
         if (date.before(createdAt)){
-            Balance error = new Balance("your account was not created yet");
-            return error;
+            return new Balance("your account was not created yet");
+        }
+        if (date.after(Date.valueOf(LocalDate.now()))){
+            return new Balance("invalid date");
         }
         return balanceRepository.findBalanceByDate(accountId , date).get(0);
     }

@@ -2,10 +2,12 @@ package com.prog4.digitalbank.transfer;
 
 import lombok.*;
 
-import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.Date;
+
 @AllArgsConstructor
 @Getter@Setter@ToString@EqualsAndHashCode
+@NoArgsConstructor
 public class Transfer {
     private String id;
     private Double amount;
@@ -17,7 +19,4 @@ public class Transfer {
     private String senderAccountId;
     private String idForeignTransfer;
 
-    public Transfer(String id) {
-        this.id = id;
-    }
 }

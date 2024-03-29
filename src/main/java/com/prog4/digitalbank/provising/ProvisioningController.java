@@ -10,10 +10,10 @@ import java.sql.SQLException;
 
 @RestController
 @AllArgsConstructor
-public class ProvisingController {
+public class ProvisioningController {
     private ProvisingServices provisingServices;
     @PostMapping("/provising/save/{subCategoryId}")
-    public Provisioning addNewProvising (@RequestBody Provisioning provisioning , @PathVariable int subCategoryId) throws SQLException {
+    public Provisioning addNewProvisioning (@RequestBody Provisioning provisioning , @PathVariable int subCategoryId) throws SQLException {
         return provisingServices.saveProvising(provisioning , subCategoryId);
     }
 }

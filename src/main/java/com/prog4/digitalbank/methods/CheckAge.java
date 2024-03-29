@@ -10,7 +10,6 @@ public class CheckAge {
         int yearBirth = date.getYear();
         LocalDate currentDate = LocalDate.now();
         int actualYear = currentDate.getYear();
-
         return  actualYear - yearBirth;
     }
 }

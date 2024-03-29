@@ -51,11 +51,11 @@ public class LoanServices {
         if (!auth){
             return false;
         }
-        if(salary < amount / 3){
+        if(salary/3 < amount){
             return false;
 
         }
-        if (findByAccountId(bankLoan.getAccountId()).size() > 0){
+        if (!findByAccountId(bankLoan.getAccountId()).isEmpty()){
             return false;
         }
         return true;
@@ -71,7 +71,7 @@ public class LoanServices {
             Double interest2 = bankLoan.getInterestAboveSevenDay();
             Date date = bankLoan.getLoanDate();
             Timestamp timestamp = Conversion.DateToTimestamp(date);
-            BankLoan bankLoan1 = new BankLoan(id,amount,date,interest1,accountId,interest2,"unpaid");
+            BankLoan bankLoan1 = new BankLoan(id,amount,date,interest2,accountId,interest1,"unpaid");
             bankLoanSave.insert(bankLoan1);
             String idEvolution = IdGenerators.generateId(12);
             LoanEvolution loanEvolution = new LoanEvolution(idEvolution,timestamp,0.0,amount,id);
@@ -145,7 +145,7 @@ public class LoanServices {
     public LoanEvolution loanEvolutionByDate(String accountId , Date date) throws SQLException {
         List<LoanEvolution> loanEvolutions =  loanRepository.loanEvolutionsAtDate(accountId , date);
         LoanEvolution loanEvolution = null;
-        if (loanEvolutions.size()>0){
+        if (!loanEvolutions.isEmpty()){
             LoanEvolution loanEvolution1 = loanEvolutions.get(0);
             Date date1 = new Date(loanEvolution1.getDateTime().getTime());
             if (date1.before(date)){
@@ -179,7 +179,7 @@ public class LoanServices {
         return loanEvolution;
     }
 
-    public List<BankLoan> laonHistory (String accountId){
+    public List<BankLoan> loanHistory(String accountId){
         return bankLoanFindById.findByAccountId(BankLoan.class ,accountId ,"","");
     }
 

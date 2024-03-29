@@ -22,7 +22,7 @@ public class LoanController {
 
     @GetMapping("/loanHistory/{accountId}")
     public List<BankLoan> loanHistory (@PathVariable String accountId){
-        return loanServices.laonHistory(accountId);
+        return loanServices.loanHistory(accountId);
 
     }
 

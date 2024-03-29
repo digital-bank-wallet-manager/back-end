@@ -21,6 +21,6 @@ FROM "provisioning" AS p
          INNER JOIN "category" AS c
                     ON sc.category_id = c.id
 GROUP BY c.name, p.effective_date
-HAVING c.name ilike ?
+HAVING c.name ilike 'rental income'
 AND date_part('month', p.effective_date) = date_part('month', current_date);
 

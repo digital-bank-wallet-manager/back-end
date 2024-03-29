@@ -5,14 +5,18 @@ import com.prog4.digitalbank.balance.Balance;
 import com.prog4.digitalbank.loan.LoanEvolution;
 import lombok.*;
 
-import java.util.Date;
+import java.sql.Date;
+
 @AllArgsConstructor
 @Getter
 @Setter
 @ToString
 @EqualsAndHashCode
 public class BalanceModel {
-    private Balance balance;
-    private LoanEvolution loanEvolution;
+    private String id;
+    private Date date;
+    private Double balance;
+    private Double totalInterest;
+    private Double rest;
 
 }
