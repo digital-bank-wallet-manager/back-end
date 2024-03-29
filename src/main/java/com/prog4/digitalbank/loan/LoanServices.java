@@ -153,7 +153,7 @@ public class LoanServices {
                 if (rest == 0){
                     loanEvolution = new LoanEvolution(0.0,0.0);
                 }
-                BankLoan bankLoan = bankLoanFindAll.findAll(BankLoan.class , "where account_id ="+accountId+" and status = 'unpaid").get(0);
+                BankLoan bankLoan = bankLoanFindAll.findAll(BankLoan.class , "where account_id ="+accountId+" and status = 'unpaid'").get(0);
                 Double initialAmount = bankLoan.getAmount();
                 Double interest1 = bankLoan.getInterestSevenDay();
                 Double interest2 = bankLoan.getInterestAboveSevenDay();

@@ -30,4 +30,5 @@ public class LoanController {
     public LoanEvolution repay(@RequestBody BankLoan bankLoan) throws SQLException {
         return loanServices.repayLoan(bankLoan);
     }
+
 }

@@ -79,19 +79,24 @@ public class BalanceServices {
     }
 
     public Balance balanceForSpecificTime (String accountId , Date date){
-        Timestamp creationDate=findById.findByAccountId(Balance.class ,
+
+        Timestamp creationDate = findById.findByAccountId(Balance.class ,
                 accountId ,
-                "order by date_time asc",
+                "order by date_time asc limit 1",
                 "").get(0).getDateTime();
-        Date createdAt = new Date(creationDate.getTime());
-        if (date.before(createdAt)){
-            return new Balance("your account was not created yet");
+        LocalDate creation = new Date(creationDate.getTime()).toLocalDate();
+        LocalDate givenDate = date.toLocalDate();
+         if (givenDate.isBefore(creation)){
+            return new Balance("your account was not created yet ",0.0,creationDate,accountId);
         }
-        if (date.after(Date.valueOf(LocalDate.now()))){
-            return new Balance("invalid date");
+        if (givenDate.isAfter(LocalDate.now())){
+            return new Balance("invalid date",0.0,creationDate,accountId);
         }
+
         return balanceRepository.findBalanceByDate(accountId , date).get(0);
     }
+
+
 
 
 }

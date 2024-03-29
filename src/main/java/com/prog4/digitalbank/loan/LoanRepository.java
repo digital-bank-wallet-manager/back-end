@@ -28,15 +28,8 @@ public class LoanRepository {
             while (resultSet.next()){
                 bankLoans.add(useConvertList.convertToList(resultSet , BankLoan.class));
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
+        } catch (SQLException | InvocationTargetException | NoSuchMethodException | InstantiationException |
+                 IllegalAccessException e) {
             throw new RuntimeException(e);
         }
         return bankLoans;
@@ -89,15 +82,8 @@ public class LoanRepository {
             while (resultSet.next()){
                 loanEvolutions.add(useToConvertList.convertToList(resultSet , LoanEvolution.class));
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
+        } catch (SQLException | InvocationTargetException | NoSuchMethodException | InstantiationException |
+                 IllegalAccessException e) {
             throw new RuntimeException(e);
         }
 
