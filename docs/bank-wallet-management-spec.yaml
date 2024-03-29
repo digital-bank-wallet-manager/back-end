@@ -301,10 +301,6 @@ paths:
         200:
           $ref: "#/components/responses/200"
           description: return a the new foreign transfer
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Transfer"
         400:
           $ref: "#/components/responses/400"
         404:
