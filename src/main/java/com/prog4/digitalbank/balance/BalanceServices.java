@@ -22,8 +22,6 @@ public class BalanceServices {
     private Save<Balance> save;
     private BalanceRepository balanceRepository;
     private FindById<Balance> findById;
-    private TransactionServices transactionServices;
-
     public Balance saveBalance (Balance balance) throws SQLException {
         String id = IdGenerators.generateId(10);
         Double amount = balance.getAmount();
