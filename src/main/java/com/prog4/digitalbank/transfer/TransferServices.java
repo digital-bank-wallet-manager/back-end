@@ -222,4 +222,8 @@ public class TransferServices {
             List<Transfer> transfers = appendingTransfer();
             updateTransferStatus(transfers);
         }
+
+    public List<Transfer> getTransferBySenderId(String senderId){
+            return transferRepository.getTransferBySenderId(senderId);
+    }
 }

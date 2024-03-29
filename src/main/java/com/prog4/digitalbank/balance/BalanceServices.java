@@ -4,7 +4,6 @@ import com.prog4.digitalbank.CrudOperations.FindById;
 import com.prog4.digitalbank.CrudOperations.Save;
 import com.prog4.digitalbank.methods.IdGenerators;
 import com.prog4.digitalbank.transactions.Transaction;
-import com.prog4.digitalbank.transactions.TransactionServices;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.sql.Date;
@@ -22,14 +21,14 @@ public class BalanceServices {
     private Save<Balance> save;
     private BalanceRepository balanceRepository;
     private FindById<Balance> findById;
-    public Balance saveBalance (Balance balance) throws SQLException {
+    public void saveBalance (Balance balance) throws SQLException {
         String id = IdGenerators.generateId(10);
         Double amount = balance.getAmount();
         Timestamp dateTime = Timestamp.valueOf(LocalDateTime.now());
         String accountId = balance.getAccountId();
 
         Balance toSave = new Balance(id ,amount ,dateTime,accountId);
-        return save.insert(toSave);
+        save.insert(toSave);
     }
 
     public Balance saveBalanceForSpecificTime (Balance balance) throws SQLException {
@@ -50,7 +49,7 @@ public class BalanceServices {
     }
 
 
-    public String applyBalance(List<Transaction> transactions) throws SQLException {
+    public void applyBalance(List<Transaction> transactions) throws SQLException {
         for (Transaction transaction : transactions){
             String transactionId = transaction.getId();
             String accountId = transaction.getAccountId();
@@ -68,7 +67,6 @@ public class BalanceServices {
             Balance toInsert = new Balance(newAmount,timestamp,accountId,transactionId);
             saveBalanceForSpecificTime(toInsert);
         }
-        return "inserted";
 
     }
 
