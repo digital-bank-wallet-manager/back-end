@@ -7,6 +7,7 @@ import lombok.*;
 @Setter
 @ToString
 @EqualsAndHashCode
+@NoArgsConstructor
 public class ForeignTransfer {
     private String id ;
     private String accountRef;

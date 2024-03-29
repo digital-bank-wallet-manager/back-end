@@ -1,6 +1,7 @@
 package com.prog4.digitalbank.transactions;
 
 import com.prog4.digitalbank.CrudOperations.FindAll;
+import com.prog4.digitalbank.transfer.Transfer;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -52,6 +53,24 @@ public class TransactionRepository {
             throw new RuntimeException(e);
         }
         return transactions;
+    }
+
+    public Transaction transactionByTransferId (String transferId){
+        Transaction transaction = null;
+        String sql= "select * from transaction where transfer_id = ? and type = 'debit'";
+        try(PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1,transferId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()){
+             transaction = findAll.convertToList(resultSet , Transaction.class);
+            }
+
+            return transaction;
+        } catch (SQLException | InvocationTargetException | NoSuchMethodException | InstantiationException |
+                 IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 }

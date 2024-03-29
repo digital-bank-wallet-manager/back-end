@@ -21,7 +21,7 @@ public class FindById<T> {
     public T findByIdOrderd(Class<T> clazz, String id , String order) {
         T entity = null;
         String tableName = Conversion
-                .convertToSnakeCase(clazz.getSimpleName().toLowerCase());
+                .convertToSnakeCase(Conversion.firstCharToLowercase(clazz.getSimpleName()));
         String sql = "select * from " + tableName + " where id = ? "+order;
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, id);

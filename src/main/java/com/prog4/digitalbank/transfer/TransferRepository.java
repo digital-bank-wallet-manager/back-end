@@ -44,4 +44,20 @@ public class TransferRepository {
             throw new RuntimeException(e);
         }
     }
+
+    public List<Transfer> getTransferBySenderId(String senderId){
+        List<Transfer> transfers = new ArrayList<>();
+        String sql = "select * from transfer where sender_account_id = ?";
+        try(PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1,senderId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()){
+                transfers.add(useConvertToList.convertToList(resultSet,Transfer.class));
+            }
+            return transfers;
+        } catch (SQLException | InvocationTargetException | NoSuchMethodException | InstantiationException |
+                 IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

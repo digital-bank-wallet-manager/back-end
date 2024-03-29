@@ -122,4 +122,8 @@ public class TransactionServices {
         }
         return "transaction failed (done transaction can not be canceled";
     }
+
+    public Transaction transactionByTransferId (String transferId){
+        return transactionRepository.transactionByTransferId(transferId);
+    }
 }
