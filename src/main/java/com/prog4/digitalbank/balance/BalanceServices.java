@@ -76,7 +76,6 @@ public class BalanceServices {
 
     public Balance actualBalance(String accountId){
         return balanceRepository.findBalanceByDate(accountId , Date.valueOf(LocalDate.now())).get(0);
-
     }
 
     public Balance balanceForSpecificTime (String accountId , Date date){
@@ -86,8 +85,10 @@ public class BalanceServices {
                 "").get(0).getDateTime();
         Date createdAt = new Date(creationDate.getTime());
         if (date.before(createdAt)){
-            Balance error = new Balance("your account was not created yet");
-            return error;
+            return new Balance("your account was not created yet");
+        }
+        if (date.after(Date.valueOf(LocalDate.now()))){
+            return new Balance("invalid date");
         }
         return balanceRepository.findBalanceByDate(accountId , date).get(0);
     }
