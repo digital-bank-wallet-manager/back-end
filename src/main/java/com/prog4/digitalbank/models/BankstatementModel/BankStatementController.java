@@ -2,6 +2,7 @@ package com.prog4.digitalbank.models.BankstatementModel;
 
 import com.itextpdf.text.DocumentException;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -21,6 +22,7 @@ public class BankStatementController {
         return bankStatementServices.bankStatements(accountId , month);
     }
 
+    @SneakyThrows
     @GetMapping(value = "/download/{accountId}/{month}" , produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<ByteArrayResource> downloadPDF(@PathVariable String accountId ,@PathVariable int month) throws DocumentException {
         byte[] pdfBytes = bankStatementServices.generatePdf(accountId , month);
