@@ -12,12 +12,11 @@ import java.sql.Date;
 @Getter
 @Setter
 public class TransactionSum {
-    private Double transactionSum;
-    private String category;
-    private Date start;
-    private Date end;
+    private Double sum;
+    private String categoryName;
 
-    public TransactionSum(Double transactionSum) {
-        this.transactionSum = transactionSum;
+
+    public TransactionSum(Double sum) {
+        this.sum = sum;
     }
 }

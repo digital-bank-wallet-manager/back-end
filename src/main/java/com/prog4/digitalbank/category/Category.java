@@ -4,10 +4,11 @@ import lombok.*;
 
 @AllArgsConstructor
 @Getter
-@Setter@ToString@EqualsAndHashCode
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode
 public class Category {
-    private int subCategoryId;
-    private String category;
-    private String subCategory;
-
+    private int id;
+    private String name;
+    private String type;
 }
