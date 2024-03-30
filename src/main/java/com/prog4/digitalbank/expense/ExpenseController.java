@@ -1,5 +1,6 @@
 package com.prog4.digitalbank.expense;
 
+import com.prog4.digitalbank.Messages;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,7 +14,7 @@ import java.sql.SQLException;
 public class ExpenseController {
     private ExpenseServices expenseServices;
     @PostMapping("/expense/{subCategoryId}")
-    public Expense getMoney (@RequestBody Expense expense ,@PathVariable int subCategoryId) throws SQLException {
+    public Messages getMoney (@RequestBody Expense expense , @PathVariable int subCategoryId) throws SQLException {
         return expenseServices.expenseOperation(expense , subCategoryId);
     }
 }

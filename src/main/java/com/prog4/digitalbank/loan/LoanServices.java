@@ -3,6 +3,7 @@ package com.prog4.digitalbank.loan;
 import com.prog4.digitalbank.CrudOperations.FindAll;
 import com.prog4.digitalbank.CrudOperations.FindById;
 import com.prog4.digitalbank.CrudOperations.Save;
+import com.prog4.digitalbank.Messages;
 import com.prog4.digitalbank.account.Account;
 import com.prog4.digitalbank.account.AccountServices;
 import com.prog4.digitalbank.balance.BalanceServices;
@@ -182,7 +183,7 @@ public class LoanServices {
 
 
 
-    public LoanEvolution repayLoan(BankLoan bankLoan) throws SQLException {
+    public Messages repayLoan(BankLoan bankLoan) throws SQLException {
         String accountId= bankLoan.getAccountId();
         String bankLoanId = bankLoan.getId();
         double actualBalance = balanceServices.actualBalance(accountId).getAmount();
@@ -210,7 +211,7 @@ public class LoanServices {
                     bankLoanId,
                     "loan",
                     categoryServices.findIdSubCategory("Repay"));
-            return inserted;
+            return new Messages("the rest to pay is "+inserted.getRest(),null);
     }
 
 }

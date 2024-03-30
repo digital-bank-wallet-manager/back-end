@@ -1,6 +1,7 @@
 package com.prog4.digitalbank.expense;
 
 import com.prog4.digitalbank.CrudOperations.Save;
+import com.prog4.digitalbank.Messages;
 import com.prog4.digitalbank.balance.Balance;
 import com.prog4.digitalbank.balance.BalanceServices;
 import com.prog4.digitalbank.insertGeneralisation.InsertServices;
@@ -36,7 +37,7 @@ public class ExpenseServices {
        }
     }
 
-    public Expense expenseOperation (Expense expense , int subCategoryId) throws SQLException {
+    public Messages expenseOperation (Expense expense , int subCategoryId) throws SQLException {
         if (checkAmountCondition(expense)){
             String id = IdGenerators.generateId(12);
             Double amount = expense.getAmount();
@@ -51,10 +52,9 @@ public class ExpenseServices {
                     id,
                     "expense",
                     subCategoryId);
-            return expense1;
+            return new Messages("your account will be debit by the amount of "+expense1.getAmount(),null);
         }else {
-            Expense error = new Expense("you actual balance is not enough for this operation");
-            return error;
+            return new Messages(null,"your actual amount is not enough");
         }
     }
 }

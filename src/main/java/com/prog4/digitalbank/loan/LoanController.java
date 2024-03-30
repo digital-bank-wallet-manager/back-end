@@ -1,6 +1,7 @@
 package com.prog4.digitalbank.loan;
 
 
+import com.prog4.digitalbank.Messages;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,13 +22,13 @@ public class LoanController {
     }
 
     @GetMapping("/loanHistory/{accountId}")
-    public List<BankLoan> loanHistory (@PathVariable String accountId){
+    public List<BankLoan> loanHistory (@PathVariable(required = true) String accountId ){
         return loanServices.loanHistory(accountId);
 
     }
 
     @PostMapping("loan/repay")
-    public LoanEvolution repay(@RequestBody BankLoan bankLoan) throws SQLException {
+    public Messages repay(@RequestBody BankLoan bankLoan) throws SQLException {
         return loanServices.repayLoan(bankLoan);
     }
 

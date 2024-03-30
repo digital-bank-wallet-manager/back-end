@@ -3,6 +3,7 @@ package com.prog4.digitalbank.transfer;
 
 
 import com.prog4.digitalbank.CrudOperations.Save;
+import com.prog4.digitalbank.Messages;
 import com.prog4.digitalbank.account.AccountServices;
 import com.prog4.digitalbank.balance.BalanceServices;
 import com.prog4.digitalbank.insertGeneralisation.InsertServices;
@@ -139,11 +140,21 @@ public class TransferServices {
             return true;
         }
 
-        public String localTransferOperation(Transfer transfer , List<LocalReceiver> localReceivers) throws SQLException {
+        private boolean checkAllDates(List<LocalReceiver> localReceivers){
+            for (LocalReceiver localReceiver : localReceivers){
+                if (localReceiver.getEffectiveDate().toLocalDate().isBefore(LocalDate.now())){
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public Messages localTransferOperation(Transfer transfer , List<LocalReceiver> localReceivers) throws SQLException {
+            String transferRef = IdGenerators.generateTransferRef();
             if (checkUnpaidLoan(transfer)){
                 if (checkAccount(localReceivers)){
                     if (checkAvailableBalance(transfer , localReceivers)){
-                        String transferRef = IdGenerators.generateTransferRef();
+                        if (checkAllDates(localReceivers)){
                         for (LocalReceiver localReceiver : localReceivers){
                             Date date = null;
                             if (localReceiver.getEffectiveDate() == null){
@@ -188,18 +199,20 @@ public class TransferServices {
                                     localReceiver.getSubCategoryId()
                             );
                         }
+                        }else {
+                            return new Messages(null,"there is an invalid effective date");
+                        }
                     }else {
-                        return "operation failed : your balance is not enough";
+                        return new Messages (null,"operation failed : your balance is not enough");
                     }
 
                 }else {
-                    return "operation failed : invalid account ref / invalid lastname or firstname ";
+                    return new Messages(null,"operation failed : invalid account ref / invalid lastname or firstname ");
                 }
             }else {
-                return "operation failed : you have an unpaid loan";
+                return new Messages(null,"operation failed : you have an unpaid loan");
             }
-            return "transfer initiated";
-
+            return new Messages("transfer initiated transfer ref: "+transferRef,null);
         }
 
         private List<Transfer> appendingTransfer(){
