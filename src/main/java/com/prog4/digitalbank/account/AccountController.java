@@ -1,5 +1,6 @@
 package com.prog4.digitalbank.account;
 
+import com.prog4.digitalbank.Messages;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,7 @@ public class AccountController {
         return accountServices.findAll(Account.class);
     }
     @PostMapping("/accounts/save")
-    public Account save (@RequestBody Account account) throws SQLException {
+    public Messages save (@RequestBody Account account) throws SQLException {
         return accountServices.insert(account);
 
     }
@@ -27,12 +28,12 @@ public class AccountController {
     }
 
     @PutMapping("/account/loan/{id}")
-    public String giveLoanAuthorization(@PathVariable String id){
+    public Messages giveLoanAuthorization(@PathVariable String id){
         return accountServices.giveAuthorization(id);
     }
 
     @PutMapping("/account/salary/{id}/{salary}")
-    public String updateSalary(@PathVariable String id , @PathVariable Double salary){
+    public Messages updateSalary(@PathVariable String id , @PathVariable Double salary){
         return accountServices.updateSalary(id , salary);
     }
 

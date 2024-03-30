@@ -26,7 +26,7 @@ public class AccountRepository {
 
     }
 
-    public String updateMonthlyPay(String tableName , String id , String columnName , Double newValue){
+    public void updateMonthlyPay(String tableName , String id , String columnName , Double newValue){
         String sql = "update "+tableName+" set "+columnName+"=? where id=?";
 
         try(PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -36,9 +36,6 @@ public class AccountRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-        return "your monthly payed has ben updated to "+newValue;
-
     }
 
     public Account findByAccountRef(String accountRef , String firstName , String lastName){
