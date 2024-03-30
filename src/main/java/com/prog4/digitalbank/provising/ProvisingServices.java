@@ -22,7 +22,12 @@ public class ProvisingServices {
         String id = IdGenerators.generateId(12);
         Double amount = provisioning.getAmount();
         String reason = provisioning.getReason();
-        Date effective = provisioning.getEffectiveDate();
+        Date effective = null;
+        if (provisioning.getEffectiveDate()!= null){
+         effective = provisioning.getEffectiveDate();
+        }else {
+            effective = Date.valueOf(LocalDate.now());
+        }
         Date record = Date.valueOf(LocalDate.now());
         String accountId = provisioning.getAccountId();
 
@@ -35,13 +40,12 @@ public class ProvisingServices {
                 accountId
         );
 
-        if(effective.before(Date.valueOf(LocalDate.now()))){
+        if(effective.toLocalDate().isBefore(LocalDate.now())){
              Provisioning error = new Provisioning("the effective date must be after today");
              return error;
         }else {
             Provisioning insert = provisingSave.insert(provisioningToInsert);
              insertServices.insertTransaction(accountId, amount, effective, "credit", id, "provisioning", subCategoryId);
-            //insertServices.upDateAndInsertBalances(accountId, amount, effective, getTransactionId);
             return insert;
         }
     }

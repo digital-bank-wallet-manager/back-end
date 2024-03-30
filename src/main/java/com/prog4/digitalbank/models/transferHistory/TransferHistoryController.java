@@ -1,4 +1,4 @@
-package com.prog4.digitalbank.models;
+package com.prog4.digitalbank.models.transferHistory;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

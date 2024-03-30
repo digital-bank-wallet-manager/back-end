@@ -1,11 +1,10 @@
-package com.prog4.digitalbank.models;
+package com.prog4.digitalbank.models.BalanceModel;
 
-import com.prog4.digitalbank.account.Account;
-import com.prog4.digitalbank.account.AccountServices;
 import com.prog4.digitalbank.balance.Balance;
 import com.prog4.digitalbank.balance.BalanceServices;
 import com.prog4.digitalbank.loan.LoanEvolution;
 import com.prog4.digitalbank.loan.LoanServices;
+import com.prog4.digitalbank.models.BalanceModel.BalanceModel;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

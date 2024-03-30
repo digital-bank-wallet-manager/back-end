@@ -1,6 +1,5 @@
-package com.prog4.digitalbank.models;
+package com.prog4.digitalbank.models.BalanceModel;
 
-import com.prog4.digitalbank.balance.BalanceServices;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
