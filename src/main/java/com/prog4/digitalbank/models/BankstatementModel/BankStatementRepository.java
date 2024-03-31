@@ -1,6 +1,7 @@
-package com.prog4.digitalbank.models;
+package com.prog4.digitalbank.models.BankstatementModel;
 
 import com.prog4.digitalbank.CrudOperations.FindAll;
+import com.prog4.digitalbank.models.BankstatementModel.BankStatement;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 

@@ -1,6 +1,7 @@
 package com.prog4.digitalbank.provising;
 
 import com.prog4.digitalbank.CrudOperations.Save;
+import com.prog4.digitalbank.Messages;
 import com.prog4.digitalbank.insertGeneralisation.InsertServices;
 import com.prog4.digitalbank.methods.IdGenerators;
 import lombok.AllArgsConstructor;
@@ -18,11 +19,16 @@ public class ProvisingServices {
     private Save<Provisioning> provisingSave ;
     private InsertServices insertServices;
 
-    public Provisioning saveProvising (Provisioning provisioning , int subCategoryId) throws SQLException {
+    public Messages saveProvising (Provisioning provisioning , int subCategoryId) throws SQLException {
         String id = IdGenerators.generateId(12);
         Double amount = provisioning.getAmount();
         String reason = provisioning.getReason();
-        Date effective = provisioning.getEffectiveDate();
+        Date effective = null;
+        if (provisioning.getEffectiveDate()!= null){
+         effective = provisioning.getEffectiveDate();
+        }else {
+            effective = Date.valueOf(LocalDate.now());
+        }
         Date record = Date.valueOf(LocalDate.now());
         String accountId = provisioning.getAccountId();
 
@@ -35,14 +41,14 @@ public class ProvisingServices {
                 accountId
         );
 
-        if(effective.before(Date.valueOf(LocalDate.now()))){
-             Provisioning error = new Provisioning("the effective date must be after today");
-             return error;
+        if(effective.toLocalDate().isBefore(LocalDate.now())){
+              return new Messages(null,"the effective date must be after today");
+
         }else {
             Provisioning insert = provisingSave.insert(provisioningToInsert);
              insertServices.insertTransaction(accountId, amount, effective, "credit", id, "provisioning", subCategoryId);
-            //insertServices.upDateAndInsertBalances(accountId, amount, effective, getTransactionId);
-            return insert;
+            return new Messages("your account will be credited by the amount of "+insert.getAmount()+
+                    " at "+insert.getEffectiveDate().toString(),null);
         }
     }
 }

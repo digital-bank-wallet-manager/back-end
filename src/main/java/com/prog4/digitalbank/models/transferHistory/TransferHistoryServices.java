@@ -1,8 +1,9 @@
-package com.prog4.digitalbank.models;
+package com.prog4.digitalbank.models.transferHistory;
 
 import com.prog4.digitalbank.CrudOperations.FindById;
 import com.prog4.digitalbank.account.Account;
 import com.prog4.digitalbank.account.AccountServices;
+import com.prog4.digitalbank.models.transferHistory.TransferHistory;
 import com.prog4.digitalbank.transactions.Transaction;
 import com.prog4.digitalbank.transactions.TransactionServices;
 import com.prog4.digitalbank.transfer.ForeignTransfer;

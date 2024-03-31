@@ -1,4 +1,4 @@
-package com.prog4.digitalbank.models;
+package com.prog4.digitalbank.models.BankstatementModel;
 
 import com.itextpdf.text.DocumentException;
 import lombok.AllArgsConstructor;
@@ -18,7 +18,7 @@ import java.util.List;
 public class BankStatementController {
     private BankStatementServices bankStatementServices;
     @GetMapping("/bankStatement/{accountId}/{month}")
-    public List<BankStatement> bankStatements (@PathVariable String accountId ,@PathVariable int month){
+    public List<BankStatement> bankStatements (@PathVariable String accountId , @PathVariable int month){
         return bankStatementServices.bankStatements(accountId , month);
     }
 

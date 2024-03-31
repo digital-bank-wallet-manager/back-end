@@ -1,5 +1,6 @@
 package com.prog4.digitalbank.transactions;
 
+import com.prog4.digitalbank.Messages;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +19,7 @@ public class TransactionController {
     }
 
     @PutMapping("/transaction/cancel/{transactionId}")
-    public String cancelTransaction(@PathVariable String transactionId) throws SQLException {
+    public Messages cancelTransaction(@PathVariable String transactionId) throws SQLException {
         return transactionServices.cancelTransaction(transactionId);
     }
 }

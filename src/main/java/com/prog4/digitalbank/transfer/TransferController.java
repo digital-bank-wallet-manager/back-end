@@ -1,5 +1,6 @@
 package com.prog4.digitalbank.transfer;
 
+import com.prog4.digitalbank.Messages;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import java.sql.SQLException;
@@ -18,7 +19,7 @@ public class TransferController {
     }
 
     @PostMapping("/transfer/local")
-    public String insideTransfer (@RequestBody LocalTransferRequest localTransferRequest) throws SQLException {
+    public Messages insideTransfer (@RequestBody LocalTransferRequest localTransferRequest) throws SQLException {
         return transferServices.localTransferOperation(
                 localTransferRequest.getTransfer(),
                 localTransferRequest.getLocalReceivers()

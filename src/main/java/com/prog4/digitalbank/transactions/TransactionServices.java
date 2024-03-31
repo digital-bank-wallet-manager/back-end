@@ -3,6 +3,7 @@ package com.prog4.digitalbank.transactions;
 import com.prog4.digitalbank.CrudOperations.FindAll;
 import com.prog4.digitalbank.CrudOperations.FindById;
 import com.prog4.digitalbank.CrudOperations.Save;
+import com.prog4.digitalbank.Messages;
 import com.prog4.digitalbank.methods.IdGenerators;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -113,14 +114,19 @@ public class TransactionServices {
         return transactionRepository.getNotAppliedTransaction();
     }
 
-    public String cancelTransaction (String transactionId) throws SQLException {
-
-        String status = transactionFindById.findByIdOrderd(Transaction.class,transactionId,"").getStatus();
+    public Messages cancelTransaction (String transactionId) throws SQLException {
+        Transaction transaction =  transactionFindById.findByIdOrderd(Transaction.class,transactionId,"");
+        if (transaction != null){
+        String status = transaction.getStatus();
         if (Objects.equals(status,"apending")){
         transactionRepository.cancel(transactionId);
-        return "transaction "+transactionId+" updated";
+        return new Messages( "transaction :"+transaction.getId()+" canceled",null);
         }
-        return "transaction failed (done transaction can not be canceled";
+        return new Messages(null, "transaction failed (done transaction can not be canceled)");
+
+        }else {
+            return new Messages(null,"transaction id :"+transactionId+" does not exist");
+        }
     }
 
     public Transaction transactionByTransferId (String transferId){

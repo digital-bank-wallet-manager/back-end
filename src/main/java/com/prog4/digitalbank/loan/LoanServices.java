@@ -3,6 +3,7 @@ package com.prog4.digitalbank.loan;
 import com.prog4.digitalbank.CrudOperations.FindAll;
 import com.prog4.digitalbank.CrudOperations.FindById;
 import com.prog4.digitalbank.CrudOperations.Save;
+import com.prog4.digitalbank.Messages;
 import com.prog4.digitalbank.account.Account;
 import com.prog4.digitalbank.account.AccountServices;
 import com.prog4.digitalbank.balance.BalanceServices;
@@ -150,7 +151,7 @@ public class LoanServices {
                 if (rest == 0){
                     loanEvolution = new LoanEvolution(0.0,0.0);
                 }
-                BankLoan bankLoan = bankLoanFindAll.findAll(BankLoan.class , "where account_id ="+accountId+" and status = 'unpaid'").get(0);
+                BankLoan bankLoan = bankLoanFindById.findByAccountId(BankLoan.class ,accountId, " and status = 'unpaid'","").get(0);
                 Double initialAmount = bankLoan.getAmount();
                 Double interest1 = bankLoan.getInterestSevenDay();
                 Double interest2 = bankLoan.getInterestAboveSevenDay();
@@ -182,7 +183,7 @@ public class LoanServices {
 
 
 
-    public LoanEvolution repayLoan(BankLoan bankLoan) throws SQLException {
+    public Messages repayLoan(BankLoan bankLoan) throws SQLException {
         String accountId= bankLoan.getAccountId();
         String bankLoanId = bankLoan.getId();
         double actualBalance = balanceServices.actualBalance(accountId).getAmount();
@@ -210,7 +211,7 @@ public class LoanServices {
                     bankLoanId,
                     "loan",
                     categoryServices.findIdSubCategory("Repay"));
-            return inserted;
+            return new Messages("the rest to pay is "+inserted.getRest(),null);
     }
 
 }
