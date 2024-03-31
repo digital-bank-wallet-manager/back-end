@@ -28,11 +28,13 @@ public class TransactionSumServices {
     }
 
     public List<TransactionSum> sumByCategoryAndDate(Date start , Date end) throws SQLException {
-        List<Category> categories = categoryServices.findAllCategory();
         List<TransactionSum> transactionSums = new ArrayList<>();
+        if (start.toLocalDate().isBefore(end.toLocalDate())){
+        List<Category> categories = categoryServices.findAllCategory();
         for (Category category : categories){
             String categoryName = category.getName();
             transactionSums.add(transactionSumRepository.findTransactionSumByDate(categoryName,start,end));
+        }
         }
         return transactionSums;
     }

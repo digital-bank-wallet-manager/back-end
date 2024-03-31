@@ -128,7 +128,6 @@ public class TransactionServices {
             return new Messages(null,"transaction id :"+transactionId+" does not exist");
         }
     }
-
     public Transaction transactionByTransferId (String transferId){
         return transactionRepository.transactionByTransferId(transferId);
     }
