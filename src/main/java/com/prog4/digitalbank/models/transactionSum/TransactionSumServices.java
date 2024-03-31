@@ -6,6 +6,7 @@ import com.prog4.digitalbank.category.CategoryServices;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,16 @@ public class TransactionSumServices {
         for (Category category : categories){
             String categoryName = category.getName();
             transactionSums.add(transactionSumRepository.findTransactionSum(categoryName));
+        }
+        return transactionSums;
+    }
+
+    public List<TransactionSum> sumByCategoryAndDate(Date start , Date end) throws SQLException {
+        List<Category> categories = categoryServices.findAllCategory();
+        List<TransactionSum> transactionSums = new ArrayList<>();
+        for (Category category : categories){
+            String categoryName = category.getName();
+            transactionSums.add(transactionSumRepository.findTransactionSumByDate(categoryName,start,end));
         }
         return transactionSums;
     }
