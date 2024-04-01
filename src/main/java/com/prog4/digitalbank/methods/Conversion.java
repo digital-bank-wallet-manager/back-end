@@ -11,11 +11,15 @@ public class Conversion {
         int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
         int currentMinute = Calendar.getInstance().get(Calendar.MINUTE);
         int currentSecond = Calendar.getInstance().get(Calendar.SECOND);
-
+        int currentNano = Calendar.getInstance().get(Calendar.MILLISECOND) * 1000000;
         calendar.set(Calendar.HOUR_OF_DAY , currentHour);
         calendar.set(Calendar.MINUTE , currentMinute);
         calendar.set(Calendar.SECOND , currentSecond);
-        return new Timestamp(calendar.getTimeInMillis());
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        Timestamp timestamp = new Timestamp(calendar.getTimeInMillis());
+        timestamp.setNanos(currentNano);
+        return timestamp;
     }
 
     public static String convertToSnakeCase(String string){
