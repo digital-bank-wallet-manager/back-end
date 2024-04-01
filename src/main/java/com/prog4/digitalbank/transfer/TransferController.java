@@ -13,7 +13,7 @@ public class TransferController {
 
     @PostMapping("/foreign")
 
-    public String foreignTransfer (@RequestBody ForeignTransferRequest foreignTransferRequest) throws SQLException {
+    public Messages foreignTransfer (@RequestBody ForeignTransferRequest foreignTransferRequest) throws SQLException {
         return transferServices.foreignTransferOperation(
                 foreignTransferRequest.getTransfer(),
                 foreignTransferRequest.getForeignReceivers());

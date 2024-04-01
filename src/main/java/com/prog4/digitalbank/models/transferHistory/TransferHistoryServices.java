@@ -45,6 +45,7 @@ public class TransferHistoryServices {
 
                 }
 
+                if(transaction != null){
             TransferHistory transferHistory = new TransferHistory(
                     transaction.getId(),
                     transfer.getId(),
@@ -58,6 +59,9 @@ public class TransferHistoryServices {
                     transaction.getStatus()
             );
                 transferHistories.add(transferHistory);
+
+                }
+
             }
         }
         return transferHistories;

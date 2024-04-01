@@ -7,6 +7,7 @@ import com.prog4.digitalbank.CrudOperations.Save;
 import com.prog4.digitalbank.Messages;
 import com.prog4.digitalbank.account.AccountServices;
 import com.prog4.digitalbank.balance.BalanceServices;
+import com.prog4.digitalbank.category.CategoryServices;
 import com.prog4.digitalbank.insertGeneralisation.InsertServices;
 import com.prog4.digitalbank.loan.BankLoan;
 
@@ -44,6 +45,7 @@ public class TransferServices {
         private TransferRepository transferRepository;
         private TransactionServices transactionServices;
         private FindById<Transfer> transferFindById;
+        private CategoryServices categoryServices;
 
         private boolean checkUnpaidLoan( Transfer transfer){
 
@@ -65,7 +67,7 @@ public class TransferServices {
         }
 
 
-        public String foreignTransferOperation(Transfer transfer , List<ForeignReceiver>foreignReceivers) throws SQLException {
+        public Messages foreignTransferOperation(Transfer transfer , List<ForeignReceiver>foreignReceivers) throws SQLException {
            if (checkUnpaidLoan(transfer)){
                if (checkDateValidity(foreignReceivers)){
                 String transferRef = IdGenerators.generateTransferRef();
@@ -101,16 +103,16 @@ public class TransferServices {
                             "debit",
                             transferId,
                             "transfert",
-                            foreignReceiver.getSubCategory());
+                            categoryServices.findIdSubCategory("transfer sent"));
                 }
-                return "all transfer initiated";
+                return new Messages("all transfer initiated transfer ref: "+transferRef,null);
 
                }else {
 
-                   return "an outside transfer required at least 48h to validate";
+                   return new Messages(null,"an outside transfer required at least 48h to validate");
                }
            }else {
-               return "you have an unpaid loan";
+               return new Messages(null,"you have an unpaid loan");
 
            }
 
@@ -193,7 +195,7 @@ public class TransferServices {
                                     "debit",
                                     transferId,
                                     "transfert",
-                                    localReceiver.getSubCategoryId()
+                                    categoryServices.findIdSubCategory("transfer sent")
                             );
                             insertServices.insertTransaction(
                                     receiverId,
@@ -202,7 +204,7 @@ public class TransferServices {
                                     "credit",
                                     transferId,
                                     "transfert",
-                                    localReceiver.getSubCategoryId()
+                                    categoryServices.findIdSubCategory("transfer received")
                             );
                         }
                         }else {

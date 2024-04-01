@@ -61,14 +61,14 @@ public class LoanServices {
     }
 
 
-    public BankLoan loanOperation(BankLoan bankLoan) throws SQLException {
+    public Messages loanOperation(BankLoan bankLoan) throws SQLException {
         if (checkEligility(bankLoan,Account.class)){
             String id = IdGenerators.generateId(12);
             Double amount = bankLoan.getAmount();
             Double interest1 = bankLoan.getInterestSevenDay();
             String accountId = bankLoan.getAccountId();
             Double interest2 = bankLoan.getInterestAboveSevenDay();
-            Date date = bankLoan.getLoanDate();
+            Date date = Date.valueOf(LocalDate.now());
             Timestamp timestamp = Conversion.DateToTimestamp(date);
             BankLoan bankLoan1 = new BankLoan(id,amount,date,interest2,accountId,interest1,"unpaid");
             bankLoanSave.insert(bankLoan1);
@@ -82,10 +82,11 @@ public class LoanServices {
                     id,
                     "loan",
                     categoryServices.findIdSubCategory("Loan Money"));
-            return bankLoan1;
+            return new Messages("your account will be credited by the amount of "
+                    +bankLoan1.getAmount().toString(),null);
         }
-        BankLoan error = new BankLoan("your are not allowed for this operation (check your loan authorization or your monthly pay is not enough)");
-        return error;
+       return new Messages( null,"operation fail : unpaid loan / not authorized / monthly pay > amount");
+
     }
 
     public List<BankLoan> findByAccountId(String accountId){

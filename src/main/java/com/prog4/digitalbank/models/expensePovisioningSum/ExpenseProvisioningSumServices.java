@@ -9,6 +9,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @AllArgsConstructor
@@ -24,6 +25,7 @@ public class ExpenseProvisioningSumServices {
             ExpenseSum expenseSum = expenseSumRepository.expenseSum(category.getName());
             expenseSums.add(expenseSum);
         }
+        expenseSums.removeAll(Collections.singleton(null));
         return expenseSums;
     }
 
@@ -36,6 +38,7 @@ public class ExpenseProvisioningSumServices {
             expenseSums.add(expenseSum);
         }
         }
+        expenseSums.removeAll(Collections.singleton(null));
         return expenseSums;
     }
 
@@ -46,6 +49,7 @@ public class ExpenseProvisioningSumServices {
             ProvisioningSum provisioningSum = expenseSumRepository.provisioningSum(category.getName());
             provisioningSums.add(provisioningSum);
         }
+        provisioningSums.removeAll(Collections.singleton(null));
         return provisioningSums;
     }
 }

@@ -13,7 +13,7 @@ import java.sql.SQLException;
 @AllArgsConstructor
 public class ProvisioningController {
     private ProvisingServices provisingServices;
-    @PostMapping(value = "/provising/save/{subCategoryId}")
+    @PostMapping( "/provising/save/{subCategoryId}")
     public Messages addNewProvisioning (@RequestBody Provisioning provisioning , @PathVariable int subCategoryId) throws SQLException {
         return provisingServices.saveProvising(provisioning , subCategoryId);
     }

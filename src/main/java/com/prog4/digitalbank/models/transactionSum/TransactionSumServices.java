@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -24,6 +25,7 @@ public class TransactionSumServices {
             String categoryName = category.getName();
             transactionSums.add(transactionSumRepository.findTransactionSum(categoryName));
         }
+        transactionSums.removeAll(Collections.singleton(null));
         return transactionSums;
     }
 
@@ -36,6 +38,7 @@ public class TransactionSumServices {
             transactionSums.add(transactionSumRepository.findTransactionSumByDate(categoryName,start,end));
         }
         }
+        transactionSums.removeAll(Collections.singleton(null));
         return transactionSums;
     }
 
