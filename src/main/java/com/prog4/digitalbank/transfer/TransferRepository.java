@@ -60,4 +60,16 @@ public class TransferRepository {
             throw new RuntimeException(e);
         }
     }
+
+    public void cancelTransfer(String transferId){
+        String sql = "update transaction set status = 'canceled' where transfer_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)){
+            statement.setString(1,transferId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }

@@ -39,4 +39,32 @@ public class TransactionSumRepository {
             throw new RuntimeException(e);
         }
     }
+
+    public TransactionSum findTransactionSumByDate( String categoryName , Date start , Date end){
+        TransactionSum transactionSum = null;
+        String sql = "SELECT SUM(transaction_sum) AS sum, category_name FROM (SELECT SUM(t.amount) AS transaction_sum, c.name AS category_name\n" +
+                "    FROM \"transaction\" AS t\n" +
+                "    LEFT JOIN \"sub_category\" AS sc\n" +
+                "    ON t.sub_category_id = sc.id\n" +
+                "    INNER JOIN \"category\" AS c\n" +
+                "    ON \"sc\".category_id = \"c\".id\n" +
+                "    GROUP BY c.name, t.date_time\n" +
+                "    HAVING c.name ilike ?\n" +
+                "    AND t.date_time BETWEEN ? AND ?) AS by_sub_category GROUP BY by_sub_category.category_name, category_name;";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setString(1,categoryName);
+            preparedStatement.setDate(2,start);
+            preparedStatement.setDate(3,end);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()){
+                transactionSum = useConvertToList.convertToList(resultSet, TransactionSum.class);
+            }
+            return transactionSum;
+        } catch (SQLException | InvocationTargetException | NoSuchMethodException | InstantiationException |
+                 IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -9,15 +9,17 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
 @AllArgsConstructor
+@RequestMapping("/bankStatement")
 public class BankStatementController {
     private BankStatementServices bankStatementServices;
-    @GetMapping("/bankStatement/{accountId}/{month}")
+    @GetMapping("/{accountId}/{month}")
     public List<BankStatement> bankStatements (@PathVariable String accountId , @PathVariable int month){
         return bankStatementServices.bankStatements(accountId , month);
     }

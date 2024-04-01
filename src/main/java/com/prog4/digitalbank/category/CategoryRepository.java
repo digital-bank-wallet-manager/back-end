@@ -1,8 +1,11 @@
 package com.prog4.digitalbank.category;
 
+import com.prog4.digitalbank.CrudOperations.FindAll;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Repository;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CategoryRepository {
     private Connection connection;
+    private FindAll<Category> useConvertToList;
 
     public List<SubCategory> findByType (String type){
         String sql =  "select sub_category.id as sub_category_id ,category.name as category, sub_category.name as sub_category  from sub_category inner join category on category.id = sub_category.category_id where category.type = ?";
@@ -48,6 +52,23 @@ public class CategoryRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public List<Category> findCategoryByType(String type) throws SQLException {
+        List<Category> categories = new ArrayList<>();
+        String sql = "select * from category where type = ?";
+        try(PreparedStatement statement = connection.prepareStatement(sql)){
+            statement.setString(1,type);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()){
+                categories.add(useConvertToList.convertToList(resultSet, Category.class));
+            }
+
+        }catch (SQLException | InvocationTargetException | NoSuchMethodException | InstantiationException |
+                IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+        return categories;
     }
 
 

@@ -2,10 +2,12 @@ package com.prog4.digitalbank.transfer;
 
 
 
+import com.prog4.digitalbank.CrudOperations.FindById;
 import com.prog4.digitalbank.CrudOperations.Save;
 import com.prog4.digitalbank.Messages;
 import com.prog4.digitalbank.account.AccountServices;
 import com.prog4.digitalbank.balance.BalanceServices;
+import com.prog4.digitalbank.category.CategoryServices;
 import com.prog4.digitalbank.insertGeneralisation.InsertServices;
 import com.prog4.digitalbank.loan.BankLoan;
 
@@ -14,6 +16,8 @@ import com.prog4.digitalbank.methods.CheckDateValidy;
 
 import com.prog4.digitalbank.methods.Conversion;
 import com.prog4.digitalbank.methods.IdGenerators;
+import com.prog4.digitalbank.transactions.Transaction;
+import com.prog4.digitalbank.transactions.TransactionServices;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -26,6 +30,7 @@ import java.time.LocalDateTime;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 @Service
@@ -38,6 +43,9 @@ public class TransferServices {
         private Save<Transfer> transferSave;
         private LoanServices loanServices;
         private TransferRepository transferRepository;
+        private TransactionServices transactionServices;
+        private FindById<Transfer> transferFindById;
+        private CategoryServices categoryServices;
 
         private boolean checkUnpaidLoan( Transfer transfer){
 
@@ -59,7 +67,7 @@ public class TransferServices {
         }
 
 
-        public String foreignTransferOperation(Transfer transfer , List<ForeignReceiver>foreignReceivers) throws SQLException {
+        public Messages foreignTransferOperation(Transfer transfer , List<ForeignReceiver>foreignReceivers) throws SQLException {
            if (checkUnpaidLoan(transfer)){
                if (checkDateValidity(foreignReceivers)){
                 String transferRef = IdGenerators.generateTransferRef();
@@ -95,16 +103,16 @@ public class TransferServices {
                             "debit",
                             transferId,
                             "transfert",
-                            foreignReceiver.getSubCategory());
+                            categoryServices.findIdSubCategory("transfer sent"));
                 }
-                return "all transfer initiated";
+                return new Messages("all transfer initiated transfer ref: "+transferRef,null);
 
                }else {
 
-                   return "an outside transfer required at least 48h to validate";
+                   return new Messages(null,"an outside transfer required at least 48h to validate");
                }
            }else {
-               return "you have an unpaid loan";
+               return new Messages(null,"you have an unpaid loan");
 
            }
 
@@ -187,7 +195,7 @@ public class TransferServices {
                                     "debit",
                                     transferId,
                                     "transfert",
-                                    localReceiver.getSubCategoryId()
+                                    categoryServices.findIdSubCategory("transfer sent")
                             );
                             insertServices.insertTransaction(
                                     receiverId,
@@ -196,7 +204,7 @@ public class TransferServices {
                                     "credit",
                                     transferId,
                                     "transfert",
-                                    localReceiver.getSubCategoryId()
+                                    categoryServices.findIdSubCategory("transfer received")
                             );
                         }
                         }else {
@@ -238,5 +246,20 @@ public class TransferServices {
 
     public List<Transfer> getTransferBySenderId(String senderId){
             return transferRepository.getTransferBySenderId(senderId);
+    }
+
+    public Messages cancelTransfer(String transferId){
+            Transfer transfer = transferFindById.findByIdOrderd(Transfer.class,transferId,"");
+            if (transfer != null){
+            Transaction transaction = transactionServices.transactionByTransferId(transferId);
+          String status = transaction.getStatus();
+          if (Objects.equals(status,"apending")){
+              transferRepository.cancelTransfer(transferId);
+              return new Messages("transfer canceled successfully",null);
+          }
+          return new Messages(null,"cancel failed : this transfer is already done");
+            }else {
+                return new Messages(null,"transfer with id: "+transferId+" doesn't exist");
+            }
     }
 }

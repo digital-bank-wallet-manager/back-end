@@ -24,4 +24,8 @@ public class CategoryServices {
     public List<Category> findAllCategory() throws SQLException {
         return categoryFindAll.findAll(Category.class , "");
     }
+
+    public List<Category> findCategoryByType(String type) throws SQLException{
+        return categoryRepository.findCategoryByType(type);
+    }
 }

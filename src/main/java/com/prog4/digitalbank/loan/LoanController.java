@@ -13,7 +13,7 @@ import java.util.List;
 public class LoanController {
     private LoanServices loanServices;
     @PostMapping("/loan")
-    public BankLoan bankLoan(@RequestBody BankLoan bankLoan) throws SQLException, IllegalAccessException {
+    public Messages bankLoan(@RequestBody BankLoan bankLoan) throws SQLException, IllegalAccessException {
         return loanServices.loanOperation(bankLoan);
     }
     @GetMapping("/loan/{accountId}")
@@ -22,7 +22,7 @@ public class LoanController {
     }
 
     @GetMapping("/loanHistory/{accountId}")
-    public List<BankLoan> loanHistory (@PathVariable(required = true) String accountId ){
+    public List<BankLoan> loanHistory (@PathVariable String accountId ){
         return loanServices.loanHistory(accountId);
 
     }

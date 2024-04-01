@@ -31,7 +31,7 @@ public class BalanceServices {
         save.insert(toSave);
     }
 
-    public Balance saveBalanceForSpecificTime (Balance balance) throws SQLException {
+    public void saveBalanceForSpecificTime (Balance balance) throws SQLException {
         String id = IdGenerators.generateId(10);
         Double amount = balance.getAmount();
         Timestamp dateTime = balance.getDateTime();
@@ -39,7 +39,7 @@ public class BalanceServices {
         String transactionId = balance.getTransactionId();
 
         Balance toSave = new Balance(id ,amount ,dateTime,accountId , transactionId);
-        return save.insert(toSave);
+        save.insert(toSave);
     }
 
 
@@ -91,8 +91,4 @@ public class BalanceServices {
 
         return balanceRepository.findBalanceByDate(accountId , date).get(0);
     }
-
-
-
-
 }

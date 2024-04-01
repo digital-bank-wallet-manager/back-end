@@ -8,7 +8,18 @@ INSERT INTO "category" (name, type) VALUES
                                         ('Communication, PC', 'debit'),
                                         ('Financial expenses', 'debit'),
                                         ('Investments', 'debit'),
-                                        ('Income', 'credit');
+                                        ('monthly fee','debit'),
+                                        ('repay','debit'),
+                                        ('loan money','credit'),
+                                        ('Income', 'credit'),
+                                        ('Salary', 'credit'),
+                                        ('Investment Returns', 'credit'),
+                                        ('Freelance Income', 'credit'),
+                                        ('Rental Income', 'credit'),
+                                        ('other income', 'credit'),
+                                        ('other spend','debit'),
+                                        ('transfer received', 'credit'),
+                                        ('transfer sent' , 'debit')
 
 
 INSERT INTO "sub_category" (name, category_id) VALUES
@@ -23,15 +34,7 @@ INSERT INTO "sub_category" (name, category_id) VALUES
                                                    ('Communication, PC', (SELECT id FROM "category" WHERE name = 'Communication, PC')),
                                                    ('Financial expenses', (SELECT id FROM "category" WHERE name = 'Financial expenses')),
                                                    ('Investments', (SELECT id FROM "category" WHERE name = 'Investments')),
-                                                   ('Income', (SELECT id FROM "category" WHERE name = 'Income'));
-
-INSERT INTO "category" (name, type) VALUES
-                                        ('Salary', 'credit'),
-                                        ('Investment Returns', 'credit'),
-                                        ('Freelance Income', 'credit'),
-                                        ('Rental Income', 'credit');
-
-INSERT INTO "sub_category" (name, category_id) VALUES
+                                                   ('Income', (SELECT id FROM "category" WHERE name = 'Income')),
                                                    ('Regular Salary', (SELECT id FROM "category" WHERE name = 'Salary')),
                                                    ('Bonus Income', (SELECT id FROM "category" WHERE name = 'Salary')),
                                                    ('Dividend Payments', (SELECT id FROM "category" WHERE name = 'Investment Returns')),
@@ -39,4 +42,10 @@ INSERT INTO "sub_category" (name, category_id) VALUES
                                                    ('Consulting Fees', (SELECT id FROM "category" WHERE name = 'Freelance Income')),
                                                    ('Contract Work', (SELECT id FROM "category" WHERE name = 'Freelance Income')),
                                                    ('Property Rent', (SELECT id FROM "category" WHERE name = 'Rental Income')),
-                                                   ('Royalties', (SELECT id FROM "category" WHERE name = 'Rental Income'));
+                                                   ('Royalties', (SELECT id FROM "category" WHERE name = 'Rental Income')),
+                                                   ('loan money',(SELECT id FROM "category" WHERE name = 'loan money')),
+                                                   ('repay',(SELECT id FROM "category" WHERE name = 'repay')),
+                                                   ('other income' , (select id from category where name = 'other income')),
+                                                   ('transfer received' , (select id from category where name = 'transfer received')),
+                                                   ('other sent' , (select id from category where name = 'transfer sent'));
+

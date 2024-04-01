@@ -49,7 +49,7 @@ public class AccountServices {
             Balance firstBalance = new Balance(0.0 ,id);
             Account saved =  save.insert(insert);
             balanceServices.saveBalance(firstBalance);
-            return new Messages("welcome "+insert.getLastName()+" ! your account ref is "+insert.getAccountRef(),null);
+            return new Messages(insert.getId(),null);
         }
 
     }
@@ -66,7 +66,7 @@ public class AccountServices {
                 id ,
                 "loan_authorization",
                 true);
-            return new Messages("account "+account.getAccountRef()+" is now allowed from D-Bank",null);
+            return new Messages("you are now allowed to loan from D-Bank",null);
         }else {
             return new Messages(null,"account with "+id+" doesn't exist");
         }
