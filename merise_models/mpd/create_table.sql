@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS "sub_category"(
 
 CREATE TABLE IF NOT EXISTS "foreign_transfer"(
     id varchar(6) primary key,
-    account_ref_foreign varchar(50) NOT NULL UNIQUE
+    account_ref varchar(50) NOT NULL UNIQUE
     );
 
 CREATE TABLE IF NOT EXISTS "transfer"(
@@ -46,9 +46,10 @@ CREATE TABLE IF NOT EXISTS "bank_loan"(
     id varchar(50) primary key,
     amount double precision,
     loan_date date,
-    interest double precision,
-    status varchar(10),
-    account_id varchar(50) references "account"(id)
+    interest_above_seven_day double precision,
+    account_id varchar(50) references "account"(id),
+    interest_seven_day double precision,
+    status varchar
     );
 
 CREATE TABLE IF NOT EXISTS "loan_evolution"(
@@ -72,7 +73,6 @@ CREATE TABLE IF NOT EXISTS "expense"(
     id varchar(50) primary key,
     amount double precision,
     date_time timestamp,
-    pattern varchar(100),
     account_id varchar (100) references "account"(id)
     );
 
@@ -81,13 +81,13 @@ CREATE TABLE IF NOT EXISTS "transaction"(
     amount double precision,
     type varchar(50) CHECK (type ilike 'debit' OR type ilike 'credit'),
     date_time timestamp,
-    status varchar(50) CHECK (status ilike 'pending' OR status ilike 'canceled' OR ilike 'done'),
     account_id varchar(50) references "account"(id),
     provisioning_id varchar(50) references "provisioning"(id),
     bank_loan_id varchar(50) references "bank_loan"(id),
     transfer_id varchar(50) references "transfer"(id),
     expense_id varchar(50) references "expense"(id),
-    sub_category_id int references "sub_category"(id)
+    sub_category_id int references "sub_category"(id),
+    status varchar(50) CHECK (status = 'apending' OR status ilike 'canceled' OR status ilike 'done')
     );
 
 CREATE TABLE IF NOT EXISTS "balance"(
