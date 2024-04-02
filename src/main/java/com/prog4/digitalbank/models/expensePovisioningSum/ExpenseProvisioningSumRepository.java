@@ -78,7 +78,7 @@ public class ExpenseProvisioningSumRepository {
         String sql = "SELECT SUM(provisioning_sum) AS total_sum, category_name FROM (SELECT SUM(p.amount) AS provisioning_sum, c.name as category_name\n" +
                 "                                                               FROM \"provisioning\" AS p\n" +
                 "                                                                        INNER JOIN \"transaction\" AS t\n" +
-                "                                                                                   ON t.expense_id = p.id\n" +
+                "                                                                                   ON t.provisioning_id = p.id\n" +
                 "                                                                        INNER JOIN \"sub_category\" AS sc\n" +
                 "                                                                                   ON t.sub_category_id = sc.id\n" +
                 "                                                                        INNER JOIN \"category\" AS c\n" +
@@ -106,7 +106,7 @@ public class ExpenseProvisioningSumRepository {
         String sql = "SELECT SUM(provisioning_sum) AS total_sum, category_name FROM (SELECT SUM(p.amount) AS provisioning_sum, c.name as category_name\n" +
                 "                                                               FROM \"provisioning\" AS p\n" +
                 "                                                                        INNER JOIN \"transaction\" AS t\n" +
-                "                                                                                   ON t.expense_id = p.id\n" +
+                "                                                                                   ON t.provisioning_id = p.id\n" +
                 "                                                                        INNER JOIN \"sub_category\" AS sc\n" +
                 "                                                                                   ON t.sub_category_id = sc.id\n" +
                 "                                                                        INNER JOIN \"category\" AS c\n" +

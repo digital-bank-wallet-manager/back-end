@@ -2,7 +2,7 @@
 SELECT SUM(provisioning_sum) AS total_sum, category_name FROM (SELECT SUM(p.amount) AS provisioning_sum, c.name as category_name
                                                                FROM "provisioning" AS p
                                                                         INNER JOIN "transaction" AS t
-                                                                                   ON t.expense_id = p.id
+                                                                                   ON t.provisioning_id = p.id
                                                                         INNER JOIN "sub_category" AS sc
                                                                                    ON t.sub_category_id = sc.id
                                                                         INNER JOIN "category" AS c
@@ -16,7 +16,7 @@ SELECT SUM(provisioning_sum) AS total_sum, category_name FROM (SELECT SUM(p.amou
 SELECT SUM(provisioning_sum) AS total_sum, category_name FROM (SELECT SUM(p.amount) AS provisioning_sum, c.name as category_name
                                                                FROM "provisioning" AS p
                                                                         INNER JOIN "transaction" AS t
-                                                                                   ON t.expense_id = p.id
+                                                                                   ON t.provisioning_id = p.id
                                                                         INNER JOIN "sub_category" AS sc
                                                                                    ON t.sub_category_id = sc.id
                                                                         INNER JOIN "category" AS c
