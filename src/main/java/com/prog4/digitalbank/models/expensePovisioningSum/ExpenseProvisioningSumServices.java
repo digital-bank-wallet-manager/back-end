@@ -34,7 +34,7 @@ public class ExpenseProvisioningSumServices {
         if (start.toLocalDate().isBefore(end.toLocalDate())){
             List<Category> categories = categoryServices.findCategoryByType("debit");
         for (Category category : categories){
-            ExpenseSum expenseSum = expenseSumRepository.expenseSum(category.getName());
+            ExpenseSum expenseSum = expenseSumRepository.expenseSumByDate(category.getName(),start,end);
             expenseSums.add(expenseSum);
         }
         }
@@ -52,4 +52,16 @@ public class ExpenseProvisioningSumServices {
         provisioningSums.removeAll(Collections.singleton(null));
         return provisioningSums;
     }
+
+    public List<ProvisioningSum> provisioningSumByDate(Date start, Date end) throws SQLException {
+        List<Category> categories = categoryServices.findCategoryByType("credit");
+        List<ProvisioningSum> provisioningSums = new ArrayList<>();
+        for (Category category : categories){
+            ProvisioningSum provisioningSum = expenseSumRepository.provisioningSumByDate(category.getName(),start,end);
+            provisioningSums.add(provisioningSum);
+        }
+        provisioningSums.removeAll(Collections.singleton(null));
+        return provisioningSums;
+    }
+
 }

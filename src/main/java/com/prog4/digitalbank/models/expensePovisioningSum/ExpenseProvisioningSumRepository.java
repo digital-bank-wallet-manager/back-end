@@ -100,6 +100,37 @@ public class ExpenseProvisioningSumRepository {
 
         return provisioningSum;
     }
+
+    public ProvisioningSum provisioningSumByDate(String category,Date start , Date end){
+        ProvisioningSum provisioningSum = null;
+        String sql = "SELECT SUM(provisioning_sum) AS total_sum, category_name FROM (SELECT SUM(p.amount) AS provisioning_sum, c.name as category_name\n" +
+                "                                                               FROM \"provisioning\" AS p\n" +
+                "                                                                        INNER JOIN \"transaction\" AS t\n" +
+                "                                                                                   ON t.expense_id = p.id\n" +
+                "                                                                        INNER JOIN \"sub_category\" AS sc\n" +
+                "                                                                                   ON t.sub_category_id = sc.id\n" +
+                "                                                                        INNER JOIN \"category\" AS c\n" +
+                "                                                                                   ON sc.category_id = c.id\n" +
+                "                                                               GROUP BY c.name, p.effective_date\n" +
+                "                                                               HAVING c.name ilike ?\n" +
+                "                                                               AND p.effective_date BETWEEN ? AND ?\n" +
+                "                                                              ) AS by_sub_category GROUP BY by_sub_category.category_name, category_name;";
+
+        try(PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1,category);
+            statement.setDate(2,start);
+            statement.setDate(3,end);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()){
+                provisioningSum = toList.convertToList(resultSet , ProvisioningSum.class);
+            }
+        } catch (SQLException | InvocationTargetException | NoSuchMethodException | InstantiationException |
+                 IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+
+        return provisioningSum;
+    }
 }
 
 

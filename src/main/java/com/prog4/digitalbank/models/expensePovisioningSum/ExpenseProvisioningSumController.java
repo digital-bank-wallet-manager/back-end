@@ -29,4 +29,9 @@ public class ExpenseProvisioningSumController {
     public List<ProvisioningSum> provisioningSums() throws SQLException{
         return  expenseSumServices.provisioningSums();
     }
+
+    @GetMapping("/provisioning/{start}/{end}")
+    public List<ProvisioningSum> provisioningSumByDate(@PathVariable Date start , @PathVariable Date end) throws SQLException {
+        return expenseSumServices.provisioningSumByDate(start,end);
+    }
 }
