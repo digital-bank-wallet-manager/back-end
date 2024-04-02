@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: digital bank wallet management API
   description: This is an api about a digital bank management.
-  version: 3.0.0
+  version: 4.0.0
 tags:
   - name: account
     description: Everything about account
@@ -160,7 +160,7 @@ paths:
           $ref: "#/components/responses/404"
         500:
           $ref: "#/components/responses/500"
-  /balance/account/{accountId}: 
+  /account/balance/{accountId}:
     get: 
       tags:
         - balance
@@ -175,7 +175,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Balance"
+                $ref: "#/components/schemas/BalanceResponse"
         400: 
           $ref: "#/components/responses/400"
         404: 
@@ -203,6 +203,36 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Balance"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+  /account/balance/{accountId}/{date}:
+    get:
+      tags:
+        - balance
+      summary: Get the last Balance of the account at a specified date
+      operationId: getBalanceByAccountIdAtDate
+      parameters:
+        - $ref: "#/components/parameters/PathAccountId"
+        - name: date
+          in: path
+          description: a date to be specified
+          required: true
+          schema:
+            type: string
+            format: date
+
+      responses:
+        200:
+          $ref: "#/components/responses/200"
+          description: return the last balance of the account
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BalanceResponse"
         400:
           $ref: "#/components/responses/400"
         404:
@@ -287,6 +317,7 @@ paths:
       tags:
         - transaction
       summary: cancel an ongoing transaction
+      operationId: cancelTransaction
       parameters:
         - name: transactionId
           in: path
@@ -298,6 +329,29 @@ paths:
         200:
           $ref: "#/components/responses/200"
           description: return a message that confirm the cancellation
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+  /sum/byCategorie/{start}/{end}:
+    get:
+      tags:
+        - transaction
+      summary: get sum of all transactions by category by date or by default for the current month
+      operationId: getTransactionSum
+      parameters:
+        - $ref: "#/components/parameters/StartDateParam"
+        - $ref: "#/components/parameters/EndDateParam"
+      responses:
+        200:
+          $ref: "#/components/responses/200"
+          description: return the sum by category if all transactions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SumByCategory"
         400:
           $ref: "#/components/responses/400"
         404:
@@ -398,6 +452,28 @@ paths:
           $ref: "#/components/responses/404"
         500:
           $ref: "#/components/responses/500"
+  /sum/provisioning/{start}/{end}:
+    get:
+      tags:
+        - provisioning
+      summary: get all provisionings by category by month or by default for the current month
+      parameters:
+        - $ref: "#/components/parameters/StartDateParam"
+        - $ref: "#/components/parameters/EndDateParam"
+      responses:
+        200:
+          $ref: "#/components/responses/200"
+          description: return the sum of all provisionings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SumByCategory"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
   /category/{type}:
     get:
       tags:
@@ -454,6 +530,29 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Expense"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+  /sum/expense/{start}/{end}:
+    get:
+      tags:
+        - expense
+      summary: get all expenses by category by date or by default for the current month
+      operationId: getExpenseSum
+      parameters:
+        - $ref: "#/components/parameters/StartDateParam"
+        - $ref: "#/components/parameters/EndDateParam"
+      responses:
+        200:
+          $ref: "#/components/responses/200"
+          description: return the sum of all expenses by category
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SumByCategory"
         400:
           $ref: "#/components/responses/400"
         404:
@@ -553,7 +652,61 @@ paths:
           $ref: "#/components/responses/404"
         500:
           $ref: "#/components/responses/500"
-
+  /bankStatement/{accountId}/{month}:
+    get:
+      tags:
+        - bankStatement
+      operationId: getBankStatementByMonth
+      parameters:
+        - $ref: "#/components/parameters/PathAccountId"
+        - name: month
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        200:
+          $ref: "#/components/responses/200"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  - $ref: "#/components/schemas/BankStatementResponse"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+  /bankStatement/download/{accountId}/{month}:
+    get:
+      tags:
+        - bankStatement
+      summary: "GET bankStatement/download/{accountId}/{month}"
+      operationId: downloadPDF
+      parameters:
+        - $ref: "#/components/parameters/PathAccountId"
+        - name: month
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        200:
+          $ref: "#/components/responses/200"
+          content:
+            application/pdf:
+              schema:
+                $ref: "#/components/schemas/BalanceResponse"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
 components:
   schemas:
     CrupdateAccount:
@@ -790,6 +943,43 @@ components:
           $ref: "#/components/schemas/Transfer"
         receivers:
           $ref: "#/components/schemas/LocalReceiver"
+    BalanceResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        date:
+          type: string
+          format: date
+        balance:
+          type: number
+        totalInterest:
+          type: number
+        rest:
+          type: number
+    BankStatementResponse:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        transactionRef:
+          type: string
+        operation:
+          type: string
+        amount:
+          type: number
+        balance:
+          type: number
+        patter:
+          type: string
+    SumByCategory:
+      type: object
+      properties:
+        categoryName:
+          type: string
+        sum:
+          type: number
     defaultResponse:
       type: object
       properties:
@@ -824,6 +1014,22 @@ components:
       required: true
       schema:
         type: string
+    StartDateParam:
+      in: path
+      name: start
+      description: start date
+      required: false
+      schema:
+        type: string
+        format: date
+    EndDateParam:
+      in: path
+      name: end
+      description: start date
+      required: false
+      schema:
+        type: string
+        format: date
   responses:
     "200":
       description: HTTP 200 (ok)
