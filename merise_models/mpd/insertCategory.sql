@@ -19,7 +19,7 @@ INSERT INTO "category" (name, type) VALUES
                                         ('other income', 'credit'),
                                         ('other spend','debit'),
                                         ('transfer received', 'credit'),
-                                        ('transfer sent' , 'debit')
+                                        ('transfer sent' , 'debit');
 
 
 INSERT INTO "sub_category" (name, category_id) VALUES
@@ -47,5 +47,5 @@ INSERT INTO "sub_category" (name, category_id) VALUES
                                                    ('repay',(SELECT id FROM "category" WHERE name = 'repay')),
                                                    ('other income' , (select id from category where name = 'other income')),
                                                    ('transfer received' , (select id from category where name = 'transfer received')),
-                                                   ('other sent' , (select id from category where name = 'transfer sent'));
+                                                   ('transfer sent' , (select id from category where name = 'transfer sent'));
 
