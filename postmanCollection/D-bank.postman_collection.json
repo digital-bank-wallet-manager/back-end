@@ -1,0 +1,1485 @@
+{
+	"info": {
+		"_postman_id": "0cd51a40-2016-4f9e-ace3-530d0bf29b95",
+		"name": "D-bank",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28626519",
+		"_collection_link": "https://universal-spaceship-912290.postman.co/workspace/New-Team-Workspace~f9b95b90-e943-41d5-b057-9a8a48f6ad5f/collection/28626519-0cd51a40-2016-4f9e-ace3-530d0bf29b95?action=share&source=collection_link&creator=28626519"
+	},
+	"item": [
+		{
+			"name": "account",
+			"item": [
+				{
+					"name": "account 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.collectionVariables.set(\"accountId 1\", jsonData.success);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"URL\", \"localhost:8080\")\r",
+									"\r",
+									"var today = new Date();\r",
+									"var dd = String(today.getDate()).padStart(2, '0');\r",
+									"var mm = String(today.getMonth() + 1).padStart(2, '0'); \r",
+									"var yyyy = today.getFullYear();\r",
+									"\r",
+									"var date = yyyy + '-' + mm + '-' + dd;\r",
+									"console.log(date); \r",
+									"\r",
+									"pm.collectionVariables.set(\"dateNow\",date)\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"malik\",\r\n    \"lastName\": \"joe\",\r\n    \"birthdate\": \"1999-05-15\",\r\n    \"monthlyPay\": 600000.0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/accounts/save",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"accounts",
+								"save"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "account 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.collectionVariables.set(\"accountId 2\", jsonData.success);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"elon\",\r\n    \"lastName\": \"musk\",\r\n    \"birthdate\": \"1975-05-15\",\r\n    \"monthlyPay\": 10000000.0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/accounts/save",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"accounts",
+								"save"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "account 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.collectionVariables.set(\"accountId 3\", jsonData.success);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"steve\",\r\n    \"lastName\": \"jobs\",\r\n    \"birthdate\": \"1984-05-15\",\r\n    \"monthlyPay\": 200000.0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/accounts/save",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"accounts",
+								"save"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "by accountId 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json()\r",
+									"\r",
+									"pm.collectionVariables.set(\"accountRef 1\" , jsonData.accountRef)\r",
+									"pm.collectionVariables.set(\"lastName 1\" , jsonData.lastName)\r",
+									"pm.collectionVariables.set(\"firstName 1\" , jsonData.firstName)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/account/{{accountId 1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"account",
+								"{{accountId 1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "by accountId 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json()\r",
+									"\r",
+									"pm.collectionVariables.set(\"accountRef 2\" , jsonData.accountRef)\r",
+									"pm.collectionVariables.set(\"lastName 2\" , jsonData.lastName)\r",
+									"pm.collectionVariables.set(\"firstName 2\" , jsonData.firstName)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/account/{{accountId 2}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"account",
+								"{{accountId 2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "by  accountId 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json()\r",
+									"\r",
+									"pm.collectionVariables.set(\"accountRef 3\" , jsonData.accountRef)\r",
+									"pm.collectionVariables.set(\"lastName 3\" , jsonData.lastName)\r",
+									"pm.collectionVariables.set(\"firstName 3\" , jsonData.firstName)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/account/{{accountId 3}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"account",
+								"{{accountId 3}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "all accounts",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/accounts",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"accounts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update salary",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/account/salary/{{accountId}}/20000",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"account",
+								"salary",
+								"{{accountId}}",
+								"20000"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "category",
+			"item": [
+				{
+					"name": "debit",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json()\r",
+									"\r",
+									"var subCategoryId = jsonData.map(function(item){\r",
+									"    return item.subCategoryId\r",
+									"})\r",
+									"\r",
+									"for (i = 0 ; i < subCategoryId.length ; i++){\r",
+									"    pm.collectionVariables.set(\"subCategoryId debit \"+(i+1) , subCategoryId[i])\r",
+									"}\r",
+									"\r",
+									"var subCategoryId1 = pm.collectionVariables.get(\"subCategoryId debit 1\");\r",
+									"console.log(subCategoryId1)\r",
+									"console.log(subCategoryId)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/category/debit",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"category",
+								"debit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "credit",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json()\r",
+									"\r",
+									"var subCategoryId = jsonData.map(function(item){\r",
+									"    return item.subCategoryId\r",
+									"})\r",
+									"\r",
+									"for (i = 0 ; i < subCategoryId.length ; i++){\r",
+									"    pm.collectionVariables.set(\"subCategoryId credit \"+(i+1) , subCategoryId[i])\r",
+									"}\r",
+									"\r",
+									"var subCategoryId1 = pm.collectionVariables.get(\"subCategoryId credit 1\");\r",
+									"console.log(subCategoryId1)\r",
+									"console.log(subCategoryId)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/category/credit",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"category",
+								"credit"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "provisioning",
+			"item": [
+				{
+					"name": "credit an account",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var amount = pm.collectionVariables.get(\"provisioning amount\")\r",
+									"var date = pm.collectionVariables.get(\"currentdate\")\r",
+									"\r",
+									"console.log(amount)\r",
+									"console.log(date)\r",
+									"pm.test(\"succes\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.success).to.eql(\"your account will be credited by the amount of \" +amount+ \" at \" + date);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"error\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.error).to.eql(null);\r",
+									"});\r",
+									"\r",
+									"console.log(\"your account will be credited by the amount of \" +amount+ \" at \" + date)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"provisioning amount\", \"100000.0\")\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"amount\":\"{{provisioning amount}}\",\r\n  \"reason\": \"regular salary\",\r\n  \"effectiveDate\": \"{{dateNow}}\",\r\n  \"accountId\":\"{{accountId 1}}\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/provising/save/{{subCategoryId credit 1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"provising",
+								"save",
+								"{{subCategoryId credit 1}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "transfer",
+			"item": [
+				{
+					"name": "transfer to D-bank account",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"transfer1\", \"10000\")\r",
+									"pm.collectionVariables.set(\"transfer2\",\"20000\")\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.test(\"success transfer\" , function(){\r",
+									"    var transferRef = jsonData.success.split(\"transfer initiated transfer ref: \")[1]\r",
+									"    pm.expect(jsonData.success).to.eql(\"transfer initiated transfer ref: \"+transferRef)\r",
+									"})\r",
+									"\r",
+									"pm.test(\"failed transfer\" , function(){\r",
+									"    pm.expect(jsonData.error).to.eql(null)\r",
+									"})\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"transfer\" : {\r\n  \"senderAccountId\": \"{{accountId 1}}\"\r\n },\r\n\r\n  \"localReceivers\": [\r\n    {\r\n    \"accountRef\":\"{{accountRef 2}}\",\r\n     \"firstName\":\"{{firstName 2}}\",\r\n     \"lastName\": \"{{lastName 2}}\",\r\n     \"amount\":\"{{transfer1}}\",\r\n     \"effectiveDate\":\"{{dateNow}}\",\r\n     \"reason\":\"thanks\"\r\n\r\n    },\r\n    {\r\n     \"accountRef\":\"{{accountRef 3}}\",\r\n     \"firstName\":\"{{firstName 3}}\",\r\n     \"lastName\": \"{{lastName 3}}\",\r\n     \"amount\":\"{{transfer2}}\",\r\n     \"effectiveDate\":\"{{dateNow}}\",\r\n     \"reason\":\"services\"\r\n   \r\n    }\r\n  ]\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/transfer/local",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"transfer",
+								"local"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "transfer account 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var accountRef2 = pm.collectionVariables.get(\"accountRef 2\")\r",
+									"var accountRef3 = pm.collectionVariables.get(\"accountRef 3\")\r",
+									"var amount1 = Number(pm.collectionVariables.get(\"transfer1\"))\r",
+									"var amount2 = Number(pm.collectionVariables.get(\"transfer2\"))\r",
+									"var accounts = [accountRef2 , accountRef3]\r",
+									"var amounts = [amount1 , amount2]\r",
+									"var jsonData = pm.response.json()\r",
+									"\r",
+									"for(i = 0 ; i < amounts.length ; i++){\r",
+									"    pm.test(\"receiver\" , ()=>{\r",
+									"        pm.expect(jsonData[i].accountReceiverRef).to.eql(accounts[i]);\r",
+									"    })\r",
+									"    pm.test(\"amount\" , ()=>{\r",
+									"        pm.expect(jsonData[i].amount).to.eql(amounts[i]);\r",
+									"    })\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/transferHistory/{{accountId 1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"transferHistory",
+								"{{accountId 1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "transfer to another account than D-bank",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"foreign1\" , 100)\r",
+									"pm.collectionVariables.set(\"foreign2\",200)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"transfer\" : {\r\n  \"senderAccountId\": \"{{accountId 2}}\"\r\n },\r\n\r\n  \"foreignReceivers\": [\r\n    {\r\n    \"receiverAccount\":\"REF-123\",\r\n     \"amount\":\"{{foreign1}}\",\r\n     \"reason\": \"service\"\r\n    },\r\n    {\r\n        \"receiverAccount\":\"REF-124\",\r\n     \"amount\":\"{{foreign2}}\",\r\n     \"reason\": \"gift\",\r\n     \"effectiveDate\":\"2024-04-05\",\r\n    \"subCategory\":13\r\n    }\r\n  ]\r\n\r\n}\r\n\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/transfer/foreign",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"transfer",
+								"foreign"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "transfer account 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"var amount1 = Number(pm.collectionVariables.get(\"foreign1\"))\r",
+									"var amount2 = Number(pm.collectionVariables.get(\"foreign2\"))\r",
+									"var amounts = [amount1 , amount2]\r",
+									"var jsonData = pm.response.json()\r",
+									"\r",
+									"for(i = 0 ; i < amounts.length ; i++){\r",
+									"    pm.test(\"amount\" , ()=>{\r",
+									"        pm.expect(jsonData[i].amount).to.eql(amounts[i]);\r",
+									"    })\r",
+									"\r",
+									"    pm.collectionVariables.set(\"transferId\"+(i+1),jsonData[i].transferId)\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/transferHistory/{{accountId 2}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"transferHistory",
+								"{{accountId 2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cancel transfer if it's not done yet",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json()\r",
+									"pm.test(\"succes\" , ()=>{\r",
+									"    pm.expect(jsonData.success).to.eql(\"transfer canceled successfully\")\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/transfer/cancel/{{transferId1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"transfer",
+								"cancel",
+								"{{transferId1}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "loan",
+			"item": [
+				{
+					"name": "give loan authorization account2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json()\r",
+									"\r",
+									"pm.test(\"authorization success\", function(){\r",
+									"    pm.expect(data.success).to.eql(\"you are now allowed to loan from D-Bank\")\r",
+									"})\r",
+									"\r",
+									"pm.test(\"authorization fail\", function(){\r",
+									"    pm.expect(data.error).to.eql(null)\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/account/loan/{{accountId 2}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"account",
+								"loan",
+								"{{accountId 2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Loan from bank",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.collectionVariables.set(\"loan amount\" , \"100.0\");\r",
+									"pm.collectionVariables.set(\"interest1\",\"1\");\r",
+									"pm.collectionVariables.set(\"interest2\",\"2\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var amount = pm.collectionVariables.get(\"loan amount\")\r",
+									"var jsonData = pm.response.json()\r",
+									"pm.test(\"success\", ()=>{\r",
+									"    pm.expect(jsonData.success).to.eql(\"your account will be credited by the amount of \"+amount)\r",
+									"})\r",
+									"\r",
+									"pm.test(\"fail\", ()=>{\r",
+									"    pm.expect(jsonData.error).to.eql(null)\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"accountId\" : \"{{accountId 2}}\",\r\n    \"amount\": \"{{loan amount}}\",\r\n    \"interestSevenDay\" : \"{{interest1}}\",\r\n    \"interestAboveSevenDay\":\"{{interest2}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/loan",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"loan"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get loan history of indicated account",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var amount = pm.collectionVariables.get(\"loan amount\")\r",
+									"var interest1 = pm.collectionVariables.get(\"interest1\")\r",
+									"var interest2 = pm.collectionVariables.get(\"interest2\")\r",
+									"var jsonData = pm.response.json()\r",
+									"\r",
+									"jsonData.map((items)=>{\r",
+									"    pm.collectionVariables.set(\"loan id\" , items.id)\r",
+									"    pm.test(\"amount\",()=>{\r",
+									"    pm.expect(items.amount).to.eql(Number(amount))\r",
+									"})\r",
+									"\r",
+									"    pm.test(\"interestSevenDay\",()=>{\r",
+									"    pm.expect(items.interestSevenDay).to.eql(Number(interest1))\r",
+									"})\r",
+									"\r",
+									"pm.test(\"interestAboveSevenDay\",()=>{\r",
+									"    pm.expect(items.interestAboveSevenDay).to.eql(Number(interest2))\r",
+									"})\r",
+									"})\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/loanHistory/{{accountId 2}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"loanHistory",
+								"{{accountId 2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "repay loan",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\" : \"{{loan id}}\",\r\n    \"accountId\" : \"{{accountId 2}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/loan/repay",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"loan",
+								"repay"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "expense",
+			"item": [
+				{
+					"name": "get money",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"expense amount\", \"1000.0\")"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json()\r",
+									"var expense = pm.collectionVariables.get(\"expense amount\")\r",
+									"pm.test(\"success\", function(){\r",
+									"    pm.expect(response.success).to.eql(\"your account will be debit by the amount of \"+expense)\r",
+									"})\r",
+									"\r",
+									"pm.test(\"error\", function(){\r",
+									"    pm.expect(response.error).to.eql(null)\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"accountId\":\"{{accountId 3}}\",\r\n    \"amount\":\"{{expense amount}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/expense/{{subCategoryId debit 12}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"expense",
+								"{{subCategoryId debit 12}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "not enough balance",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n     \"accountId\":\"{{accountId}}\",\r\n    \"amount\":10000000\r\n }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/expense/13",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"expense",
+								"13"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "balance",
+			"item": [
+				{
+					"name": "balance account1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var provisioning = pm.collectionVariables.get(\"provisioning amount\")\r",
+									"var transfer1 = pm.collectionVariables.get(\"transfer1\")\r",
+									"var transfer2 = pm.collectionVariables.get(\"transfer2\")\r",
+									"var currentdate = pm.collectionVariables.get(\"dateNow\")\r",
+									"var balance = Number(provisioning) - (Number(transfer1) + Number(transfer2))\r",
+									"var jsonData = pm.response.json()\r",
+									"pm.test(\"date value\", ()=>{\r",
+									"    pm.expect(jsonData.date).to.eql(currentdate)\r",
+									"})\r",
+									"pm.test(\"balance value\", ()=>{\r",
+									"    pm.expect(jsonData.balance).to.eql(balance)\r",
+									"})\r",
+									"\r",
+									"console.log(balance)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/account/balance/{{accountId 1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"account",
+								"balance",
+								"{{accountId 1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "balance account2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var transfer1 = pm.collectionVariables.get(\"transfer1\")\r",
+									"var loan = pm.collectionVariables.get(\"loan amount\")\r",
+									"var balance = Number(transfer1) + Number(loan)\r",
+									"var jsonData = pm.response.json()\r",
+									"\r",
+									"pm.test(\"balance value\", ()=>{\r",
+									"    pm.expect(jsonData.balance).to.eql(balance)\r",
+									"})\r",
+									"\r",
+									"pm.test(\"rest value\", ()=>{\r",
+									"    pm.expect(jsonData.rest).to.eql(Number(loan))\r",
+									"})\r",
+									"\r",
+									"console.log(balance)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/account/balance/{{accountId 2}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"account",
+								"balance",
+								"{{accountId 2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "balance account 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var credited = pm.collectionVariables.get(\"transfer2\")\r",
+									"var expense = pm.collectionVariables.get(\"expense amount\")\r",
+									"\r",
+									"var jsonData = pm.response.json()\r",
+									"\r",
+									"pm.test(\"balance\" , ()=>{\r",
+									"    pm.expect(jsonData.balance).to.eql(Number(credited) - Number(expense))\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/account/balance/{{accountId 3}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"account",
+								"balance",
+								"{{accountId 3}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "balance for a specific date",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/account/balance/{{accountId 1}}/2024-04-03",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"account",
+								"balance",
+								"{{accountId 1}}",
+								"2024-04-03"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Bank Statement",
+			"item": [
+				{
+					"name": "bankStatemtent by month",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/bankStatement/{{accountId 3}}/4",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"bankStatement",
+								"{{accountId 3}}",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "bankStatement pdf",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/bankStatement/download/{{accountId 2}}/4",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"bankStatement",
+								"download",
+								"{{accountId 2}}",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "wallet",
+			"item": [
+				{
+					"name": "total amount of each category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/sum/byCategory",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"sum",
+								"byCategory"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "total by category in specific period",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/sum/byCategory/2024-03-29/2024-03-31",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"sum",
+								"byCategory",
+								"2024-03-29",
+								"2024-03-31"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "expense sum",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/sum/expense",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"sum",
+								"expense"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "expense by date",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/sum/expense/2024-03-29/2024-04-01",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"sum",
+								"expense",
+								"2024-03-29",
+								"2024-04-01"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "total provisioning",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/sum/provisioning",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"sum",
+								"provisioning"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "URL",
+			"value": ""
+		},
+		{
+			"key": "dateNow",
+			"value": ""
+		},
+		{
+			"key": "accountId 1",
+			"value": ""
+		},
+		{
+			"key": "accountId 2",
+			"value": ""
+		},
+		{
+			"key": "accountId 3",
+			"value": ""
+		},
+		{
+			"key": "accountRef 1",
+			"value": ""
+		},
+		{
+			"key": "lastName 1",
+			"value": ""
+		},
+		{
+			"key": "firstName 1",
+			"value": ""
+		},
+		{
+			"key": "accountRef 2",
+			"value": ""
+		},
+		{
+			"key": "lastName 2",
+			"value": ""
+		},
+		{
+			"key": "firstName 2",
+			"value": ""
+		},
+		{
+			"key": "accountRef 3",
+			"value": ""
+		},
+		{
+			"key": "lastName 3",
+			"value": ""
+		},
+		{
+			"key": "firstName 3",
+			"value": ""
+		},
+		{
+			"key": "subCategoryId debit 1",
+			"value": ""
+		},
+		{
+			"key": "subCategoryId debit 2",
+			"value": ""
+		},
+		{
+			"key": "subCategoryId debit 3",
+			"value": ""
+		},
+		{
+			"key": "subCategoryId debit 4",
+			"value": ""
+		},
+		{
+			"key": "subCategoryId debit 5",
+			"value": ""
+		},
+		{
+			"key": "subCategoryId debit 6",
+			"value": ""
+		},
+		{
+			"key": "subCategoryId debit 7",
+			"value": ""
+		},
+		{
+			"key": "subCategoryId debit 8",
+			"value": ""
+		},
+		{
+			"key": "subCategoryId debit 9",
+			"value": ""
+		},
+		{
+			"key": "subCategoryId debit 10",
+			"value": ""
+		},
+		{
+			"key": "subCategoryId debit 11",
+			"value": ""
+		},
+		{
+			"key": "subCategoryId debit 12",
+			"value": ""
+		},
+		{
+			"key": "subCategoryId debit 13",
+			"value": ""
+		},
+		{
+			"key": "subCategoryId debit 14",
+			"value": ""
+		},
+		{
+			"key": "subCategoryId credit 1",
+			"value": ""
+		},
+		{
+			"key": "subCategoryId credit 2",
+			"value": ""
+		},
+		{
+			"key": "subCategoryId credit 3",
+			"value": ""
+		},
+		{
+			"key": "subCategoryId credit 4",
+			"value": ""
+		},
+		{
+			"key": "subCategoryId credit 5",
+			"value": ""
+		},
+		{
+			"key": "subCategoryId credit 6",
+			"value": ""
+		},
+		{
+			"key": "subCategoryId credit 7",
+			"value": ""
+		},
+		{
+			"key": "subCategoryId credit 8",
+			"value": ""
+		},
+		{
+			"key": "subCategoryId credit 9",
+			"value": ""
+		},
+		{
+			"key": "subCategoryId credit 10",
+			"value": ""
+		},
+		{
+			"key": "subCategoryId credit 11",
+			"value": ""
+		},
+		{
+			"key": "subCategoryId credit 12",
+			"value": ""
+		},
+		{
+			"key": "provisioning amount",
+			"value": ""
+		},
+		{
+			"key": "transfer1",
+			"value": ""
+		},
+		{
+			"key": "transfer2",
+			"value": ""
+		},
+		{
+			"key": "foreign1",
+			"value": ""
+		},
+		{
+			"key": "foreign2",
+			"value": ""
+		},
+		{
+			"key": "transferId1",
+			"value": ""
+		},
+		{
+			"key": "transferId2",
+			"value": ""
+		},
+		{
+			"key": "loan amount",
+			"value": ""
+		},
+		{
+			"key": "interest1",
+			"value": ""
+		},
+		{
+			"key": "interest2",
+			"value": ""
+		},
+		{
+			"key": "loan id",
+			"value": ""
+		},
+		{
+			"key": "expense amount",
+			"value": ""
+		}
+	]
+}
