@@ -49,7 +49,8 @@ public class AccountServices {
             Balance firstBalance = new Balance(0.0 ,id);
             Account saved =  save.insert(insert);
             balanceServices.saveBalance(firstBalance);
-            return new Messages(insert.getId(),null);
+            return new Messages("welcome "+insert.getLastName()+" your account ref :"+insert
+                    .getAccountRef(),null);
         }
 
     }

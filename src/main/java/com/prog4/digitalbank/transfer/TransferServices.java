@@ -122,7 +122,7 @@ public class TransferServices {
         List<Double> instantTransfer= new ArrayList<>();
         for(LocalReceiver localReceiver:localReceivers){
         Date effectiveDate=localReceiver.getEffectiveDate();
-        if(effectiveDate.equals(Date.valueOf(LocalDate.now()))||
+        if(effectiveDate.toLocalDate().equals(LocalDate.now())||
         effectiveDate==null){
         instantTransfer.add(localReceiver.getAmount());
         }
